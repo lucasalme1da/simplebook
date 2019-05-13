@@ -12,7 +12,18 @@
   font-family: "Roboto";
   src: local("./../../assets/fonts/Roboto.ttf");
 }
+button{
 
+
+  transition: transform 0.1s ease;
+}
+button:hover{
+  transform: scale(1.1);
+}
+button:active{
+  transform:  scale(1);
+
+}
 body {
   display: flex;
   width: 100vw;
@@ -23,8 +34,17 @@ body {
 
 nav {
   width: 100vw;
-  height: 10vh;
+  height: 5vh;
   background: var(--cor-escura);
+}
+navtab{
+
+  transition: all 0.2s ease;
+}
+
+navtab:hover{
+
+  cursor: pointer;
 }
 
 dashboard {
