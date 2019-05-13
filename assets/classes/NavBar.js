@@ -20,12 +20,33 @@ class NavBar extends Estilo {
     const tabs = document.createElement('div')
 
     const buttons = document.createElement('div')
+
+    const tabsContainer = document.createElement('div')
+
+    const plusContainer = document.createElement('div')
+
+    this.addEstilo(tabsContainer, {
+      maxWidth: '90%',
+      height: '100%',
+      display: 'flex',
+      paddingLeft: '10px',
+      alignItems: 'flex-end',
+    })
+
+    this.addEstilo(plusContainer, {
+      width: '5%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-end',
+    })
+
     this.addEstilo(tabs, {
       width: '80%',
       height: '100%',
       display: 'flex',
-      alignItems: 'flex-end',
-
+      flexDirection: 'row',
+      justifyContent: 'flex-start'
     })
     this.addEstilo(buttons, {
       width: '20%',
@@ -58,12 +79,32 @@ class NavBar extends Estilo {
     this.addEstilo(this.ref, {
       display: 'flex',
     })
-    this.tabs = [
-      new NavTabs({ text: 'Folha 1', ref: tabs }),
-      new NavTabs({ text: 'Folha 2', ref: tabs })
-    ]
+    this.tabs = []
+    this.tabs.push(new NavTabs({ text: 'Folha 1', ref: tabsContainer, tabs: this.tabs }))
+    this.tabs.push(new NavTabs({ text: 'Folha 2', ref: tabsContainer, tabs: this.tabs }))
     const tabsElements = this.tabs.map(tab => tab.ref)
-    tabs.append(...tabsElements)
+    tabsContainer.append(...tabsElements)
+    const novaAba = new Botao({
+      icon: 'plus',
+      width: '30px',
+      height: '30px',
+      imageWidth: '12px',
+      imageHeight: '12px',
+      ref: plusContainer,
+      action: () => {
+        this.tabs.push(new NavTabs({ text: 'Folha 1', ref: tabsContainer, tabs: this.tabs }))
+        console.log('action')
+      },
+      style: {
+        borderRadius: '50%',
+        backgroundColor: 'var(--cor-media)',
+        marginLeft: '10px',
+        marginBottom: '5px',
+        flexShrink: 0
+      }
+    })
+    tabs.append(tabsContainer, plusContainer)
+    novaAba.hover(novaAba.ref, { backgroundColor: 'var(--cor-clara)' })
     this.ref.append(tabs, buttons)
     this.bodyRef.appendChild(this.ref);
 

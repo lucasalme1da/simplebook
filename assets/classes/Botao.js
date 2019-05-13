@@ -22,8 +22,8 @@ class Botao extends Estilo {
         const image = document.createElement('img')
         image.setAttribute('src', `./assets/icons/${options.icon}.svg`)
         this.addEstilo(image, {
-            width: '30px',
-            height: '30px',
+            width: options.imageWidth || '30px',
+            height: options.imageHeight || '30px',
         })
         this.addEstilo(this.ref, {
             width: options.width,
