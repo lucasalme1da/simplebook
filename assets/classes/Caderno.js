@@ -39,8 +39,8 @@ class Caderno extends Estilo {
 
     const saveThisBook = new Botao({
       icon: "saveThisBook",
-      iconWidth: "20px",
-      iconHeigth: "20px",
+      imageWidth: "20px",
+      imageHeigth: "20px",
       width: "40%",
       height: "80%",
       ref: titleButtonContainer,
@@ -53,8 +53,8 @@ class Caderno extends Estilo {
 
     const saveAllBooks = new Botao({
       icon: "saveAllBooks",
-      iconWidth: "20px",
-      iconHeigth: "20px",
+      imageWidth: "20px",
+      imageHeigth: "20px",
       width: "40%",
       height: "80%",
       ref: titleButtonContainer,
@@ -80,8 +80,8 @@ class Caderno extends Estilo {
 
     const btnAddBook = new Botao({
       icon: "addBook",
-      iconWidth: "20px",
-      iconHeigth: "20px",
+      imageWidth: "20px",
+      imageHeigth: "20px",
       width: "20%",
       height: "5%",
       ref: contentContainer,
@@ -151,8 +151,8 @@ function newBook(caderno, mochila) {
 
   const favoriteBook = new Botao({
     icon: "favoriteBook",
-    iconWidth: "18px",
-    iconHeigth: "18px",
+    imageWidth: "18px",
+    imageHeigth: "18px",
     width: "40%",
     height: "80%",
     ref: bookButtonContainer,
@@ -164,8 +164,8 @@ function newBook(caderno, mochila) {
 
   const deleteBook = new Botao({
     icon: "deleteBook",
-    iconWidth: "20px",
-    iconHeigth: "20px",
+    imageWidth: "20px",
+    imageHeigth: "20px",
     width: "40%",
     height: "80%",
     ref: bookButtonContainer,

@@ -28,8 +28,9 @@ nav {
   height: 5vh;
   background: var(--cor-media);
 }
-
+/* 
 dashboard {
+  display: none;
   position: absolute;
   z-index: 1;
   top: 5vh;
@@ -37,7 +38,7 @@ dashboard {
   width: 20vw;
   background: var(--cor-escura);
   align-self: flex-end;
-}
+} */
 
 button,
 input[type="submit"],

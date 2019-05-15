@@ -82,8 +82,8 @@ class Mochila extends Estilo {
 
     const saveThisBag = new Botao({
       icon: "saveThisBook",
-      iconWidth: "17px",
-      iconHeigth: "17px",
+      imageWidth: "17px",
+      imageHeight: "17px",
       width: "18%",
       height: "100%",
       ref: btnTitleContainer,
@@ -100,8 +100,8 @@ class Mochila extends Estilo {
 
     const saveAllBags = new Botao({
       icon: "saveAllBooks",
-      iconWidth: "18px",
-      iconHeigth: "18px",
+      imageWidth: "18px",
+      imageHeight: "18px",
       width: "18%",
       height: "100%",
       ref: btnTitleContainer,
@@ -118,8 +118,8 @@ class Mochila extends Estilo {
 
     const deleteBag = new Botao({
       icon: "deleteBook",
-      iconWidth: "20px",
-      iconHeigth: "20px",
+      imageWidth: "20px",
+      imageHeight: "20px",
       width: "18%",
       height: "100%",
       ref: btnTitleContainer,
@@ -183,8 +183,8 @@ class Mochila extends Estilo {
 
     const btnAddBook = new Botao({
       icon: "addBook",
-      iconWidth: "20px",
-      iconHeigth: "20px",
+      imageWidth: "20px",
+      imageHeight: "20px",
       width: "20%",
       height: "5%",
       ref: contentContainer,
@@ -261,8 +261,8 @@ function newBag(mochila, container) {
 
   const favoriteBag = new Botao({
     icon: "favoriteBook",
-    iconWidth: "18px",
-    iconHeigth: "18px",
+    imageWidth: "18px",
+    imageHeight: "18px",
     width: "40%",
     height: "80%",
     ref: bagButtonContainer,
@@ -274,8 +274,8 @@ function newBag(mochila, container) {
 
   const deleteBag = new Botao({
     icon: "deleteBook",
-    iconWidth: "20px",
-    iconHeigth: "20px",
+    imageWidth: "20px",
+    imageHeight: "20px",
     width: "40%",
     height: "80%",
     ref: bagButtonContainer,
