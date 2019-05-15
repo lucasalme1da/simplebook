@@ -1,0 +1,15 @@
+<svg id="baseline-add_circle-24px" xmlns="http://www.w3.org/2000/svg" width="28.696" height="28.696" viewBox="0 0 28.696 28.696">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <path id="Caminho_18" data-name="Caminho 18" class="cls-1" d="M0,0H28.7V28.7H0Z"/>
+  <path id="Caminho_19" data-name="Caminho 19" class="cls-2" d="M13.957,2A11.957,11.957,0,1,0,25.913,13.957,11.961,11.961,0,0,0,13.957,2Zm5.978,13.152H15.152v4.783H12.761V15.152H7.978V12.761h4.783V7.978h2.391v4.783h4.783Z" transform="translate(0.391 0.391)"/>
+</svg>

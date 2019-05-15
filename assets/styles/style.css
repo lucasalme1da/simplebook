@@ -13,22 +13,6 @@
   src: local("./../../assets/fonts/Roboto.ttf");
 }
 
-p{
-  font-family: "Roboto",
-  color: 'white',
-}
-button{
-
-
-  transition: transform 0.1s ease;
-}
-button:hover{
-  transform: scale(1.1);
-}
-button:active{
-  transform:  scale(1);
-
-}
 body {
   display: flex;
   width: 100vw;
@@ -42,18 +26,27 @@ nav {
   z-index: 2;
   width: 100vw;
   height: 5vh;
-  background: var(--cor-escura);
-}
-navtab{
-
-  transition: all 0.2s ease;
+  background: var(--cor-media);
 }
 
 dashboard {
   position: absolute;
   z-index: 1;
-  height: 100vh;
-  width: 30vw;
-  background: orangered;
+  top: 5vh;
+  height: 95vh;
+  width: 20vw;
+  background: var(--cor-escura);
   align-self: flex-end;
+}
+
+button,
+input[type="submit"],
+input[type="reset"] {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
 }
