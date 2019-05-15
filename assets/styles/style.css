@@ -12,6 +12,11 @@
   font-family: "Roboto";
   src: local("./../../assets/fonts/Roboto.ttf");
 }
+
+p{
+  font-family: "Roboto",
+  color: 'white',
+}
 button{
 
 
@@ -40,11 +45,6 @@ nav {
 navtab{
 
   transition: all 0.2s ease;
-}
-
-navtab:hover{
-
-  cursor: pointer;
 }
 
 dashboard {

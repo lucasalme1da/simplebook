@@ -12,19 +12,17 @@ class Botao extends Estilo {
         //     width: '60%',
         //     height: '60%',
         //     ref: buttons,
+        //     text: 'texto'
         //     action: () => { console.log('action') }
         //     style: { backgroundColor: 'black'}
         // }
     }
 
     criar(options) {
+
+
         this.ref = document.createElement('button')
-        const image = document.createElement('img')
-        image.setAttribute('src', `./assets/icons/${options.icon}.svg`)
-        this.addEstilo(image, {
-            width: '30px',
-            height: '30px',
-        })
+
         this.addEstilo(this.ref, {
             width: options.width,
             height: options.height,
@@ -34,9 +32,41 @@ class Botao extends Estilo {
             borderRadius: '8px',
         })
         this.addEstilo(this.ref, options.style)
-        this.ref.appendChild(image)
         this.ref.onclick = options.action
+
+        if (options.text) {
+            this.text = document.createElement('p')
+            this.text.textContent = options.text
+            this.addEstilo(this.text, {
+                fontFamily: 'Roboto',
+                color: 'white',
+                fontSize: '1em',
+            })
+            this.ref.appendChild(this.text)
+        }
+        if (options.icon) {
+
+            const image = document.createElement('img')
+            image.setAttribute('src', `./assets/icons/${options.icon}.svg`)
+            this.addEstilo(image, {
+                width: options.imageWidth || '30px',
+                height: options.imageHeight || '30px',
+            })
+
+            this.ref.appendChild(image)
+        }
+        if (options.icon && options.text) {
+
+            this.addEstilo(this.ref, {
+                justifyContent: 'space-around',
+                alignItems: 'center',
+            })
+        }
+
+
         options.ref.appendChild(this.ref)
+
+
 
     }
 
