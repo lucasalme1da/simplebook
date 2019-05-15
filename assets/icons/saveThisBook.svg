@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32.827" height="33.383" viewBox="0 0 32.827 33.383">
+  <defs>
+    <style>
+      .cls-1, .cls-3 {
+        fill: none;
+        stroke-width: 2px;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke: #fff;
+        stroke-linecap: round;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-linejoin: round;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="Grupo_7" data-name="Grupo 7" transform="translate(-1470 -139.047)">
+    <path id="Caminho_31" data-name="Caminho 31" class="cls-1" d="M-.289,0h17.5V23.009l-2.807,2.914-14.7-2.914L-3,2.571Z" transform="translate(1474 140.047)"/>
+    <path id="Exclusão_2" data-name="Exclusão 2" class="cls-2" d="M-2001,81h-18V57h18V81Zm-13.5-7.5v3h9v-3ZM-2017,60v5h14V60h-14Z" transform="translate(3489.5 85.5)"/>
+    <g id="Grupo_5" data-name="Grupo 5" transform="translate(9.703 9.59)">
+      <line id="Linha_1" data-name="Linha 1" class="cls-3" y2="12.922" transform="translate(1487.176 147.5)"/>
+      <line id="Linha_3" data-name="Linha 3" class="cls-3" x1="4.399" y1="3.7" transform="translate(1482.777 157.731)"/>
+      <line id="Linha_6" data-name="Linha 6" class="cls-3" y1="3.7" x2="4.399" transform="translate(1487.315 157.731)"/>
+    </g>
+  </g>
+</svg>

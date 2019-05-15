@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="26.293" height="26.294" viewBox="0 0 26.293 26.294">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="baseline-delete_outline-24px" transform="translate(-0.301)">
+    <path id="Caminho_7" data-name="Caminho 7" class="cls-1" d="M6.1,20.529A2.2,2.2,0,0,0,8.287,22.72h8.765a2.2,2.2,0,0,0,2.191-2.191V7.382H6.1ZM8.287,9.573h8.765V20.529H8.287ZM16.5,4.1,15.408,3H9.93l-1.1,1.1H5V6.287H20.338V4.1Z" transform="translate(1 0.287)"/>
+    <path id="Caminho_8" data-name="Caminho 8" class="cls-2" d="M0,0H26.294V26.294H0Z" transform="translate(0.301)"/>
+  </g>
+</svg>
