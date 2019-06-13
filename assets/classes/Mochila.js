@@ -11,9 +11,11 @@ class Mochila extends Estilo {
   criar() {
     const titleContainer = document.createElement("div")
     this.addEstilo(titleContainer, {
-      width: "90%",
+      width: "95%",
       height: "11%",
-      margin: "5%",
+      marginTop: "5.5%",
+      marginLeft: "2.5%",
+      marginRight: "2.5%",
       backgroundColor: "var(--cor-media)",
       display: "flex",
       flexFlow: "row nowrap",
@@ -170,9 +172,11 @@ class Mochila extends Estilo {
 
     const contentContainer = document.createElement("div")
     this.addEstilo(contentContainer, {
-      width: "86%",
+      width: "91%",
       height: "85%",
-      margin: "5%",
+      marginTop: "2.5%",
+      marginLeft: "2.5%",
+      marginRight: "2.5%",
       backgroundColor: "var(--cor-media)",
       display: "flex",
       flexDirection: "column",

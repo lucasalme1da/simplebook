@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="109.791" height="30" viewBox="0 0 109.791 30">
+  <defs>
+    <clipPath id="clip-path">
+      <rect width="109.791" height="30" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Grupo_24" data-name="Grupo 24" transform="translate(-1773.5 -283.5)">
+    <g id="Componente_15_1" data-name="Componente 15 – 1" transform="translate(1773.5 283.5)" clip-path="url(#clip-path)">
+      <g id="Componente_17_1" data-name="Componente 17 – 1" clip-path="url(#clip-path)">
+        <g id="Componente_18_1" data-name="Componente 18 – 1" clip-path="url(#clip-path)">
+          <text id="f_x_ax_b" data-name="f(x)=ax+b" transform="translate(1 1)" fill="#fff" stroke="#fff" stroke-width="1" font-size="17" font-family="SegoeScript, Segoe Script" letter-spacing="0.14em"><tspan x="2.502" y="19">f(x)=ax+b</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

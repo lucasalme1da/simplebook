@@ -1,5 +1,6 @@
 let caderno = require("./Caderno")
 let mochila = require("./Mochila")
+let blocos = require("./Bloco")
 const Estilo = require("./Estilo")
 
 class Dashboard extends Estilo {
@@ -15,7 +16,7 @@ class Dashboard extends Estilo {
         this.callBag()
         break
       case "blocos":
-        // this.callBlocks()
+        this.callBlocks()
         break
     }
   }
@@ -63,6 +64,12 @@ class Dashboard extends Estilo {
   callBag() {
     mochila = new mochila(this.ref)
     mochila.criar()
+    this.bodyRef.appendChild(this.ref)
+  }
+
+  callBlocks() {
+    blocos = new blocos(this.ref)
+    blocos.criar()
     this.bodyRef.appendChild(this.ref)
   }
 }

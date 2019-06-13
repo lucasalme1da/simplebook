@@ -1,7 +1,8 @@
 :root {
   --cor-escura: #8300a9;
   --cor-media: #a200d1;
-  --cor-clara: #a14ebf;
+  --cor-clara: #b200e6;
+  /* --cor-clara: #a14ebf; */
 }
 
 * {

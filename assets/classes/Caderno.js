@@ -12,10 +12,12 @@ class Caderno extends Estilo {
     const titleContainer = document.createElement("div")
     titleContainer.textContent = "Mochila 1"
     this.addEstilo(titleContainer, {
-      width: "88%",
+      width: "93%",
       height: "5%",
-      margin: "5%",
-      backgroundColor: "var(--cor-media)",
+      marginTop: "5.5%",
+      marginLeft: "2.5%",
+      marginRight: "2.5%",
+      backgroundColor: "#A200D1",
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
@@ -67,9 +69,11 @@ class Caderno extends Estilo {
 
     const contentContainer = document.createElement("div")
     this.addEstilo(contentContainer, {
-      width: "86%",
-      height: "90%",
-      margin: "5%",
+      width: "91%",
+      height: "89%",
+      marginTop: "2.5%",
+      marginLeft: "2.5%",
+      marginRight: "2.5%",
       backgroundColor: "var(--cor-media)",
       display: "flex",
       flexDirection: "column",
