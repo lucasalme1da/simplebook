@@ -173,7 +173,7 @@ class Mochila extends Estilo {
     const contentContainer = document.createElement("div")
     this.addEstilo(contentContainer, {
       width: "91%",
-      height: "85%",
+      height: "83%",
       marginTop: "2.5%",
       marginLeft: "2.5%",
       marginRight: "2.5%",
