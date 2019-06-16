@@ -299,7 +299,7 @@ class Bloco extends Estilo {
 //   })
 
 //   newBook.append(newBookName)
-//   newBook.append(bookButtonContainer)
+//https://github.com/lucasalme1da/simplebook.git/   newBook.append(bookButtonContainer)
 //   mochila.insertBefore(newBook, mochila.lastChild)
 // }
 

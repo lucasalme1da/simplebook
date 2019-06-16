@@ -32,7 +32,25 @@ class Botao extends Estilo {
             borderRadius: '8px',
         })
         this.addEstilo(this.ref, options.style)
-        this.ref.onclick = options.action
+
+        if (options.animation) {
+            this.ref.onclick = () => {
+
+                this.ref.animate([
+                    {
+                        transform: 'scale(1)'
+                    }, {
+                        transform: 'scale(0.8)'
+                    }
+                ], 50)
+                options.action()
+
+            }
+
+        } else {
+
+            this.ref.onclick = options.action
+        }
 
         if (options.text) {
             this.text = document.createElement('p')
@@ -51,6 +69,7 @@ class Botao extends Estilo {
             this.addEstilo(image, {
                 width: options.imageWidth || '30px',
                 height: options.imageHeight || '30px',
+                userSelect: 'none'
             })
 
             this.ref.appendChild(image)
@@ -62,6 +81,7 @@ class Botao extends Estilo {
                 alignItems: 'center',
             })
         }
+
 
 
         options.ref.appendChild(this.ref)

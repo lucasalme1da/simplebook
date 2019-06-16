@@ -25,6 +25,18 @@ class NavBar extends Estilo {
     this.dashs = [this.dashBook, this.dashBag, this.dashBlock]
   }
   criar() {
+
+    this.folhaContainer = document.createElement('folhaContainer')
+    this.addEstilo(this.folhaContainer, {
+      height: '93vh',
+      width: '95vw',
+      marginTop: '7vh',
+      backgroundColor: 'white',
+      position: 'relative',
+      overflowY: 'auto',
+      overflowX: 'hidden'
+    })
+
     this.ref = document.createElement("nav")
     this.addEstilo(this.ref, {
       position: "fixed",
@@ -61,7 +73,6 @@ class NavBar extends Estilo {
 
     const plusContainer = document.createElement("div")
 
-    //Botao More
     this.moreButton = new Botao({
       icon: "drop",
       width: "100px",
@@ -81,8 +92,6 @@ class NavBar extends Estilo {
       },
       action: () => this.abrirMoreModal()
     })
-
-    //
 
     this.addEstilo(tabsContainer, {
       maxWidth: "90%",
@@ -146,11 +155,9 @@ class NavBar extends Estilo {
     })
     this.tabs = []
     this.tabs.push(
-      new NavTabs({ text: "Folha 1", ref: tabsContainer, tabs: this.tabs })
+      new NavTabs({ text: "Folha 1", ref: tabsContainer, tabs: this.tabs, folhaContainer: this.folhaContainer })
     )
-    this.tabs.push(
-      new NavTabs({ text: "Folha 2", ref: tabsContainer, tabs: this.tabs })
-    )
+
     const tabsElements = this.tabs.map(tab => tab.ref)
     tabsContainer.append(...tabsElements)
     const novaAba = new Botao({
@@ -173,6 +180,14 @@ class NavBar extends Estilo {
     novaAba.hover(novaAba.ref, { backgroundColor: "var(--cor-clara)" })
     this.ref.append(tabs, buttons)
     this.bodyRef.appendChild(this.ref)
+    this.bodyRef.appendChild(this.folhaContainer)
+    this.addEstilo(this.bodyRef, {
+      backgroundColor: 'var(--cor-fundo)',
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      flexDirection: 'column'
+    })
   }
 
   abrirMoreButton() {
@@ -250,6 +265,7 @@ class NavBar extends Estilo {
           moreTabsRef: moreContainer,
           tabs: this.tabs,
           navbar: this,
+          folhaContainer: this.folhaContainer,
           index: this.tabs.length + 1
         })
       )
