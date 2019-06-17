@@ -6,7 +6,8 @@ class NavTabs extends Estilo {
     super()
     this.criar(options)
     this.folha = new Folha({
-      folhaContainer: options.folhaContainer
+      folhaContainer: options.folhaContainer,
+      loadedFonts: options.loadedFonts
     })
   }
   criar(options) {

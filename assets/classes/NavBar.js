@@ -2,11 +2,14 @@ const Estilo = require("./Estilo")
 const Botao = require("./Botao")
 const NavTabs = require("./NavTabs")
 const Dashboard = require("./Dashboard")
+const fs = require('fs')
 
 class NavBar extends Estilo {
   constructor() {
     super()
     this.bodyRef = document.getElementsByTagName("BODY")[0]
+    this.loadedFonts = { fonts: [] }
+    this.loadFonts()
     this.criar()
     this.limiteAbas = 10
     this.moreModalAberto = false
@@ -23,6 +26,8 @@ class NavBar extends Estilo {
       dashType: "blocos"
     })
     this.dashs = [this.dashBook, this.dashBag, this.dashBlock]
+
+
   }
   criar() {
 
@@ -155,7 +160,7 @@ class NavBar extends Estilo {
     })
     this.tabs = []
     this.tabs.push(
-      new NavTabs({ text: "Folha 1", ref: tabsContainer, tabs: this.tabs, folhaContainer: this.folhaContainer })
+      new NavTabs({ text: "Folha 1", ref: tabsContainer, tabs: this.tabs, folhaContainer: this.folhaContainer, loadedFonts: this.loadedFonts })
     )
 
     const tabsElements = this.tabs.map(tab => tab.ref)
@@ -283,6 +288,28 @@ class NavBar extends Estilo {
       targetDash.openDash()
     }
   }
+  loadFonts() {
+    return new Promise(resolve => {
+
+      let fonts = fs.readdirSync(`./assets/fonts/`)
+      fonts.forEach(font => {
+        let name = font.substring(0, font.length - 4)
+        this.loadedFonts.fonts.push(name)
+        let loadedFont = new FontFace(name, `url(assets/fonts/${font})`)
+        loadedFont.load().then(function (loaded_face) {
+          document.fonts.add(loaded_face);
+          document.body.style.fontFamily = `"${name}", Arial`;
+
+        }).catch(function (error) {
+        });
+
+      })
+
+    })
+
+  }
+
+
 }
 
 const navBar = new NavBar()

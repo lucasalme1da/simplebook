@@ -8,10 +8,137 @@ class Blocos extends Estilo {
         this.folhaContainer = options.folhaContainer
         this.tempoOptions;
         this.folha = options.folha
+        this.alignPadding = 20
+        this.minEditContainerWidth = 200
         this.criar()
+        this.maximized = false
+        this.tempoFadeOut = 8000
     }
+    handleClick() {
+
+        if (!this.maximized) this.maximize(this)
+
+        clearTimeout(this.tempoMinimize)
+        this.tempoMinimize = setTimeout(() => this.minimize(this), this.tempoFadeOut)
 
 
+    }
+    changeContainerPos(ref) {
+
+        if (ref.optionsContainer.style.left == '100%') {
+            ref.addEstilo(ref.optionsContainer, {
+                left: '0%'
+            })
+
+        }
+        else if (ref.optionsContainer.style.left == '0%') {
+            ref.addEstilo(ref.optionsContainer, {
+                left: '100%'
+            })
+
+        }
+
+    }
+    chageOptionsStyle(ref, option) {
+
+        const hideOptionsContainer = () => {
+
+            ref.addEstilo(ref.optionsContainer, {
+                display: 'none',
+                opacity: '0'
+            })
+        }
+
+        const showOptionsContainer = () => {
+            ref.addEstilo(ref.optionsContainer, {
+                display: 'block'
+            })
+
+            let anim = ref.optionsContainer.animate([
+                {
+                    opacity: '0',
+                    transform: 'scale(0.8)'
+                }, {
+                    opacity: '1',
+                    transform: 'scale(1)'
+                }
+            ], 80)
+            anim.onfinish = () => {
+                ref.addEstilo(ref.optionsContainer, {
+                    opacity: '1'
+                })
+            }
+
+        }
+
+
+        if (option == '100%') {
+
+            hideOptionsContainer()
+
+            let botaoWidth = window.innerWidth * 0.03
+            let posMove = this.reparsePx(-(botaoWidth + ref.minEditContainerWidth))
+
+            ref.addEstilo(ref.editContainer, {
+                left: posMove
+            })
+
+            ref.addEstilo(ref.optionsContainer, {
+                paddingLeft: '0px'
+            })
+
+            ref.optionsButtons.forEach(button => {
+
+                ref.addEstilo(button.ref, {
+
+                    left: '-2.5vw'
+
+                })
+
+            })
+            showOptionsContainer()
+
+        } else {
+
+            hideOptionsContainer()
+            ref.addEstilo(ref.editContainer, {
+                left: '2vw'
+            })
+
+            ref.addEstilo(ref.optionsContainer, {
+                paddingLeft: '15px'
+            })
+            ref.optionsButtons.forEach(button => {
+
+
+                ref.addEstilo(button.ref, {
+
+                    left: '0vw'
+                })
+
+            })
+            showOptionsContainer()
+
+        }
+
+    }
+    checkEnd(ref) {
+
+        let optionsPercent = ref.optionsContainer.style.left
+        let posX = ref.parsePx(ref.blocoRef.style.left)
+        let blocoWidth = ref.parsePx(ref.blocoRef.style.width)
+        let folhaWidth = ref.parsePx(getComputedStyle(ref.folhaContainer, null).getPropertyValue('width'))
+        let paddingLeftOptionsContainer = 15
+        let editContainerWidth = (folhaWidth * 0.015) + 200
+        if ((posX + blocoWidth + paddingLeftOptionsContainer + editContainerWidth) >= folhaWidth && optionsPercent == '100%') {
+            ref.changeContainerPos(ref)
+            ref.chageOptionsStyle(ref, '100%')
+        } else if (posX <= ref.alignPadding && optionsPercent == '0%') {
+            ref.changeContainerPos(ref)
+            ref.chageOptionsStyle(ref, '0%')
+        }
+
+    }
     makeResize(element, resizers) {
         const minimum_size = 20;
         let originalWidth = 0;
@@ -139,7 +266,6 @@ class Blocos extends Estilo {
 
 
     }
-
     removeBloco(ref) {
 
         let anim = ref.blocoRef.animate([{
@@ -160,34 +286,82 @@ class Blocos extends Estilo {
         }
 
     }
-
     appearOptions(ref) {
-
     }
-
     openEditContainer(ref) {
+
 
         if (ref.editContainer.style.display == 'none') {
 
+            let openRight = () => {
+
+                let anim = ref.editContainer.animate([{
+
+                    opacity: '0',
+                    left: '1vw'
+
+                }, {
+                    opacity: '1',
+                    left: '2vw'
+                }], {
+                        duration: 100,
+                    })
+
+                anim.onfinish = () => {
+                    ref.addEstilo(ref.editContainer, {
+                        opacity: '1',
+                        left: '2vw'
+                    })
+                }
+            }
+
+            let openLeft = () => {
+                let botaoWidth = window.innerWidth * 0.03
+                let posMove = -(botaoWidth + ref.minEditContainerWidth)
+                let posMoveInit = posMove + 20
+                posMove = ref.reparsePx(posMove)
+                posMoveInit = ref.reparsePx(posMoveInit)
+                let anim = ref.editContainer.animate([{
+
+                    opacity: '0',
+                    left: posMoveInit
+
+                }, {
+                    opacity: '1',
+                    left: posMove
+                }], {
+                        duration: 100,
+                    })
+
+                anim.onfinish = () => {
+                    ref.addEstilo(ref.editContainer, {
+                        opacity: '1',
+                        left: posMove
+                    })
+                }
+
+
+
+
+                ref.addEstilo(ref.editContainer, {
+                    left: posMove
+                })
+
+            }
             ref.addEstilo(ref.editContainer, {
                 display: 'flex',
                 opacity: '0'
             })
 
-            ref.editContainer.animate([{
 
-                opacity: '0',
-                left: '1vw'
+            if (ref.optionsContainer.style.left == '100%') {
 
-            }, {
-                opacity: '1',
-                left: '2vw'
+                openRight()
 
+            } else {
+                openLeft()
+            }
 
-            }], {
-                    duration: 100,
-                    fill: 'forwards'
-                })
         } else {
 
             let anim = ref.editContainer.animate([{
@@ -215,18 +389,181 @@ class Blocos extends Estilo {
 
 
     }
+    alignRight(ref) {
+        let folhaEnd = ref.parsePx(getComputedStyle(ref.folhaContainer, null).getPropertyValue('width')) - ref.alignPadding
+        let blocoWidth = ref.parsePx(ref.blocoRef.style.width)
+        let posX = ref.reparsePx(folhaEnd - blocoWidth)
 
+
+        let anim = ref.blocoRef.animate([
+            {
+                left: ref.blocoRef.style.left
+            }, {
+                left: posX
+            }
+        ], {
+                duration: 100,
+            })
+
+        anim.onfinish = () => {
+
+            ref.addEstilo(ref.blocoRef, {
+                left: posX
+            })
+            ref.checkEnd(ref)
+        }
+
+    }
+    alignLeft(ref) {
+
+        let folhaInit = ref.reparsePx(ref.alignPadding)
+
+        let anim = ref.blocoRef.animate([
+            {
+                left: ref.blocoRef.style.left
+            }, {
+                left: folhaInit
+            }
+        ], {
+                duration: 100,
+            })
+
+        anim.onfinish = () => {
+
+            ref.addEstilo(ref.blocoRef, {
+                left: folhaInit
+            })
+            ref.checkEnd(ref)
+        }
+    }
+    alignCenter(ref) {
+        let halfFolhaWidth = this.parsePx(getComputedStyle(ref.folhaContainer, null).getPropertyValue('width')) / 2
+        let halfBlocoWidth = ref.parsePx(ref.blocoRef.style.width) / 2
+
+        let posX = this.reparsePx(halfFolhaWidth - halfBlocoWidth)
+
+        let anim = ref.blocoRef.animate([
+            {
+                left: ref.blocoRef.style.left
+            }, {
+                left: posX
+            }
+        ], {
+                duration: 100,
+            })
+
+        anim.onfinish = () => {
+
+            ref.addEstilo(ref.blocoRef, {
+                left: posX
+            })
+        }
+
+
+    }
+    minimize(ref) {
+
+        ref.addEstilo(ref.blocoRef, {
+            border: 'none'
+        })
+
+        ref.resizesContainer.forEach(container => {
+
+            let anim = container.animate([{
+                opacity: '1'
+
+            }, {
+                opacity: '0'
+            }], 80)
+
+            anim.onfinish = () => {
+                ref.addEstilo(container, {
+                    display: 'none'
+                })
+
+            }
+
+        })
+
+        let anim = ref.optionsContainer.animate([{
+
+            opacity: '1'
+
+        }, {
+            opacity: '0'
+
+        }], 80)
+
+        anim.onfinish = () => {
+            ref.addEstilo(ref.optionsContainer, {
+                display: 'none'
+            })
+            ref.maximized = false
+        }
+
+    }
+    maximize(ref) {
+        ref.addEstilo(ref.blocoRef, {
+            border: '1px solid var(--cor-escura)'
+        })
+        ref.resizesContainer.forEach(container => {
+            ref.addEstilo(container, {
+                display: 'block',
+            })
+            let anim = container.animate([{
+                opacity: '0'
+
+            }, {
+                opacity: '1'
+            }], 80)
+
+
+        })
+
+        ref.addEstilo(ref.optionsContainer, {
+            display: 'block'
+        })
+        let anim = ref.optionsContainer.animate([{
+
+            opacity: '0'
+
+        }, {
+            opacity: '1'
+
+        }], 80)
+
+        ref.maximized = true
+
+    }
+    trazerFrente(ref) {
+        ref.folha.trazerFrente(ref)
+    }
+    addMainContent(element) {
+        this.blocoRef.appendChild(element)
+    }
+    addConfig(elements) {
+        elements.forEach(element => {
+
+            this.editContainer.prepend(element)
+        })
+    }
     criar() {
 
         this.blocoRef = document.createElement('bloco')
+
+        this.blocoRef.onclick = () => {
+            this.handleClick()
+        }
 
         this.optionsContainer = document.createElement('optionsContainer')
         this.addEstilo(this.optionsContainer, {
             position: 'absolute',
             left: '100%',
-            paddingLeft: '15px'
+            paddingLeft: '15px',
+            zIndex: '301'
         })
 
+        this.optionsButtons = []
 
         this.close = new Botao({
             icon: "close",
@@ -242,6 +579,7 @@ class Blocos extends Estilo {
                 justifyContent: "space-around",
                 alignItems: "center",
                 borderRadius: "50%",
+                position: 'relative',
                 backgroundColor: "var(--cor-media)",
                 boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
             },
@@ -263,24 +601,98 @@ class Blocos extends Estilo {
                 justifyContent: "space-around",
                 alignItems: "center",
                 borderRadius: "50%",
+                position: 'relative',
                 backgroundColor: "var(--cor-media)",
                 boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
             },
             action: () => this.openEditContainer(this)
         })
+
+        this.optionsButtons.push(this.close, this.edit)
+
         this.editContainer = document.createElement('editContainer')
         this.addEstilo(this.editContainer, {
 
             display: 'none',
             position: 'relative',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            padding: '5px',
             top: '-1vw',
             left: '1.5vw',
             minWidth: '200px',
             minHeight: '100px',
             borderRadius: '8px',
+            zIndex: '301',
             backgroundColor: 'var(--cor-media)',
             boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
 
+
+        })
+        this.Frete = new Botao({
+            width: "80%",
+            height: "30px",
+            text: 'Trazer para frente',
+            ref: this.editContainer,
+            animation: true,
+            style: {
+                padding: '5px',
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "var(--cor-clara)",
+                marginBottom: '3px'
+            },
+            action: () => this.trazerFrente(this)
+        })
+
+        this.center = new Botao({
+            width: "80%",
+            height: "30px",
+            text: 'Centralizar',
+            ref: this.editContainer,
+            animation: true,
+            style: {
+                padding: '5px',
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "var(--cor-clara)",
+                marginBottom: '3px'
+            },
+            action: () => this.alignCenter(this)
+        })
+        this.aliignLeft = new Botao({
+            width: "80%",
+            height: "30px",
+            text: 'Alinhar a esquerda',
+            ref: this.editContainer,
+            animation: true,
+            style: {
+                padding: '5px',
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "var(--cor-clara)",
+                marginBottom: '3px'
+            },
+            action: () => this.alignLeft(this)
+
+        })
+
+        this.aliignRight = new Botao({
+            width: "80%",
+            height: "30px",
+            text: 'Alinhar a direita',
+            ref: this.editContainer,
+            animation: true,
+            style: {
+                padding: '5px',
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "var(--cor-clara)",
+                marginBottom: '3px'
+
+            },
+            action: () => this.alignRight(this)
 
         })
 
@@ -292,9 +704,12 @@ class Blocos extends Estilo {
             width: '200px',
             height: '100px',
             border: '1px solid var(--cor-escura)',
+            backgroundColor: 'white',
             position: 'absolute',
+            zIndex: '100',
             top: '50px',
             left: '50px',
+            padding: '20px',
             boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
         })
 
@@ -342,7 +757,7 @@ class Blocos extends Estilo {
 
         this.resizes = []
 
-        let resizesContainer = []
+        this.resizesContainer = []
 
 
         this.resizeTopLeft = document.createElement('resize')
@@ -354,11 +769,8 @@ class Blocos extends Estilo {
             left: '0%',
             position: 'absolute'
         })
-        resizesContainer.push(reziseContainerTopLeft)
+        this.resizesContainer.push(reziseContainerTopLeft)
         reziseContainerTopLeft.appendChild(this.resizeTopLeft)
-
-
-
         this.resizeTop = document.createElement('resize')
         this.resizes.push(this.resizeTop)
         this.resizeTop.top = true
@@ -368,12 +780,8 @@ class Blocos extends Estilo {
             left: '50%',
             position: 'absolute'
         })
-        resizesContainer.push(reziseContainerTop)
+        this.resizesContainer.push(reziseContainerTop)
         reziseContainerTop.appendChild(this.resizeTop)
-
-
-
-
         this.resizeTopRight = document.createElement('resize')
         this.resizeTopRight.topRight = true
         this.resizes.push(this.resizeTopRight)
@@ -383,12 +791,8 @@ class Blocos extends Estilo {
             left: '100%',
             position: 'absolute'
         })
-        resizesContainer.push(reziseContainerTopRight)
+        this.resizesContainer.push(reziseContainerTopRight)
         reziseContainerTopRight.appendChild(this.resizeTopRight)
-
-
-
-
         this.resizeLeft = document.createElement('resize')
         this.resizes.push(this.resizeLeft)
         this.resizeLeft.left = true
@@ -398,12 +802,8 @@ class Blocos extends Estilo {
             left: '0%',
             position: 'absolute'
         })
-        resizesContainer.push(reziseContainerLeft)
+        this.resizesContainer.push(reziseContainerLeft)
         reziseContainerLeft.appendChild(this.resizeLeft)
-
-
-
-
         this.resizeRight = document.createElement('resize')
         this.resizes.push(this.resizeRight)
         this.resizeRight.right = true
@@ -413,11 +813,8 @@ class Blocos extends Estilo {
             left: '100%',
             position: 'absolute'
         })
-        resizesContainer.push(reziseContainerRight)
+        this.resizesContainer.push(reziseContainerRight)
         reziseContainerRight.appendChild(this.resizeRight)
-
-
-
         this.resizeBottomLeft = document.createElement('resize')
         this.resizes.push(this.resizeBottomLeft)
         this.resizeBottomLeft.bottomLeft = true
@@ -427,11 +824,8 @@ class Blocos extends Estilo {
             left: '0%',
             position: 'absolute'
         })
-        resizesContainer.push(reziseContainerBottomLeft)
+        this.resizesContainer.push(reziseContainerBottomLeft)
         reziseContainerBottomLeft.appendChild(this.resizeBottomLeft)
-
-
-
         this.resizeBottomRight = document.createElement('resize')
         this.resizes.push(this.resizeBottomRight)
         this.resizeBottomRight.bottomRight = true
@@ -441,11 +835,8 @@ class Blocos extends Estilo {
             left: '100%',
             position: 'absolute'
         })
-        resizesContainer.push(reziseContainerBottomRight)
+        this.resizesContainer.push(reziseContainerBottomRight)
         reziseContainerBottomRight.appendChild(this.resizeBottomRight)
-
-
-
         this.resizeBottom = document.createElement('resize')
         this.resizes.push(this.resizeBottom)
         this.resizeBottom.bottom = true
@@ -455,10 +846,8 @@ class Blocos extends Estilo {
             left: '50%',
             position: 'absolute'
         })
-        resizesContainer.push(reziseContainerBottom)
+        this.resizesContainer.push(reziseContainerBottom)
         reziseContainerBottom.appendChild(this.resizeBottom)
-
-
         this.resizes.forEach(resize => {
 
             let vw = window.innerWidth
@@ -469,20 +858,20 @@ class Blocos extends Estilo {
                 height: '1vw',
                 display: 'block',
                 borderRadius: '50%',
-                border: '1px solid var(--cor-escura)',
                 position: 'relative',
                 top: '-0.5vw',
                 left: '-0.5vw',
                 backgroundColor: 'white',
+                boxShadow: '0 0 1px 0 var(--cor-escura) inset, 0 0 1px 0 var(--cor-escura)',
                 zIndex: '2',
             })
             this.makeResize(this.blocoRef, this.resizes)
         })
 
-        this.blocoRef.append(...resizesContainer)
+        this.blocoRef.append(...this.resizesContainer)
         this.folhaContainer.appendChild(this.blocoRef)
+        this.minimize(this)
     }
-
 }
 
 module.exports = Blocos

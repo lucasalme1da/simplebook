@@ -43,7 +43,7 @@ class Botao extends Estilo {
                         transform: 'scale(0.8)'
                     }
                 ], 50)
-                options.action()
+                if (options.action) options.action()
 
             }
 
@@ -59,6 +59,7 @@ class Botao extends Estilo {
                 fontFamily: 'Roboto',
                 color: 'white',
                 fontSize: '1em',
+                userSelect: 'none'
             })
             this.ref.appendChild(this.text)
         }
@@ -66,6 +67,7 @@ class Botao extends Estilo {
 
             const image = document.createElement('img')
             image.setAttribute('src', `./assets/icons/${options.icon}.svg`)
+            image.setAttribute('draggable', 'false')
             this.addEstilo(image, {
                 width: options.imageWidth || '30px',
                 height: options.imageHeight || '30px',
