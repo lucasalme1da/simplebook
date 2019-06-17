@@ -51,6 +51,7 @@ class BlocoDash extends Estilo {
       },
       style: {
         draggable: "false",
+        cursor: "grab",
         backgroundColor: "#B200E6",
         alignSelf: "center"
       }
@@ -83,6 +84,7 @@ class BlocoDash extends Estilo {
       },
       style: {
         draggable: "false",
+        cursor: "grab",
         backgroundColor: "#B200E6",
         alignSelf: "center"
       }
@@ -115,6 +117,7 @@ class BlocoDash extends Estilo {
       },
       style: {
         draggable: "false",
+        cursor: "grab",
         backgroundColor: "#B200E6",
         alignSelf: "center"
       }
@@ -147,6 +150,7 @@ class BlocoDash extends Estilo {
       },
       style: {
         draggable: "false",
+        cursor: "grab",
         backgroundColor: "#B200E6",
         alignSelf: "center"
       }
@@ -179,6 +183,7 @@ class BlocoDash extends Estilo {
       },
       style: {
         draggable: "false",
+        cursor: "grab",
         backgroundColor: "#B200E6",
         alignSelf: "center"
       }
@@ -211,13 +216,14 @@ class BlocoDash extends Estilo {
       },
       style: {
         draggable: "false",
+        cursor: "grab",
         backgroundColor: "#B200E6",
         alignSelf: "center"
       }
     })
 
     // Making all "manually" draggable
-    dragging(blockTextContainer)
+    dragging(blockTextContainer, this)
     dragging(blockImgContainer)
     dragging(blockListContainer)
     dragging(blockTableContainer)
@@ -239,20 +245,18 @@ class BlocoDash extends Estilo {
   }
 }
 
-function dragging(div) {
+function dragging(div, ref) {
   div.onmousedown = function(event) {
     let placeholder = div.cloneNode(true)
-    placeholder.style.width = div.offsetWidth + "px"
-    placeholder.style.height = div.offsetHeight + "px"
-
-    console.log(div.offsetHeight)
-
     let shiftX = event.clientX - div.getBoundingClientRect().left
-
     let shiftY = event.clientY - div.getBoundingClientRect().top
 
+    placeholder.style.width = div.offsetWidth + "px"
+    placeholder.style.height = div.offsetHeight + "px"
+    placeholder.firstChild.style.cursor = "grabbing"
     placeholder.style.position = "absolute"
     placeholder.style.zIndex = 1000
+
     document.body.append(placeholder)
 
     moveAt(event.pageX, event.pageY)
