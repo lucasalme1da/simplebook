@@ -1,6 +1,6 @@
 let caderno = require("./Caderno")
 let mochila = require("./Mochila")
-let blocos = require("./Bloco")
+let blocos = require("./BlocoDash")
 const Estilo = require("./Estilo")
 
 class Dashboard extends Estilo {

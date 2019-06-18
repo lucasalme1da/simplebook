@@ -1,7 +1,7 @@
 const Estilo = require("./Estilo")
 const Botao = require("./Botao")
 
-class Bloco extends Estilo {
+class BlocoDash extends Estilo {
   constructor(dashRef) {
     super()
     this.dashRef = dashRef
@@ -47,9 +47,11 @@ class Bloco extends Estilo {
       height: "100%",
       ref: blockTextContainer,
       action: () => {
-        newBook(this, contentContainer)
+        // newBook(this, contentContainer)
       },
       style: {
+        draggable: "false",
+        cursor: "grab",
         backgroundColor: "#B200E6",
         alignSelf: "center"
       }
@@ -78,9 +80,11 @@ class Bloco extends Estilo {
       height: "100%",
       ref: blockImgContainer,
       action: () => {
-        newBook(this, contentContainer)
+        // newBook(this, contentContainer)
       },
       style: {
+        draggable: "false",
+        cursor: "grab",
         backgroundColor: "#B200E6",
         alignSelf: "center"
       }
@@ -109,9 +113,11 @@ class Bloco extends Estilo {
       height: "100%",
       ref: blockListContainer,
       action: () => {
-        newBook(this, contentContainer)
+        // newBook(this, contentContainer)
       },
       style: {
+        draggable: "false",
+        cursor: "grab",
         backgroundColor: "#B200E6",
         alignSelf: "center"
       }
@@ -140,9 +146,11 @@ class Bloco extends Estilo {
       height: "100%",
       ref: blockTableContainer,
       action: () => {
-        newBook(this, contentContainer)
+        // newBook(this, contentContainer)
       },
       style: {
+        draggable: "false",
+        cursor: "grab",
         backgroundColor: "#B200E6",
         alignSelf: "center"
       }
@@ -171,9 +179,11 @@ class Bloco extends Estilo {
       height: "100%",
       ref: blockGeometryContainer,
       action: () => {
-        newBook(this, contentContainer)
+        // newBook(this, contentContainer)
       },
       style: {
+        draggable: "false",
+        cursor: "grab",
         backgroundColor: "#B200E6",
         alignSelf: "center"
       }
@@ -202,13 +212,23 @@ class Bloco extends Estilo {
       height: "100%",
       ref: blockEquationContainer,
       action: () => {
-        newBook(this, contentContainer)
+        // newBook(this, contentContainer)
       },
       style: {
+        draggable: "false",
+        cursor: "grab",
         backgroundColor: "#B200E6",
         alignSelf: "center"
       }
     })
+
+    // Making all "manually" draggable
+    dragging(blockTextContainer, this)
+    dragging(blockImgContainer)
+    dragging(blockListContainer)
+    dragging(blockTableContainer)
+    dragging(blockGeometryContainer)
+    dragging(blockEquationContainer)
 
     this.ref = document.createElement("blocos")
     backContainer.append(
@@ -224,6 +244,83 @@ class Bloco extends Estilo {
     document.createElement("div").length
   }
 }
+
+function dragging(div, ref) {
+  div.onmousedown = function(event) {
+    let placeholder = div.cloneNode(true)
+    let shiftX = event.clientX - div.getBoundingClientRect().left
+    let shiftY = event.clientY - div.getBoundingClientRect().top
+
+    placeholder.style.width = div.offsetWidth + "px"
+    placeholder.style.height = div.offsetHeight + "px"
+    placeholder.firstChild.style.cursor = "grabbing"
+    placeholder.style.position = "absolute"
+    placeholder.style.zIndex = 1000
+
+    document.body.append(placeholder)
+
+    moveAt(event.pageX, event.pageY)
+
+    function moveAt(pageX, pageY) {
+      placeholder.style.left = pageX - shiftX + "px"
+      placeholder.style.top = pageY - shiftY - div.offsetHeight / 2 + "px"
+    }
+
+    function onMouseMove(event) {
+      moveAt(event.pageX, event.pageY)
+    }
+
+    document.addEventListener("mousemove", onMouseMove)
+
+    document.onmouseup = function() {
+      document.body.removeChild(placeholder)
+      document.removeEventListener("mousemove", onMouseMove)
+      placeholder.onmouseup = null
+    }
+  }
+
+  div.ondragstart = function() {
+    return false
+  }
+}
+
+// function dragg(div, child) {
+//   div.onmousedown = function(event) {
+//     let block = div.cloneNode(true)
+//     child.insertBefore(block, child.firstChild)
+//     div.style.width = block.offsetWidth + "px"
+//     div.style.height = block.offsetHeigh + "px"
+
+//     let shiftX = event.clientX - div.getBoundingClientRect().left
+//     let shiftY = event.clientY - div.getBoundingClientRect().top
+
+//     div.style.position = "absolute"
+//     div.style.zIndex = 1000
+//     document.body.append(div)
+
+//     moveAt(event.pageX, event.pageY)
+
+//     function moveAt(pageX, pageY) {
+//       div.style.left = pageX - shiftX + "px"
+//       div.style.top = pageY - shiftY + "px"
+//     }
+
+//     function onMouseMove(event) {
+//       moveAt(event.pageX, event.pageY)
+//     }
+
+//     document.addEventListener("mousemove", onMouseMove)
+
+//     div.onmouseup = function() {
+//       document.removeEventListener("mousemove", onMouseMove)
+//       div.onmouseup = null
+//     }
+//   }
+
+//   div.ondragstart = function() {
+//     return false
+//   }
+// }
 
 // function newBook(caderno, mochila) {
 //   let newBook = document.createElement("caderno")
@@ -307,4 +404,4 @@ class Bloco extends Estilo {
 //   mochila.removeChild(caderno)
 // }
 
-module.exports = Bloco
+module.exports = BlocoDash
