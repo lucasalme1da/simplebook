@@ -1,15 +1,21 @@
 const Estilo = require("./Estilo")
 const Botao = require("./Botao")
+const Folha = require('./Folha')
 class NavTabs extends Estilo {
   constructor(options) {
     super()
     this.criar(options)
+    this.folha = new Folha({
+      folhaContainer: options.folhaContainer,
+      loadedFonts: options.loadedFonts
+    })
   }
   criar(options) {
     this.ref = document.createElement("navtab")
     this.text = document.createElement("p")
     this.text.textContent = options.text
     this.moreTabs = options.moreTabs
+    this.folhaContainer = options.folhaContainer
     this.addEstilo(this.text, {
       color: "white",
       fontSize: "1.1em",
@@ -141,7 +147,9 @@ class NavTabs extends Estilo {
     })
   }
   action() {
+
     this.canhover = false
+
     this.addEstilo(this.ref, {
       backgroundColor: "var(--cor-clara)"
     })
