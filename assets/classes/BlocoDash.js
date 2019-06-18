@@ -4,7 +4,8 @@ const Botao = require("./Botao")
 class BlocoDash extends Estilo {
   constructor(dashRef) {
     super()
-    this.dashRef = dashRef
+    this.dashRef = dashRef.ref
+    this.navBar = dashRef.navBar
   }
 
   criar() {
@@ -224,11 +225,11 @@ class BlocoDash extends Estilo {
 
     // Making all "manually" draggable
     dragging(blockTextContainer, this)
-    dragging(blockImgContainer)
-    dragging(blockListContainer)
-    dragging(blockTableContainer)
-    dragging(blockGeometryContainer)
-    dragging(blockEquationContainer)
+    dragging(blockImgContainer, this)
+    dragging(blockListContainer, this)
+    dragging(blockTableContainer, this)
+    dragging(blockGeometryContainer, this)
+    dragging(blockEquationContainer, this)
 
     this.ref = document.createElement("blocos")
     backContainer.append(
@@ -271,9 +272,14 @@ function dragging(div, ref) {
     }
 
     document.addEventListener("mousemove", onMouseMove)
+    console.log(ref.parsePx(placeholder.style.left))
 
     document.onmouseup = function() {
       document.body.removeChild(placeholder)
+      ref.navBar.tabs[0].folha.criarTexto({
+        posX: ref.parsePx(placeholder.style.left),
+        posY: ref.parsePx(placeholder.style.top)
+      })
       document.removeEventListener("mousemove", onMouseMove)
       placeholder.onmouseup = null
     }

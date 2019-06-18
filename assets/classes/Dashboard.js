@@ -1,12 +1,13 @@
 let caderno = require("./Caderno")
 let mochila = require("./Mochila")
-let blocos = require("./BlocoDash")
+let blocoDash = require("./BlocoDash")
 const Estilo = require("./Estilo")
 
 class Dashboard extends Estilo {
   constructor(options) {
     super()
     this.bodyRef = options.bodyRef
+    this.navBar = options.navBar
     this.criar()
     switch (options.dashType) {
       case "caderno":
@@ -56,20 +57,20 @@ class Dashboard extends Estilo {
   }
 
   callBook() {
-    caderno = new caderno(this.ref)
+    caderno = new caderno(this)
     caderno.criar()
     this.bodyRef.appendChild(this.ref)
   }
 
   callBag() {
-    mochila = new mochila(this.ref)
+    mochila = new mochila(this)
     mochila.criar()
     this.bodyRef.appendChild(this.ref)
   }
 
   callBlocks() {
-    blocos = new blocos(this.ref)
-    blocos.criar()
+    blocoDash = new blocoDash(this)
+    blocoDash.criar()
     this.bodyRef.appendChild(this.ref)
   }
 }

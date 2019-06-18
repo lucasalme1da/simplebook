@@ -5,7 +5,7 @@ let bookCounter = 0
 class Caderno extends Estilo {
   constructor(dashRef) {
     super()
-    this.dashRef = dashRef
+    this.dashRef = dashRef.ref
   }
 
   criar() {

@@ -2,7 +2,7 @@ const Estilo = require("./Estilo")
 const Botao = require("./Botao")
 const NavTabs = require("./NavTabs")
 const Dashboard = require("./Dashboard")
-const fs = require('fs')
+const fs = require("fs")
 
 class NavBar extends Estilo {
   constructor() {
@@ -15,31 +15,31 @@ class NavBar extends Estilo {
     this.moreModalAberto = false
     this.dashBook = new Dashboard({
       bodyRef: this.bodyRef,
-      dashType: "caderno"
+      dashType: "caderno",
+      navBar: this
     })
     this.dashBag = new Dashboard({
       bodyRef: this.bodyRef,
-      dashType: "mochila"
+      dashType: "mochila",
+      navBar: this
     })
     this.dashBlock = new Dashboard({
       bodyRef: this.bodyRef,
-      dashType: "blocos"
+      dashType: "blocos",
+      navBar: this
     })
     this.dashs = [this.dashBook, this.dashBag, this.dashBlock]
-
-
   }
   criar() {
-
-    this.folhaContainer = document.createElement('folhaContainer')
+    this.folhaContainer = document.createElement("folhaContainer")
     this.addEstilo(this.folhaContainer, {
-      height: '93vh',
-      width: '95vw',
-      marginTop: '7vh',
-      backgroundColor: 'white',
-      position: 'relative',
-      overflowY: 'auto',
-      overflowX: 'hidden'
+      height: "93vh",
+      width: "95vw",
+      marginTop: "7vh",
+      backgroundColor: "white",
+      position: "relative",
+      overflowY: "auto",
+      overflowX: "hidden"
     })
 
     this.ref = document.createElement("nav")
@@ -160,7 +160,13 @@ class NavBar extends Estilo {
     })
     this.tabs = []
     this.tabs.push(
-      new NavTabs({ text: "Folha 1", ref: tabsContainer, tabs: this.tabs, folhaContainer: this.folhaContainer, loadedFonts: this.loadedFonts })
+      new NavTabs({
+        text: "Folha 1",
+        ref: tabsContainer,
+        tabs: this.tabs,
+        folhaContainer: this.folhaContainer,
+        loadedFonts: this.loadedFonts
+      })
     )
 
     const tabsElements = this.tabs.map(tab => tab.ref)
@@ -187,11 +193,11 @@ class NavBar extends Estilo {
     this.bodyRef.appendChild(this.ref)
     this.bodyRef.appendChild(this.folhaContainer)
     this.addEstilo(this.bodyRef, {
-      backgroundColor: 'var(--cor-fundo)',
-      display: 'flex',
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      flexDirection: 'column'
+      backgroundColor: "var(--cor-fundo)",
+      display: "flex",
+      justifyContent: "flex-start",
+      alignItems: "center",
+      flexDirection: "column"
     })
   }
 
@@ -290,26 +296,21 @@ class NavBar extends Estilo {
   }
   loadFonts() {
     return new Promise(resolve => {
-
       let fonts = fs.readdirSync(`./assets/fonts/`)
       fonts.forEach(font => {
         let name = font.substring(0, font.length - 4)
         this.loadedFonts.fonts.push(name)
         let loadedFont = new FontFace(name, `url(assets/fonts/${font})`)
-        loadedFont.load().then(function (loaded_face) {
-          document.fonts.add(loaded_face);
-          document.body.style.fontFamily = `"${name}", Arial`;
-
-        }).catch(function (error) {
-        });
-
+        loadedFont
+          .load()
+          .then(function(loaded_face) {
+            document.fonts.add(loaded_face)
+            document.body.style.fontFamily = `"${name}", Arial`
+          })
+          .catch(function(error) {})
       })
-
     })
-
   }
-
-
 }
 
 const navBar = new NavBar()
