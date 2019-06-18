@@ -4,8 +4,23 @@ class Estilo {
         this.canhover = true
         this.active = false
     }
+    getWidth(element) {
+        return getComputedStyle(element, null).getPropertyValue('width')
+    }
+    getHeight(element) {
+        return getComputedStyle(element, null).getPropertyValue('height')
+    }
+
     addEstilo(elemento, estilo) {
         Object.assign(elemento.style, estilo)
+    }
+    parsePx(px) {
+        return parseInt(px.substring(0, px.length - 2))
+    }
+    reparsePx(int) {
+
+        return `${int}px`
+
     }
     hover(elemento, estilo) {
 

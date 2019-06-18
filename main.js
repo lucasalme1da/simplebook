@@ -7,20 +7,20 @@ if (require.main !== module) {
 
 const path = require('path')
 const glob = require('glob')
-const {app, BrowserWindow} = require('electron')
+const { app, BrowserWindow } = require('electron')
 
 const debug = /--debug/.test(process.argv[2])
 
-if (process.mas) app.setName('Electron APIs')
+if (process.mas) app.setName('SimpleBook')
 
 let mainWindow = null
 
-function initialize () {
+function initialize() {
   makeSingleInstance()
 
   loadDemos()
 
-  function createWindow () {
+  function createWindow() {
     const windowOptions = {
       width: 1080,
       minWidth: 680,
@@ -34,6 +34,7 @@ function initialize () {
 
     mainWindow = new BrowserWindow(windowOptions)
     mainWindow.loadURL(path.join('file://', __dirname, '/index.html'))
+    mainWindow.maximize()
 
     // Launch fullscreen with DevTools open, usage: npm run debug
     if (debug) {
@@ -71,7 +72,7 @@ function initialize () {
 //
 // Returns true if the current version of the app should quit instead of
 // launching.
-function makeSingleInstance () {
+function makeSingleInstance() {
   if (process.mas) return
 
   app.requestSingleInstanceLock()
@@ -85,7 +86,7 @@ function makeSingleInstance () {
 }
 
 // Require each JS file in the main-process dir
-function loadDemos () {
+function loadDemos() {
   const files = glob.sync(path.join(__dirname, 'main-process/**/*.js'))
   files.forEach((file) => { require(file) })
 }

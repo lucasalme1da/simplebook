@@ -2,11 +2,26 @@
   --cor-escura: #8300a9;
   --cor-media: #a200d1;
   --cor-clara: #b200e6;
+  --cor-fundo: #e6e6e6;
   /* --cor-clara: #a14ebf; */
 }
 
 * {
   font-family: "Roboto";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+textarea{
+  -webkit-font-smoothing: antialiased !important;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.004) !important;
+}
+img{
+
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 @font-face {
@@ -23,7 +38,6 @@ body {
 }
 
 nav {
-  position: absolute;
   z-index: 2;
   width: 100vw;
   height: 5vh;
