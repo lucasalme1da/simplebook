@@ -1,11 +1,25 @@
 class Estilo {
-  constructor() {
-    this.canhover = true
-    this.active = false
-    this.animationTimes = {
-      fast: 40,
-      medium: 80,
-      slow: 140
+    constructor() {
+        this.canhover = true
+        this.active = false
+        this.animationTimes = {
+            fast: 40,
+            medium: 80,
+            slow: 180
+        }
+    }
+    getWidth(element) {
+        return getComputedStyle(element, null).getPropertyValue('width')
+    }
+    getHeight(element) {
+        return getComputedStyle(element, null).getPropertyValue('height')
+    }
+
+    addEstilo(elemento, estilo) {
+        Object.assign(elemento.style, estilo)
+    }
+    parsePx(px) {
+        return parseInt(px.substring(0, px.length - 2))
     }
   }
   getWidth(element) {

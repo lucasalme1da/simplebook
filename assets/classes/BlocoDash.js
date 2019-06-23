@@ -247,7 +247,7 @@ class BlocoDash extends Estilo {
 }
 
 function dragging(div, ref) {
-  div.onmousedown = function(event) {
+  div.onmousedown = function (event) {
     let placeholder = div.cloneNode(true)
     let shiftX = event.clientX - div.getBoundingClientRect().left
     let shiftY = event.clientY - div.getBoundingClientRect().top
@@ -274,6 +274,7 @@ function dragging(div, ref) {
     document.addEventListener("mousemove", onMouseMove)
     console.log(ref.parsePx(placeholder.style.left))
 
+
     document.onmouseup = () => {
       document.body.removeChild(placeholder)
       ref.navBar.currentPage().criarTexto({
@@ -285,7 +286,7 @@ function dragging(div, ref) {
     }
   }
 
-  div.ondragstart = function() {
+  div.ondragstart = function () {
     return false
   }
 }

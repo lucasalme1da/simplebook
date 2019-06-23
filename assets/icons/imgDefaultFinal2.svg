@@ -1,0 +1,28 @@
+<svg width="55.975" height="43.021" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g stroke="null" id="Grupo_11">
+   <g stroke="#fff" stroke-width="4" fill="none" id="Retângulo_55">
+    <rect x="8.315791" y="0" id="svg_1" rx="8" height="33.757842" width="39.343419"/>
+    <rect stroke="null" id="svg_2" fill="none" rx="6" height="30.61911" width="36.53192" y="1.569366" x="9.72154"/>
+   </g>
+   <path stroke="null" fill="#b3b3b3" d="m21.234645,11.048336c2.556356,0.01177 11.744336,20.868641 11.744336,20.868641l-22.97487,-0.867859a5.613861,6.267262 0 0 1 0.670543,-3.766478c2.475525,-5.437068 8.650281,-16.24372 10.559992,-16.234304z" id="Caminho_41"/>
+   <path stroke="null" fill="#b3b3b3" d="m35.912757,17.186125c1.616612,0.051789 6.672391,5.482579 9.116287,9.856402c1.528753,2.735404 0.866645,4.87445 0.866645,4.87445l-19.963754,0s2.33495,-4.781073 4.947536,-9.045039c1.825366,-2.980226 3.849645,-5.724262 5.033287,-5.685812z" id="Caminho_40"/>
+   <path stroke="null" fill="#b3b3b3" d="m26.401468,18.272124s2.233033,4.496233 3.467282,4.51585s3.086323,-2.981795 3.086323,-2.981795l2.372203,10.882767l-11.156732,0l2.230925,-12.416822z" id="Caminho_42"/>
+   <path stroke="null" fill="#b3b3b3" d="m36.208684,13.502822a4.508942,5.033741 0 0 1 -3.424406,-1.705116a5.135906,5.733678 0 0 0 2.183129,0.535938c2.494503,0 4.523702,-1.940521 4.523702,-4.325957a3.688687,4.118016 0 0 0 -1.760701,-3.429064a4.370476,4.879158 0 0 1 2.072075,1.659604a3.91923,4.375392 0 0 1 0.809712,2.66086a4.275588,4.773226 0 0 1 -4.403511,4.603734z" id="Subtração_3"/>
+  </g>
+  <text font-weight="bold" xml:space="preserve" text-anchor="start" font-family="'Courier New', Courier, monospace" font-size="6" id="svg_4" y="41.23502" x="6.391849" stroke-width="0" stroke="#b3b3b3" fill="#b3b3b3">Dois cliques</text>
+  <path id="svg_10" d="m51.284598,13.280202" opacity="0.5" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#b3b3b3" fill="#b3b3b3"/>
+  <path id="svg_12" d="m52.009235,27.338171" opacity="0.5" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#b3b3b3" fill="#b3b3b3"/>
+  <g stroke="null" transform="rotate(-62 47.964969635009766,20.327865600585938) " id="svg_19">
+   <path stroke="#b3b3b3" id="svg_16" d="m46.141098,19.359111l1.823872,-2.226183l1.823872,2.226183l-3.647744,0z" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="#b3b3b3"/>
+   <rect stroke="#b3b3b3" id="svg_17" height="2.845871" width="0.177401" y="20.67693" x="47.946102" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="#b3b3b3"/>
+  </g>
+  <line stroke="#b3b3b3" transform="rotate(-2 27.44768905639656,31.168899536132788) " stroke-linecap="null" stroke-linejoin="null" id="svg_21" y2="31.551066" x2="44.906827" y1="30.786734" x1="9.988547" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+ </g>
+</svg>
