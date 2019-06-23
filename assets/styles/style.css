@@ -11,9 +11,41 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+ul{
+
+  transition: all 0.3s ease
+}
+textarea{
+  transition: all 0.3s ease
+}
 textarea{
   -webkit-font-smoothing: antialiased !important;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.004) !important;
+}
+p.textarea{
+  -webkit-font-smoothing: antialiased !important;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.004) !important;
+  -webkit-user-modify: read-write;
+  overflow-wrap: break-word;
+  -webkit-line-break: after-white-space;
+  padding: 2px;
+  cursor: text;
+  -webkit-appearance: textarea;
+  background-color: white;
+  -webkit-rtl-ordering: logical;
+  flex-direction: column;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-rendering: auto;
+
+  text-align: start;
+  -webkit-writing-mode: horizontal-tb !important;
+
+}
+strong{
+  font-weight: bold !important;
 }
 img{
 
@@ -66,3 +98,187 @@ input[type="reset"] {
   cursor: pointer;
   outline: inherit;
 }
+table {
+   border-collapse: collapse;
+  width: 100%;
+  transition: all 0.3s ease
+}
+th{
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+
+table.simpleGreen {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table.simpleGreen td, table .simpleGreen th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+table.simpleGreen tr:nth-child(even){background-color: #f2f2f2;}
+
+table.simpleGreen tr:hover {background-color: #ddd;}
+
+table.simpleGreen th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+table.linhaSimples{
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td.linhaSimples, th.linhaSimples {
+  border: none;
+}
+
+th.linhaSimples, td.linhaSimples {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tr.linhaSimples:hover {background-color:#f5f5f5;}
+
+
+table.fl-table {
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: normal;
+  border: none;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 100%;
+  white-space: nowrap;
+  background-color: white;
+  box-shadow: 0px 5px 5px rgba( 0, 0, 0, 0.2 );
+}
+
+table.fl-table td, table.fl-table th {
+  text-align: center;
+  padding: 8px;
+}
+
+table.fl-table td {
+  border-right: 1px solid #f8f8f8;
+  font-size: 0.6em;
+}
+
+table.fl-table th {
+  color: #ffffff;
+  background: #4FC3A1;
+}
+
+
+table.fl-table th:nth-child(odd) {
+  color: #ffffff;
+  background: #324960;
+}
+
+table.fl-table tr:nth-child(even) {
+  background: #F8F8F8;
+}
+
+
+table.table-black {
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: normal;
+  border: none;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 100%;
+  white-space: nowrap;
+  background-color: white;
+  box-shadow: 0px 2px 2px rgba( 0, 0, 0, 0.2 );
+}
+
+table.table-black td, table.table-black th {
+  text-align: center;
+  padding: 8px;
+}
+
+table.table-black td {
+  border-right: 1px solid #f8f8f8;
+  font-size: 0.6em;
+}
+
+table.table-black th {
+  color: #ffffff;
+  background: blueviolet;
+}
+
+table.table-black tr:nth-child(even) {
+  background: #F8F8F8;
+}
+
+table.branco {
+  border-collapse: collapse;
+ width: 100%;
+ border: 1px solid lightgray;
+ box-shadow: 0px 2px 2px rgba( 0, 0, 0, 0.2 );
+}
+table.branco th{
+ font-weight: bold;
+ font-size: 1.1em;
+ background: rgb(255,255,255);
+background: linear-gradient(180deg, rgba(255,255,255,1) 12%, rgba(216,216,221,1) 92%);
+ border-bottom: 1px solid lightgray;
+}
+
+table.branco td, table.branco th {
+ text-align: left;
+ padding: 8px;
+ border:none;
+}
+
+table.branco tr:nth-child(even) {
+ background-color: #f2f2f2;
+}
+
+table.preto {
+  border-collapse: collapse;
+ width: 100%;
+ box-shadow: 0px 2px 2px rgba( 0, 0, 0, 0.2 );
+}
+table.preto th{
+ font-weight: bold;
+ font-size: 1.1em;
+ background-color: #4d4d4d;
+ color: white;
+
+}
+
+table.preto td, table.preto th {
+ text-align: left;
+ padding: 8px;
+ border:none;
+}
+table.preto  tr{
+  border-bottom: 1px solid lightgray;
+ }
+
+table.preto tr:nth-child(even) {
+ background-color: #f2f2f2;
+}
+

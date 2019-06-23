@@ -3,6 +3,11 @@ class Estilo {
     constructor() {
         this.canhover = true
         this.active = false
+        this.animationTimes = {
+            fast: 40,
+            medium: 80,
+            slow: 180
+        }
     }
     getWidth(element) {
         return getComputedStyle(element, null).getPropertyValue('width')

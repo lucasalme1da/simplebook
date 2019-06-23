@@ -10,7 +10,9 @@ class Blocos extends Estilo {
         this.folha = options.folha
         this.alignPadding = 20
         this.minEditContainerWidth = 200
-        this.criar()
+        this.initialHeight = options.initialHeight || 200
+        this.initialWidth = options.initialWidth || 200
+        this.criar(options)
         this.maximized = false
         this.tempoFadeOut = 8000
     }
@@ -547,7 +549,7 @@ class Blocos extends Estilo {
             this.editContainer.prepend(element)
         })
     }
-    criar() {
+    criar(options) {
 
         this.blocoRef = document.createElement('bloco')
 
@@ -621,7 +623,7 @@ class Blocos extends Estilo {
             padding: '5px',
             top: '-1vw',
             left: '1.5vw',
-            minWidth: '200px',
+            width: '200px',
             minHeight: '100px',
             borderRadius: '8px',
             zIndex: '301',
@@ -699,16 +701,15 @@ class Blocos extends Estilo {
         this.optionsContainer.appendChild(this.editContainer)
 
         this.blocoRef.appendChild(this.optionsContainer)
-
         this.addEstilo(this.blocoRef, {
-            width: '200px',
-            height: '100px',
+            width: this.reparsePx(this.initialWidth),
+            height: this.reparsePx(this.initialHeight),
             border: '1px solid var(--cor-escura)',
             backgroundColor: 'white',
             position: 'absolute',
             zIndex: '100',
-            top: '50px',
-            left: '50px',
+            top: options.posY,
+            left: options.posX,
             padding: '20px',
             boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
         })
