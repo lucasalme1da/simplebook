@@ -54,17 +54,42 @@ class Tabela extends Blocos {
 
     addColuna(ref) {
         let trs = ref.tabela.children[0].children
-        let first = true
-        Array.from(trs).forEach(tr => {
+        if (trs.length > 0) {
+            let first = true
+            Array.from(trs).forEach(tr => {
+                let td
+                if (first) {
+                    td = document.createElement('th')
+                    td.textContent = 'Um título legal'
+                    first = false
+                } else {
+                    td = document.createElement('td')
+                    td.textContent = ref.displayText
+                }
+                td.setAttribute('contenteditable', 'true')
+                ref.addEstilo(td, {
+                    position: 'relative',
+                    left: '0px',
+                    opacity: '1',
+                    textAlign: ref.align.value
+
+                })
+                tr.appendChild(td)
+                tr.animate([{
+                    opacity: '0',
+                    transform: 'scale(0.8)'
+                }, {
+                    opacity: '1',
+                    transform: 'scale(1)'
+
+                }], ref.animationTimes.medium)
+            })
+
+        } else {
+            let tr = document.createElement('tr')
             let td
-            if (first) {
-                td = document.createElement('th')
-                td.textContent = 'Um título legal'
-                first = false
-            } else {
-                td = document.createElement('td')
-                td.textContent = ref.displayText
-            }
+            td = document.createElement('th')
+            td.textContent = 'Um título legal'
             td.setAttribute('contenteditable', 'true')
             ref.addEstilo(td, {
                 position: 'relative',
@@ -74,6 +99,7 @@ class Tabela extends Blocos {
 
             })
             tr.appendChild(td)
+            ref.tabela.children[0].appendChild(tr)
             tr.animate([{
                 opacity: '0',
                 transform: 'scale(0.8)'
@@ -82,8 +108,55 @@ class Tabela extends Blocos {
                 transform: 'scale(1)'
 
             }], ref.animationTimes.medium)
-        })
-        this.numColunas++
+
+        }
+
+        ref.numColunas++
+        console.log(ref.numColunas)
+    }
+    removeColuna(ref) {
+        let trs = ref.tabela.children[0].children
+        if (ref.numColunas > 0) {
+            Array.from(trs).forEach(tr => {
+                let anim = tr.lastElementChild.animate([{
+                    opacity: '1',
+                    left: '0px'
+                }, {
+                    opacity: '0',
+                    left: '-2vw'
+                }], ref.animationTimes.medium)
+
+                anim.onfinish = () => {
+                    tr.removeChild(tr.lastElementChild)
+
+
+                }
+            })
+
+            ref.numColunas--
+            console.log(ref.numColunas)
+        }
+
+    }
+    removeLine(ref) {
+        let tr = ref.tabela.children[0].lastElementChild
+        if (tr) {
+
+            let anim = tr.animate([{
+                opacity: '1',
+                top: '0px'
+            }, {
+                opacity: '0',
+                top: '-2vw'
+            }], ref.animationTimes.medium)
+
+            anim.onfinish = () => {
+
+                ref.tabela.children[0].removeChild(tr)
+            }
+
+        }
+
     }
 
     addTextEdit(ref, refel) {
@@ -185,7 +258,6 @@ class Tabela extends Blocos {
         return select
     }
     addLine(ref) {
-
         let line = document.createElement('tr')
         for (let i = 0; i < ref.numColunas; i++) {
 
@@ -286,6 +358,48 @@ class Tabela extends Blocos {
             },
             action: () => this.addLine(this)
         })
+        this.removeBtColuna = new Botao({
+            icon: "close",
+            width: "2vw",
+            height: "2vw",
+            imageWidth: "16px",
+            imageHeight: "16px",
+            ref: this.tabelaContainer,
+            animation: true,
+            style: {
+                display: "flex",
+                justifyContent: "space-around",
+                alignItems: "center",
+                borderRadius: "50%",
+                position: 'relative',
+                flexShrink: '0',
+                backgroundColor: "var(--cor-media)",
+                boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+                marginRight: '10px'
+            },
+            action: () => this.removeColuna(this)
+        })
+        this.removeBtLine = new Botao({
+            icon: "close",
+            width: "2vw",
+            height: "2vw",
+            imageWidth: "16px",
+            imageHeight: "16px",
+            ref: this.tabelaContainer,
+            animation: true,
+            style: {
+                display: "flex",
+                justifyContent: "space-around",
+                alignItems: "center",
+                flexShrink: '0',
+                borderRadius: "50%",
+                position: 'relative',
+                backgroundColor: "var(--cor-media)",
+                boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
+            },
+            action: () => this.removeLine(this)
+        })
+
         this.addTextEdit(this, this.tabela)
         const editAction = selectValue => {
 
