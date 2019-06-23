@@ -3,6 +3,7 @@ const Botao = require("./Botao")
 const NavTabs = require("./NavTabs")
 const Dashboard = require("./Dashboard")
 const fs = require("fs")
+this.Dashboard = Dashboard
 
 class NavBar extends Estilo {
   constructor() {
@@ -30,6 +31,7 @@ class NavBar extends Estilo {
     })
     this.dashs = [this.dashBook, this.dashBag, this.dashBlock]
   }
+
   criar() {
     this.folhaContainer = document.createElement("folhaContainer")
     this.addEstilo(this.folhaContainer, {
@@ -75,6 +77,7 @@ class NavBar extends Estilo {
     const buttons = document.createElement("div")
 
     const tabsContainer = document.createElement("div")
+    this.tabsContainer = tabsContainer
 
     const plusContainer = document.createElement("div")
 
@@ -159,15 +162,15 @@ class NavBar extends Estilo {
       display: "flex"
     })
     this.tabs = []
-    this.tabs.push(
-      new NavTabs({
-        text: "Folha 1",
-        ref: tabsContainer,
-        tabs: this.tabs,
-        folhaContainer: this.folhaContainer,
-        loadedFonts: this.loadedFonts
-      })
-    )
+    // this.tabs.push(
+    //   new NavTabs({
+    //     text: "Folha 1",
+    //     ref: tabsContainer,
+    //     tabs: this.tabs,
+    //     folhaContainer: this.folhaContainer,
+    //     loadedFonts: this.loadedFonts
+    //   })
+    // )
 
     const tabsElements = this.tabs.map(tab => tab.ref)
     tabsContainer.append(...tabsElements)
@@ -178,7 +181,13 @@ class NavBar extends Estilo {
       imageWidth: "12px",
       imageHeight: "12px",
       ref: plusContainer,
-      action: () => this.novaAba(tabsContainer, this.moreNavTabs),
+      action: () => {
+        this.dashBag
+          .getBag()
+          .currentBag()
+          .currentBook()
+          .newPage()
+      },
       style: {
         borderRadius: "50%",
         backgroundColor: "var(--cor-media)",
@@ -253,37 +262,6 @@ class NavBar extends Estilo {
       this.limiteAbas} mais`
   }
 
-  novaAba(tabsContainer, moreContainer) {
-    if (this.tabs.length >= this.limiteAbas) {
-      this.abrirMoreButton()
-      this.tabs.push(
-        new NavTabs({
-          text: "Folha 1",
-          ref: moreContainer,
-          tabs: this.tabs,
-          moreTabs: true,
-          navbar: this,
-          index: this.tabs.length + 1
-        })
-      )
-      console.log(this.tabs)
-      this.atualizarNumAbas()
-    } else {
-      this.tabs.push(
-        new NavTabs({
-          text: "Folha 1",
-          ref: tabsContainer,
-          moreTabsRef: moreContainer,
-          tabs: this.tabs,
-          navbar: this,
-          folhaContainer: this.folhaContainer,
-          index: this.tabs.length + 1
-        })
-      )
-      console.log(this.tabs)
-    }
-  }
-
   openDash(targetDash) {
     if (!targetDash.isOpened()) {
       this.dashs.forEach(dash => {
@@ -291,9 +269,16 @@ class NavBar extends Estilo {
           if (dash.isOpened()) dash.openDash()
         }
       })
+      if (targetDash == this.dashBook) {
+        targetDash.getBag().updateBooklist()
+      }
+      if (targetDash == this.dashBag) {
+        targetDash.getBag().updateBagInfo()
+      }
       targetDash.openDash()
     }
   }
+
   loadFonts() {
     return new Promise(resolve => {
       let fonts = fs.readdirSync(`./assets/fonts/`)
@@ -310,6 +295,88 @@ class NavBar extends Estilo {
           .catch(function(error) {})
       })
     })
+  }
+
+  getDashboard() {
+    return Dashboard
+  }
+
+  createTab(newPageRef) {
+    console.log("PRESTENÇÃO->", newPageRef)
+
+    this.currentBook = this.dashBag
+      .getBag()
+      .currentBag()
+      .currentBook()
+    if (this.tabs.length >= this.limiteAbas) {
+      this.abrirMoreButton()
+      this.tabs.push(
+        new NavTabs({
+          text: "Folha 1",
+          ref: this.moreNavTabs,
+          tabs: this.tabs,
+          moreTabs: true,
+          navbar: this,
+          index: this.tabs.length + 1,
+          belongsTo: this.currentBook,
+          pageRef: newPageRef
+        })
+      )
+      this.atualizarNumAbas()
+    } else {
+      this.tabs.push(
+        new NavTabs({
+          text: "Folha 1",
+          ref: this.tabsContainer,
+          moreTabsRef: this.moreNavTabs,
+          tabs: this.tabs,
+          navbar: this,
+          folhaContainer: this.folhaContainer,
+          index: this.tabs.length + 1,
+          belongsTo: this.currentBook,
+          pageRef: newPageRef
+        })
+      )
+    }
+
+    // for (let j = 0; j < this.currentBag().cadernos.length; j++) {
+    //   // console.log(this.currentBag().cadernos[j].newBook)
+    //   this.currentBag().cadernos[j].newBook.style.display = "flex"
+    // }
+  }
+
+  updateTabs() {
+    let arrayOfElNavBars = [...document.querySelectorAll("navtab")]
+    for (let i = 0; i < arrayOfElNavBars.length; i++) {
+      arrayOfElNavBars[i].style.display = "none"
+    }
+    for (let j = 0; j < this.tabs.length; j++) {
+      if (
+        this.tabs[j].belongsTo ==
+        this.dashBag
+          .getBag()
+          .currentBag()
+          .currentBook()
+      )
+        this.tabs[j].ref.style.display = "flex"
+    }
+  }
+
+  currentPage() {
+    for (let i = 0; i < this.tabs.length; i++) {
+      if (
+        this.tabs[i].belongsTo ==
+        this.dashBag
+          .getBag()
+          .currentBag()
+          .currentBook()
+      ) {
+        if (this.tabs[i].ref.style.display == "flex") {
+          console.log(this.tabs[i])
+          return this.tabs[i].pageRef
+        }
+      }
+    }
   }
 }
 

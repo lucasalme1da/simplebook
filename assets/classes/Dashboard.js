@@ -1,5 +1,5 @@
-let caderno = require("./Caderno")
-let mochila = require("./Mochila")
+let cadernoDash = require("./CadernoDash")
+let mochilaDash = require("./MochilaDash")
 let blocoDash = require("./BlocoDash")
 const Estilo = require("./Estilo")
 
@@ -37,8 +37,6 @@ class Dashboard extends Estilo {
   }
 
   openDash() {
-    console.log(this.ref.style.display, this.ref)
-
     if (this.ref.style.display == "none") {
       this.addEstilo(this.ref, {
         display: "block"
@@ -48,8 +46,6 @@ class Dashboard extends Estilo {
         display: "none"
       })
     }
-
-    console.log(this.ref.style.display)
   }
 
   isOpened() {
@@ -57,14 +53,14 @@ class Dashboard extends Estilo {
   }
 
   callBook() {
-    caderno = new caderno(this)
-    caderno.criar()
+    cadernoDash = new cadernoDash(this)
+    cadernoDash.criar()
     this.bodyRef.appendChild(this.ref)
   }
 
   callBag() {
-    mochila = new mochila(this)
-    mochila.criar()
+    mochilaDash = new mochilaDash(this)
+    mochilaDash.criar()
     this.bodyRef.appendChild(this.ref)
   }
 
@@ -72,6 +68,14 @@ class Dashboard extends Estilo {
     blocoDash = new blocoDash(this)
     blocoDash.criar()
     this.bodyRef.appendChild(this.ref)
+  }
+
+  getBook() {
+    return cadernoDash
+  }
+
+  getBag() {
+    return mochilaDash
   }
 }
 

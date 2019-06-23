@@ -1,5 +1,4 @@
 class Estilo {
-
     constructor() {
         this.canhover = true
         this.active = false
@@ -22,30 +21,40 @@ class Estilo {
     parsePx(px) {
         return parseInt(px.substring(0, px.length - 2))
     }
-    reparsePx(int) {
+  }
+  getWidth(element) {
+    return getComputedStyle(element, null).getPropertyValue("width")
+  }
+  getHeight(element) {
+    return getComputedStyle(element, null).getPropertyValue("height")
+  }
 
-        return `${int}px`
+  addEstilo(elemento, estilo) {
+    Object.assign(elemento.style, estilo)
+  }
+  parsePx(px) {
+    return parseInt(px.substring(0, px.length - 2))
+  }
+  reparsePx(int) {
+    return `${int}px`
+  }
+  hover(elemento, estilo) {
+    const estiloAnterior = {}
 
+    Object.assign(estiloAnterior, elemento.style)
+
+    elemento.onmouseover = () => {
+      if (this.canhover) {
+        this.addEstilo(elemento, estilo)
+      }
     }
-    hover(elemento, estilo) {
 
-        const estiloAnterior = {}
-
-        Object.assign(estiloAnterior, elemento.style)
-
-        elemento.onmouseover = () => {
-            if (this.canhover) {
-                this.addEstilo(elemento, estilo)
-            }
-        }
-
-        elemento.onmouseout = () => {
-            if (this.canhover) {
-                this.addEstilo(elemento, estiloAnterior)
-            }
-        }
+    elemento.onmouseout = () => {
+      if (this.canhover) {
+        this.addEstilo(elemento, estiloAnterior)
+      }
     }
-
+  }
 }
 
 module.exports = Estilo

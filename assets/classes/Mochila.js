@@ -1,36 +1,21 @@
 const Estilo = require("./Estilo")
 const Botao = require("./Botao")
+const Caderno = require("./Caderno")
 let bagCounter = 0
 
 class Mochila extends Estilo {
-  constructor(dashRef) {
+  constructor(options) {
     super()
-    this.dashRef = dashRef.ref
+    this.criar(options)
   }
 
-  criar() {
-    const titleContainer = document.createElement("div")
-    this.addEstilo(titleContainer, {
-      width: "95%",
-      height: "11%",
-      marginTop: "5.5%",
-      marginLeft: "2.5%",
-      marginRight: "2.5%",
-      backgroundColor: "var(--cor-media)",
-      display: "flex",
-      flexFlow: "row nowrap",
-      justifyContent: "space-between",
-      alignItems: "center",
-      borderRadius: "8px",
-      color: "white",
-      fontSize: "20px",
-      fontWeight: "bold"
-    })
+  criar(options) {
+    this.cadernos = [] // Vetor de cadernos
 
-    const imgTitleContainer = document.createElement("div")
-    this.addEstilo(imgTitleContainer, {
-      width: "25%",
-      height: "90%",
+    this.newBag = document.createElement("mochila")
+    this.addEstilo(this.newBag, {
+      width: "94%",
+      height: "5%",
       margin: "2%",
       backgroundColor: "var(--cor-escura)",
       display: "flex",
@@ -38,264 +23,261 @@ class Mochila extends Estilo {
       alignItems: "center",
       borderRadius: "8px",
       color: "white",
-      fontSize: "20px",
-      fontWeight: "bold",
-      paddingLeft: "2%"
+      fontSize: "15px",
+      cursor: "pointer",
+      paddingLeft: "2%",
+      position: "relative",
+      top: "0vh",
+      transition: "all 0.3s ease"
     })
 
-    const bagLogo = document.createElement("img")
-    bagLogo.setAttribute("src", "./assets/icons/bagLogo.svg")
-    this.addEstilo(bagLogo, {
-      width: "90%",
-      height: "100%"
-    })
+    // Editar Nome da Bolsa
+    const newBagName = document.createElement("p")
+    newBagName.textContent = "Nova Mochila " + ("(" + ++bagCounter + ")")
+    this.bagName = newBagName.textContent
+    newBagName.ondblclick = e => {
+      this.addEstilo(newBagName, {
+        transitionTimingFunction: "ease",
+        textDecoration: "underline white",
+        cursor: "text"
+      })
+      newBagName.contentEditable = true
+      let oldTextContent = newBagName.textContent
+      let range, selection
+      // Selecionando todo texto dentro da div
+      if (document.body.createTextRange) {
+        range = document.body.createTextRange()
+        range.moveToElementText(newBagName)
+        range.select()
+      } else if (window.getSelection) {
+        selection = window.getSelection()
+        range = document.createRange()
+        range.selectNodeContents(newBagName)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      }
+      newBagName.onkeydown = e => {
+        if (e.keyCode == 13) {
+          if (newBagName.innerText.trim() == "") {
+            newBagName.textContent = oldTextContent
+          } else {
+            this.bagName = newBagName.textContent
+          }
+          newBagName.contentEditable = false
+          this.addEstilo(newBagName, {
+            textDecoration: "none",
+            cursor: "pointer"
+          })
+          options.bagRef.updateBagInfo()
+          //options.bagRef.selectBag(this)
+        }
+      }
 
-    const rightTitleContainer = document.createElement("div")
-    this.addEstilo(rightTitleContainer, {
-      width: "75%",
-      height: "90%",
-      margin: "2%",
-      marginLeft: "2%",
+      document.onclick = e => {
+        console.log("agora sim kappa")
+        if (e.target != newBagName) {
+          if (newBagName.innerText.trim() == "") {
+            newBagName.textContent = oldTextContent
+          } else {
+            this.bagName = newBagName.textContent
+          }
+          newBagName.contentEditable = false
+          this.addEstilo(newBagName, {
+            textDecoration: "none",
+            cursor: "pointer"
+          })
+          options.bagRef.updateBagInfo()
+          options.bagRef.selectBag(this)
+          document.onclick = () => {}
+        }
+      }
+      // let confirm = () => {
+      //   console.log("tessaaaaaaaa")
+      //   if (e.target != newBagName) {
+      //     if (newBagName.innerText.trim() == "") {
+      //       newBagName.textContent = oldTextContent
+      //     } else {
+      //       this.bagName = newBagName.textContent
+      //     }
+      //     newBagName.contentEditable = false
+      //     this.addEstilo(newBagName, {
+      //       textDecoration: "none",
+      //       cursor: "pointer"
+      //     })
+      //     options.bagRef.updateBagInfo()
+      //     //options.bagRef.selectBag(this)
+      //     document.body.removeEventListener("click", confirm)
+      //   }
+      // }
+      // document.body.addEventListener("click", confirm)
+    }
+
+    const bagButtonContainer = document.createElement("div")
+    this.addEstilo(bagButtonContainer, {
+      width: "30%",
+      height: "100%",
       backgroundColor: "none",
       display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "space-between",
-      alignItems: "flex-start",
-      borderRadius: "8px",
-      color: "white",
-      fontSize: "20px",
-      fontWeight: "bold"
+      justifyContent: "space-evenly",
+      alignItems: "center"
     })
 
-    const btnTitleContainer = document.createElement("div")
-    this.addEstilo(btnTitleContainer, {
-      width: "100%",
-      height: "35%",
-      margin: 0,
-      backgroundColor: "var(--cor-media)",
-      display: "flex",
-      justifyContent: "flex-start",
-      alignItems: "center",
-      borderRadius: "8px",
-      color: "white",
-      fontSize: "20px",
-      fontWeight: "bold"
-    })
-
-    const saveThisBag = new Botao({
-      icon: "saveThisBook",
-      imageWidth: "17px",
-      imageHeight: "17px",
-      width: "18%",
-      height: "100%",
-      ref: btnTitleContainer,
-      action: () => {
-        console.log("action")
-      },
-      style: {
-        backgroundColor: "var(--cor-escura)",
-        marginLeft: "1%",
-        marginRight: "1%"
-      },
-      hover: { backgroundColor: "var(--cor-clara)" }
-    })
-
-    const saveAllBags = new Botao({
-      icon: "saveAllBooks",
+    const favoriteBag = new Botao({
+      icon: "favoriteBook",
       imageWidth: "18px",
       imageHeight: "18px",
-      width: "18%",
-      height: "100%",
-      ref: btnTitleContainer,
-      action: () => {
-        console.log("action")
-      },
-      style: {
-        backgroundColor: "var(--cor-escura)",
-        marginLeft: "1%",
-        marginRight: "1%"
-      },
-      hover: { backgroundColor: "var(--cor-clara)" }
+      width: "40%",
+      height: "80%",
+      ref: bagButtonContainer,
+      action: () => {},
+      hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
     })
 
     const deleteBag = new Botao({
       icon: "deleteBook",
       imageWidth: "20px",
       imageHeight: "20px",
-      width: "18%",
-      height: "100%",
-      ref: btnTitleContainer,
+      width: "40%",
+      height: "80%",
+      animation: "true",
+      animationFillMode: "true",
+      ref: bagButtonContainer,
       action: () => {
-        console.log("action")
+        this.deleteBag(options.containerRef, this.newBag)
       },
-      style: {
-        backgroundColor: "var(--cor-escura)",
-        marginLeft: "40%",
-        marginRight: "1%"
-      },
-      hover: { backgroundColor: "var(--cor-clara)" }
+      hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
     })
 
-    const nameRightContainer = document.createElement("div")
-    nameRightContainer.textContent = "Mochila 1"
-    this.addEstilo(nameRightContainer, {
-      width: "100%",
-      height: "25%",
-      margin: 0,
-      backgroundColor: "none",
-      display: "flex",
-      justifyContent: "flex-start",
-      alignItems: "center",
-      borderRadius: "8px",
-      color: "white",
-      fontSize: "20px",
-      fontWeight: "bold",
-      padding: "1%"
-    })
+    this.newBag.onclick = e => {
+      if (e.target == this.newBag || e.target == newBagName)
+        options.bagRef.selectBag(this)
+    }
 
-    const bookCounterRightContainer = document.createElement("div")
-    bookCounterRightContainer.textContent = "7 Cadernos"
-    this.addEstilo(bookCounterRightContainer, {
-      width: "100%",
-      height: "25%",
-      margin: 0,
-      backgroundColor: "none",
-      display: "flex",
-      justifyContent: "flex-start",
-      alignItems: "center",
-      borderRadius: "8px",
-      color: "white",
-      fontSize: "16px",
-      fontWeight: "normal",
-      padding: "1%"
-    })
+    this.newBag.onmouseover = () => {
+      if (!this.currentBag())
+        this.newBag.style.backgroundColor = "var(--cor-clara)"
+    }
 
-    const contentContainer = document.createElement("div")
-    this.addEstilo(contentContainer, {
-      width: "91%",
-      height: "83%",
-      marginTop: "2.5%",
-      marginLeft: "2.5%",
-      marginRight: "2.5%",
-      backgroundColor: "var(--cor-media)",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-start",
-      borderRadius: "8px",
-      padding: "2%"
-    })
+    this.newBag.onmouseout = () => {
+      if (!this.currentBag())
+        this.newBag.style.backgroundColor = "var(--cor-escura)"
+    }
 
-    const btnAddBook = new Botao({
-      icon: "addBook",
-      imageWidth: "20px",
-      imageHeight: "20px",
-      width: "20%",
-      height: "5%",
-      ref: contentContainer,
-      action: () => {
-        newBag(this, contentContainer)
-      },
-      style: {
-        backgroundColor: "none",
-        alignSelf: "center"
-      }
-    })
-
-    this.ref = document.createElement("mochilas")
-    rightTitleContainer.append(
-      btnTitleContainer,
-      nameRightContainer,
-      bookCounterRightContainer
+    this.newBag.append(newBagName)
+    this.newBag.append(bagButtonContainer)
+    options.containerRef.insertBefore(
+      this.newBag,
+      options.containerRef.lastChild
     )
 
-    imgTitleContainer.append(bagLogo)
-    titleContainer.append(imgTitleContainer, rightTitleContainer)
-    this.ref.append(titleContainer, contentContainer)
-    this.dashRef.appendChild(this.ref)
+    let anim = this.newBag.animate(
+      [
+        {
+          opacity: "0",
+          top: "-1vh"
+        },
+        {
+          opacity: "1",
+          top: "0vh"
+        }
+      ],
+      {
+        duration: this.animationTimes.slow
+      }
+    )
+
+    this.bagRef = options.bagRef
   }
-}
 
-function newBag(mochila, container) {
-  let newBag = document.createElement("mochila")
+  deleteBag(ref, bag) {
+    if (confirm("Tem certeza que deseja excluir essa mochila?")) {
+      let anim = bag.animate(
+        [
+          {
+            opacity: "1",
+            transform: "scale(1)",
+            height: "4%"
+          },
+          {
+            opacity: "0",
+            transform: "scale(0.8)",
+            height: "0%"
+          }
+        ],
+        {
+          duration: this.animationTimes.slow
+        }
+      )
 
-  mochila.addEstilo(newBag, {
-    width: "94%",
-    height: "5%",
-    margin: "2%",
-    backgroundColor: "var(--cor-escura)",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderRadius: "8px",
-    color: "white",
-    fontSize: "15px",
-    paddingLeft: "2%"
-  })
-  mochila.hover(newBag, {
-    backgroundColor: "var(--cor-clara)"
-  })
-
-  const newBagName = document.createElement("p")
-  newBagName.textContent = "Nova Mochila " + ("(" + ++bagCounter + ")")
-  newBagName.ondblclick = () => {
-    mochila.addEstilo(newBagName, {
-      transitionTimingFunction: "ease",
-      textDecoration: "underline white"
-    })
-    newBagName.contentEditable = true
-    newBagName.onkeydown = function(event) {
-      if (event.keyCode == 13) {
-        newBagName.contentEditable = false
-        mochila.addEstilo(newBagName, {
-          textDecoration: "none"
-        })
+      anim.onfinish = () => {
+        let bagLength = this.bagRef.mochilas.length
+        let bagArray = this.bagRef.mochilas
+        if (bagLength > 1) {
+          if (this.isSelected) {
+            this.bagRef.selectBag(bagArray[bagLength - 2])
+          }
+        }
+        for (let i = 0; i <= bagLength; i++) {
+          if (bagArray[i] == this) bagArray.splice(i, 1)
+        }
+        ref.removeChild(bag)
+        if (this.bagRef.mochilas.length == 1) this.bagRef.selectBag(bagArray[0])
+        if (this.bagRef.mochilas.length == 0)
+          this.bagRef.emptyBagWarningCreator()
       }
     }
   }
 
-  const bagButtonContainer = document.createElement("div")
-  mochila.addEstilo(bagButtonContainer, {
-    width: "30%",
-    height: "100%",
-    backgroundColor: "none",
-    display: "flex",
-    justifyContent: "space-evenly",
-    alignItems: "center"
-  })
+  getBagName() {
+    return this.bagName
+  }
 
-  const favoriteBag = new Botao({
-    icon: "favoriteBook",
-    imageWidth: "18px",
-    imageHeight: "18px",
-    width: "40%",
-    height: "80%",
-    ref: bagButtonContainer,
-    action: () => {
-      console.log("action")
-    },
-    hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
-  })
+  currentBag() {
+    return this.isSelected
+  }
 
-  const deleteBag = new Botao({
-    icon: "deleteBook",
-    imageWidth: "20px",
-    imageHeight: "20px",
-    width: "40%",
-    height: "80%",
-    ref: bagButtonContainer,
-    action: () => {
-      delBag(container, newBag)
-    },
-    hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
-  })
+  createBook() {
+    this.cadernos.push(
+      new Caderno({
+        thisBag: this,
+        bookRef: this.bagRef.dashRefObj.getBook(),
+        containerRef: this.bagRef.dashRefObj.getBook().contentContainer
+      })
+    )
+    this.selectBook(this.cadernos[this.cadernos.length - 1])
+    if (this.bagRef.dashRefObj.getBook().emptyWarning)
+      this.bagRef.dashRefObj.getBook().turnOffWarning()
+  }
 
-  newBag.append(newBagName)
-  newBag.append(bagButtonContainer)
-  container.insertBefore(newBag, container.lastChild)
-}
+  selectBook(bookRef) {
+    bookRef.isSelected = true
+    for (let i = 0; i < this.cadernos.length; i++) {
+      if (bookRef == this.cadernos[i]) {
+        bookRef.addEstilo(bookRef.newBook, {
+          backgroundColor: "var(--cor-clara)"
+        })
+      } else {
+        this.cadernos[i].isSelected = false
+        this.cadernos[i].addEstilo(this.cadernos[i].newBook, {
+          backgroundColor: "var(--cor-escura)"
+        })
+      }
+    }
+    console.log(this.bagRef.dashRefObj.navBar.updateTabs())
 
-function delBag(container, mochila) {
-  container.removeChild(mochila)
+    this.bagRef.dashRefObj.navBar.updateTabs()
+  }
+
+  currentBook() {
+    for (let i = 0; i < this.cadernos.length; i++) {
+      if (this.cadernos[i].isSelected) return this.cadernos[i]
+    }
+  }
+
+  updateBookInfo() {
+    console.log(this.bagName)
+    this.bagRef.dashRefObj.getBook().titleNameContainer.textContent = this.bagName
+  }
 }
 
 module.exports = Mochila

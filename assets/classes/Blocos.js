@@ -2,7 +2,6 @@ const Estilo = require("./Estilo")
 const Botao = require('./Botao')
 
 class Blocos extends Estilo {
-
     constructor(options) {
         super()
         this.folhaContainer = options.folhaContainer
@@ -16,6 +15,332 @@ class Blocos extends Estilo {
         this.maximized = false
         this.tempoFadeOut = 8000
     }
+
+    criar() {
+
+        this.blocoRef = document.createElement('bloco')
+
+        this.blocoRef.onclick = () => {
+            this.handleClick()
+        }
+
+        this.optionsContainer = document.createElement('optionsContainer')
+        this.addEstilo(this.optionsContainer, {
+            position: 'absolute',
+            left: '100%',
+            paddingLeft: '15px',
+            zIndex: '301'
+        })
+
+        this.optionsButtons = []
+
+        this.close = new Botao({
+            icon: "close",
+            width: "2vw",
+            height: "2vw",
+            imageWidth: "12px",
+            imageHeight: "12px",
+            animation: true,
+            ref: this.optionsContainer,
+            style: {
+                display: "flex",
+                marginBottom: "5px",
+                justifyContent: "space-around",
+                alignItems: "center",
+                borderRadius: "50%",
+                position: 'relative',
+                backgroundColor: "var(--cor-media)",
+                boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
+            },
+            action: () => this.removeBloco(this)
+
+        })
+
+        this.edit = new Botao({
+            icon: "gear",
+            width: "2vw",
+            height: "2vw",
+            imageWidth: "12px",
+            imageHeight: "12px",
+            ref: this.optionsContainer,
+            animation: true,
+            style: {
+                display: "flex",
+                marginBottom: "5px",
+                justifyContent: "space-around",
+                alignItems: "center",
+                borderRadius: "50%",
+                position: 'relative',
+                backgroundColor: "var(--cor-media)",
+                boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
+            },
+            action: () => this.openEditContainer(this)
+        })
+
+        this.optionsButtons.push(this.close, this.edit)
+
+        this.editContainer = document.createElement('editContainer')
+        this.addEstilo(this.editContainer, {
+
+            display: 'none',
+            position: 'relative',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            padding: '5px',
+            top: '-1vw',
+            left: '1.5vw',
+            minWidth: '200px',
+            minHeight: '100px',
+            borderRadius: '8px',
+            zIndex: '301',
+            backgroundColor: 'var(--cor-media)',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
+
+
+        })
+        this.Frete = new Botao({
+            width: "80%",
+            height: "30px",
+            text: 'Trazer para frente',
+            ref: this.editContainer,
+            animation: true,
+            style: {
+                padding: '5px',
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "var(--cor-clara)",
+                marginBottom: '3px'
+            },
+            action: () => this.trazerFrente(this)
+        })
+
+        this.center = new Botao({
+            width: "80%",
+            height: "30px",
+            text: 'Centralizar',
+            ref: this.editContainer,
+            animation: true,
+            style: {
+                padding: '5px',
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "var(--cor-clara)",
+                marginBottom: '3px'
+            },
+            action: () => this.alignCenter(this)
+        })
+        this.aliignLeft = new Botao({
+            width: "80%",
+            height: "30px",
+            text: 'Alinhar a esquerda',
+            ref: this.editContainer,
+            animation: true,
+            style: {
+                padding: '5px',
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "var(--cor-clara)",
+                marginBottom: '3px'
+            },
+            action: () => this.alignLeft(this)
+
+        })
+
+        this.aliignRight = new Botao({
+            width: "80%",
+            height: "30px",
+            text: 'Alinhar a direita',
+            ref: this.editContainer,
+            animation: true,
+            style: {
+                padding: '5px',
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "var(--cor-clara)",
+                marginBottom: '3px'
+
+            },
+            action: () => this.alignRight(this)
+
+        })
+
+        this.optionsContainer.appendChild(this.editContainer)
+
+        this.blocoRef.appendChild(this.optionsContainer)
+
+        this.addEstilo(this.blocoRef, {
+            width: '200px',
+            height: '100px',
+            border: '1px solid var(--cor-escura)',
+            backgroundColor: 'white',
+            position: 'absolute',
+            zIndex: '100',
+            top: '50px',
+            left: '50px',
+            padding: '20px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
+        })
+
+        this.blocoRef.onmousedown = e => {
+
+            if (e.target == this.blocoRef) {
+                let tempo;
+                let blocoStyle = this.blocoRef.style
+                let bloco = this.blocoRef
+                let originalX = this.parsePx(blocoStyle.left)
+                let originalY = this.parsePx(blocoStyle.top)
+
+                let get = false
+                let mousePosX;
+                let mousePosY;
+                let left;
+                let top;
+                this.folhaContainer.onmousemove = e => {
+                    if (!get) {
+                        mousePosX = e.pageX - this.folhaContainer.offsetLeft
+                        mousePosY = e.pageY - this.folhaContainer.offsetTop
+                        left = mousePosX - originalX;
+                        top = mousePosY - originalY;
+                        get = true
+                    }
+                    mousePosX = e.pageX - this.folhaContainer.offsetLeft
+                    mousePosY = e.pageY - this.folhaContainer.offsetTop
+                    blocoStyle.left = this.reparsePx(mousePosX - left)
+                    blocoStyle.top = this.reparsePx(mousePosY - top)
+                }
+                this.folhaContainer.onmouseup = () => {
+
+                    this.folhaContainer.onmousemove = () => { }
+                    this.addEstilo(this.folhaContainer, {
+                        cursor: 'default'
+                    })
+
+                }
+                this.addEstilo(this.folhaContainer, {
+                    cursor: 'grabbing'
+                })
+
+            }
+        }
+
+        this.resizes = []
+
+        this.resizesContainer = []
+
+
+        this.resizeTopLeft = document.createElement('resize')
+        this.resizeTopLeft.topLeft = true
+        this.resizes.push(this.resizeTopLeft)
+        let reziseContainerTopLeft = document.createElement('reziseContainer')
+        this.addEstilo(reziseContainerTopLeft, {
+            top: '0%',
+            left: '0%',
+            position: 'absolute'
+        })
+        this.resizesContainer.push(reziseContainerTopLeft)
+        reziseContainerTopLeft.appendChild(this.resizeTopLeft)
+        this.resizeTop = document.createElement('resize')
+        this.resizes.push(this.resizeTop)
+        this.resizeTop.top = true
+        let reziseContainerTop = document.createElement('reziseContainer')
+        this.addEstilo(reziseContainerTop, {
+            top: '0%',
+            left: '50%',
+            position: 'absolute'
+        })
+        this.resizesContainer.push(reziseContainerTop)
+        reziseContainerTop.appendChild(this.resizeTop)
+        this.resizeTopRight = document.createElement('resize')
+        this.resizeTopRight.topRight = true
+        this.resizes.push(this.resizeTopRight)
+        let reziseContainerTopRight = document.createElement('reziseContainer')
+        this.addEstilo(reziseContainerTopRight, {
+            top: '0%',
+            left: '100%',
+            position: 'absolute'
+        })
+        this.resizesContainer.push(reziseContainerTopRight)
+        reziseContainerTopRight.appendChild(this.resizeTopRight)
+        this.resizeLeft = document.createElement('resize')
+        this.resizes.push(this.resizeLeft)
+        this.resizeLeft.left = true
+        let reziseContainerLeft = document.createElement('reziseContainer')
+        this.addEstilo(reziseContainerLeft, {
+            top: '50%',
+            left: '0%',
+            position: 'absolute'
+        })
+        this.resizesContainer.push(reziseContainerLeft)
+        reziseContainerLeft.appendChild(this.resizeLeft)
+        this.resizeRight = document.createElement('resize')
+        this.resizes.push(this.resizeRight)
+        this.resizeRight.right = true
+        let reziseContainerRight = document.createElement('reziseContainer')
+        this.addEstilo(reziseContainerRight, {
+            top: '50%',
+            left: '100%',
+            position: 'absolute'
+        })
+        this.resizesContainer.push(reziseContainerRight)
+        reziseContainerRight.appendChild(this.resizeRight)
+        this.resizeBottomLeft = document.createElement('resize')
+        this.resizes.push(this.resizeBottomLeft)
+        this.resizeBottomLeft.bottomLeft = true
+        let reziseContainerBottomLeft = document.createElement('reziseContainer')
+        this.addEstilo(reziseContainerBottomLeft, {
+            top: '100%',
+            left: '0%',
+            position: 'absolute'
+        })
+        this.resizesContainer.push(reziseContainerBottomLeft)
+        reziseContainerBottomLeft.appendChild(this.resizeBottomLeft)
+        this.resizeBottomRight = document.createElement('resize')
+        this.resizes.push(this.resizeBottomRight)
+        this.resizeBottomRight.bottomRight = true
+        let reziseContainerBottomRight = document.createElement('reziseContainer')
+        this.addEstilo(reziseContainerBottomRight, {
+            top: '100%',
+            left: '100%',
+            position: 'absolute'
+        })
+        this.resizesContainer.push(reziseContainerBottomRight)
+        reziseContainerBottomRight.appendChild(this.resizeBottomRight)
+        this.resizeBottom = document.createElement('resize')
+        this.resizes.push(this.resizeBottom)
+        this.resizeBottom.bottom = true
+        let reziseContainerBottom = document.createElement('reziseContainer')
+        this.addEstilo(reziseContainerBottom, {
+            top: '100%',
+            left: '50%',
+            position: 'absolute'
+        })
+        this.resizesContainer.push(reziseContainerBottom)
+        reziseContainerBottom.appendChild(this.resizeBottom)
+        this.resizes.forEach(resize => {
+
+            let vw = window.innerWidth
+            let vh = window.innerHeight
+
+            this.addEstilo(resize, {
+                width: '1vw',
+                height: '1vw',
+                display: 'block',
+                borderRadius: '50%',
+                position: 'relative',
+                top: '-0.5vw',
+                left: '-0.5vw',
+                backgroundColor: 'white',
+                boxShadow: '0 0 1px 0 var(--cor-escura) inset, 0 0 1px 0 var(--cor-escura)',
+                zIndex: '2',
+            })
+            this.makeResize(this.blocoRef, this.resizes)
+        })
+
+        this.blocoRef.append(...this.resizesContainer)
+        this.folhaContainer.appendChild(this.blocoRef)
+        this.minimize(this)
+    }
     handleClick() {
 
         if (!this.maximized) this.maximize(this)
@@ -25,6 +350,7 @@ class Blocos extends Estilo {
 
 
     }
+
     changeContainerPos(ref) {
 
         if (ref.optionsContainer.style.left == '100%') {
@@ -41,6 +367,7 @@ class Blocos extends Estilo {
         }
 
     }
+
     chageOptionsStyle(ref, option) {
 
         const hideOptionsContainer = () => {
@@ -124,6 +451,7 @@ class Blocos extends Estilo {
         }
 
     }
+
     checkEnd(ref) {
 
         let optionsPercent = ref.optionsContainer.style.left
@@ -141,6 +469,7 @@ class Blocos extends Estilo {
         }
 
     }
+
     makeResize(element, resizers) {
         const minimum_size = 20;
         let originalWidth = 0;
@@ -268,6 +597,7 @@ class Blocos extends Estilo {
 
 
     }
+
     removeBloco(ref) {
 
         let anim = ref.blocoRef.animate([{
@@ -288,8 +618,10 @@ class Blocos extends Estilo {
         }
 
     }
+
     appearOptions(ref) {
     }
+
     openEditContainer(ref) {
 
 
@@ -391,6 +723,7 @@ class Blocos extends Estilo {
 
 
     }
+
     alignRight(ref) {
         let folhaEnd = ref.parsePx(getComputedStyle(ref.folhaContainer, null).getPropertyValue('width')) - ref.alignPadding
         let blocoWidth = ref.parsePx(ref.blocoRef.style.width)
@@ -416,6 +749,7 @@ class Blocos extends Estilo {
         }
 
     }
+
     alignLeft(ref) {
 
         let folhaInit = ref.reparsePx(ref.alignPadding)
@@ -438,6 +772,7 @@ class Blocos extends Estilo {
             ref.checkEnd(ref)
         }
     }
+
     alignCenter(ref) {
         let halfFolhaWidth = this.parsePx(getComputedStyle(ref.folhaContainer, null).getPropertyValue('width')) / 2
         let halfBlocoWidth = ref.parsePx(ref.blocoRef.style.width) / 2
@@ -463,6 +798,7 @@ class Blocos extends Estilo {
 
 
     }
+
     minimize(ref) {
 
         ref.addEstilo(ref.blocoRef, {
@@ -504,6 +840,7 @@ class Blocos extends Estilo {
         }
 
     }
+
     maximize(ref) {
         ref.addEstilo(ref.blocoRef, {
             border: '1px solid var(--cor-escura)'
@@ -537,12 +874,15 @@ class Blocos extends Estilo {
         ref.maximized = true
 
     }
+
     trazerFrente(ref) {
         ref.folha.trazerFrente(ref)
     }
+
     addMainContent(element) {
         this.blocoRef.appendChild(element)
     }
+
     addConfig(elements) {
         elements.forEach(element => {
 
@@ -873,6 +1213,7 @@ class Blocos extends Estilo {
         this.folhaContainer.appendChild(this.blocoRef)
         this.minimize(this)
     }
+
 }
 
 module.exports = Blocos
