@@ -1,15 +1,18 @@
 const Estilo = require("./Estilo")
 const Botao = require("./Botao")
-const Folha = require('./Folha')
+const Folha = require("./Folha")
 class NavTabs extends Estilo {
   constructor(options) {
     super()
     this.criar(options)
-    this.folha = new Folha({
-      folhaContainer: options.folhaContainer,
-      loadedFonts: options.loadedFonts
-    })
+    this.belongsTo = options.belongsTo
+    this.pageRef = options.pageRef
+    // this.folha = new Folha({
+    //   folhaContainer: options.folhaContainer,
+    //   loadedFonts: options.loadedFonts
+    // })
   }
+
   criar(options) {
     this.ref = document.createElement("navtab")
     this.text = document.createElement("p")
@@ -33,7 +36,7 @@ class NavTabs extends Estilo {
       flexShrink: 3,
       justifyContent: "space-between",
       padding: "10px",
-      backgroundColor: "var(--cor-media)"
+      backgroundColor: "var(--cor-escura)"
     })
     this.hover(this.ref, {
       cursor: "pointer",
@@ -78,6 +81,7 @@ class NavTabs extends Estilo {
     )
     anim.onfinish = () => this.addEstilo(this.text, { opacity: 1 })
   }
+
   setActive(tabs) {
     tabs.forEach(tab => {
       tab.removeActive()
@@ -143,11 +147,11 @@ class NavTabs extends Estilo {
   removeActive() {
     this.canhover = true
     this.addEstilo(this.ref, {
-      backgroundColor: "var(--cor-media)"
+      backgroundColor: "var(--cor-escura)"
     })
   }
-  action() {
 
+  action() {
     this.canhover = false
 
     this.addEstilo(this.ref, {

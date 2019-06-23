@@ -16,6 +16,7 @@ class Folha extends Estilo {
     // })
     this.loadedFonts = options.loadedFonts
   }
+
   criarTexto(options) {
     this.blocos.push(
       new Texto({
@@ -27,6 +28,7 @@ class Folha extends Estilo {
       })
     )
   }
+
   criarBloco(options) {
     this.blocos.push(
       new Blocos({
@@ -37,11 +39,13 @@ class Folha extends Estilo {
       })
     )
   }
+
   removeBloco(bloco) {
     let ind = this.blocos.findIndex(b => b.blocoRef == bloco.blocoRef)
     this.blocos.splice(ind, 1)
     console.log(this.blocos)
   }
+
   trazerFrente(bloco) {
     let ind
     let zindex = bloco.blocoRef.style.zIndex

@@ -1,191 +1,232 @@
 const Estilo = require("./Estilo")
 const Botao = require("./Botao")
+const Folha = require("./Folha")
 let bookCounter = 0
 
 class Caderno extends Estilo {
-  constructor(dashRef) {
+  constructor(options) {
     super()
-    this.dashRef = dashRef.ref
+    this.criar(options)
+    this.selectedBook = null
+    this.previousSelectedBag = null
+    this.thisBag = options.thisBag
+    this.bookRef = options.bookRef
+    this.navBar = options.thisBag.bagRef.dashRefObj.navBar
+    // this.folha = new Folha({
+    //   folhaContainer: this.navBar.folhaContainer,
+    //   loadedFonts: this.navBar.loadedFonts
+    // })
   }
 
-  criar() {
-    const titleContainer = document.createElement("div")
-    titleContainer.textContent = "Mochila 1"
-    this.addEstilo(titleContainer, {
-      width: "93%",
+  criar(options) {
+    this.pages = []
+    this.newBook = document.createElement("caderno")
+    this.addEstilo(this.newBook, {
+      width: "94%",
       height: "5%",
-      marginTop: "5.5%",
-      marginLeft: "2.5%",
-      marginRight: "2.5%",
-      backgroundColor: "#A200D1",
+      margin: "2%",
+      backgroundColor: "var(--cor-escura)",
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
       borderRadius: "8px",
       color: "white",
-      fontSize: "20px",
-      fontWeight: "bold",
-      paddingLeft: "2%"
+      fontSize: "15px",
+      paddingLeft: "2%",
+      cursor: "pointer"
+    })
+    this.hover(this.newBook, {
+      backgroundColor: "var(--cor-clara)"
     })
 
-    const titleButtonContainer = document.createElement("div")
-    this.addEstilo(titleButtonContainer, {
-      width: "35%",
+    // Editar nome do caderno
+    this.newBookName = document.createElement("p")
+    this.newBookName.textContent = "Novo Caderno " + ("(" + ++bookCounter + ")")
+    this.newBookName.ondblclick = () => {
+      this.addEstilo(this.newBookName, {
+        transitionTimingFunction: "ease",
+        textDecoration: "underline white",
+        cursor: "text"
+      })
+      this.newBookName.contentEditable = true
+      let oldTextContent = this.newBookName.textContent
+      let range, selection
+      // Selecionando todo texto dentro da div
+      if (document.body.createTextRange) {
+        range = document.body.createTextRange()
+        range.moveToElementText(this.newBookName)
+        range.select()
+      } else if (window.getSelection) {
+        selection = window.getSelection()
+        range = document.createRange()
+        range.selectNodeContents(this.newBookName)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      }
+      this.newBookName.onkeydown = e => {
+        if (e.keyCode == 13) {
+          if (this.newBookName.innerText.trim() == "") {
+            this.newBookName.textContent = oldTextContent
+          }
+          // else {
+          //   this.bagName = this.newBookName.textContent
+          // }
+          this.newBookName.contentEditable = false
+          this.addEstilo(this.newBookName, {
+            textDecoration: "none",
+            cursor: "pointer"
+          })
+        }
+      }
+      document.onclick = e => {
+        console.log("clicccccccccccccccc")
+
+        if (e.target != this.newBookName) {
+          if (this.newBookName.innerText.trim() == "") {
+            this.newBookName.textContent = oldTextContent
+          }
+          // else {
+          //   this.bagName = this.newBookName.textContent
+          // }
+          this.newBookName.contentEditable = false
+          this.addEstilo(this.newBookName, {
+            textDecoration: "none",
+            cursor: "pointer"
+          })
+          document.onclick = () => {}
+        }
+      }
+    }
+
+    const bookButtonContainer = document.createElement("div")
+    this.addEstilo(bookButtonContainer, {
+      width: "30%",
       height: "100%",
-      backgroundColor: "var(--cor-media)",
+      backgroundColor: "none",
       display: "flex",
       justifyContent: "space-evenly",
-      borderRadius: "8px",
       alignItems: "center"
     })
 
-    const saveThisBook = new Botao({
-      icon: "saveThisBook",
+    const favoriteBook = new Botao({
+      icon: "favoriteBook",
+      imageWidth: "18px",
+      imageHeigth: "18px",
+      width: "40%",
+      height: "80%",
+      ref: bookButtonContainer,
+      action: () => {
+        console.log("action")
+      },
+      hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
+    })
+
+    const deleteBook = new Botao({
+      icon: "deleteBook",
       imageWidth: "20px",
       imageHeigth: "20px",
       width: "40%",
       height: "80%",
-      ref: titleButtonContainer,
+      ref: bookButtonContainer,
       action: () => {
-        console.log("action")
+        this.deleteBook(options.containerRef, this.newBook)
       },
-      style: { backgroundColor: "var(--cor-escura)" },
-      hover: { backgroundColor: "var(--cor-clara)" }
+      hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
     })
 
-    const saveAllBooks = new Botao({
-      icon: "saveAllBooks",
-      imageWidth: "20px",
-      imageHeigth: "20px",
-      width: "40%",
-      height: "80%",
-      ref: titleButtonContainer,
-      action: () => {
-        console.log("action")
-      },
-      style: { backgroundColor: "var(--cor-escura)" },
-      hover: { backgroundColor: "var(--cor-clara)" }
-    })
+    this.newBook.onclick = e => {
+      if (e.target == this.newBook || e.target == this.newBookName)
+        options.thisBag.selectBook(this)
+    }
 
-    const contentContainer = document.createElement("div")
-    this.addEstilo(contentContainer, {
-      width: "91%",
-      height: "89%",
-      marginTop: "2.5%",
-      marginLeft: "2.5%",
-      marginRight: "2.5%",
-      backgroundColor: "var(--cor-media)",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-start",
-      borderRadius: "8px",
-      padding: "2%"
-    })
+    this.newBook.onmouseover = () => {
+      if (!this.currentBook())
+        this.newBook.style.backgroundColor = "var(--cor-clara)"
+    }
 
-    const btnAddBook = new Botao({
-      icon: "addBook",
-      imageWidth: "20px",
-      imageHeigth: "20px",
-      width: "20%",
-      height: "5%",
-      ref: contentContainer,
-      action: () => {
-        newBook(this, contentContainer)
-      },
-      style: {
-        backgroundColor: "none",
-        alignSelf: "center"
+    this.newBook.onmouseout = () => {
+      if (!this.currentBook())
+        this.newBook.style.backgroundColor = "var(--cor-escura)"
+    }
+
+    this.newBook.append(this.newBookName)
+    this.newBook.append(bookButtonContainer)
+    options.containerRef.insertBefore(
+      this.newBook,
+      options.containerRef.lastChild
+    )
+
+    let anim = this.newBook.animate(
+      [
+        {
+          opacity: "0",
+          top: "-1vh"
+        },
+        {
+          opacity: "1",
+          top: "0vh"
+        }
+      ],
+      {
+        duration: this.animationTimes.slow
       }
-    })
-    this.ref = document.createElement("cadernos")
-    titleContainer.append(titleButtonContainer)
-    this.ref.append(titleContainer, contentContainer)
-
-    this.dashRef.appendChild(this.ref)
-    document.createElement("div").length
+    )
   }
-}
 
-function newBook(caderno, mochila) {
-  let newBook = document.createElement("caderno")
-  caderno.addEstilo(newBook, {
-    width: "94%",
-    height: "5%",
-    margin: "2%",
-    backgroundColor: "var(--cor-escura)",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderRadius: "8px",
-    color: "white",
-    fontSize: "15px",
-    paddingLeft: "2%"
-  })
-  caderno.hover(newBook, {
-    backgroundColor: "var(--cor-clara)"
-  })
+  deleteBook(ref, book) {
+    if (confirm("Tem certeza que deseja excluir esse caderno?")) {
+      let anim = book.animate(
+        [
+          {
+            opacity: "1",
+            transform: "scale(1)",
+            height: "4%"
+          },
+          {
+            opacity: "0",
+            transform: "scale(0.8)",
+            height: "0%"
+          }
+        ],
+        {
+          duration: this.animationTimes.slow
+        }
+      )
 
-  const newBookName = document.createElement("p")
-  newBookName.textContent = "Novo Caderno " + ("(" + ++bookCounter + ")")
-  newBookName.ondblclick = () => {
-    caderno.addEstilo(newBookName, {
-      transitionTimingFunction: "ease",
-      textDecoration: "underline white"
-    })
-    newBookName.contentEditable = true
-    newBookName.onkeydown = function(event) {
-      if (event.keyCode == 13) {
-        newBookName.contentEditable = false
-        caderno.addEstilo(newBookName, {
-          textDecoration: "none"
-        })
+      anim.onfinish = () => {
+        let bookLength = this.thisBag.cadernos.length
+        let bookArray = this.thisBag.cadernos
+        if (bookLength > 1) {
+          if (this.isSelected) {
+            this.thisBag.selectBook(bookArray[bookLength - 2])
+          }
+        }
+        for (let i = 0; i <= bookLength; i++) {
+          if (bookArray[i] == this) bookArray.splice(i, 1)
+        }
+        ref.removeChild(book)
+        if (this.thisBag.cadernos.length == 1)
+          this.thisBag.selectBook(bookArray[0])
+        if (this.thisBag.cadernos.length == 0)
+          this.bookRef.emptyBookWarningCreator()
       }
     }
   }
 
-  const bookButtonContainer = document.createElement("div")
-  caderno.addEstilo(bookButtonContainer, {
-    width: "30%",
-    height: "100%",
-    backgroundColor: "none",
-    display: "flex",
-    justifyContent: "space-evenly",
-    alignItems: "center"
-  })
+  currentBook() {
+    return this.isSelected
+  }
 
-  const favoriteBook = new Botao({
-    icon: "favoriteBook",
-    imageWidth: "18px",
-    imageHeigth: "18px",
-    width: "40%",
-    height: "80%",
-    ref: bookButtonContainer,
-    action: () => {
-      console.log("action")
-    },
-    hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
-  })
-
-  const deleteBook = new Botao({
-    icon: "deleteBook",
-    imageWidth: "20px",
-    imageHeigth: "20px",
-    width: "40%",
-    height: "80%",
-    ref: bookButtonContainer,
-    action: () => {
-      delBook(mochila, newBook)
-    },
-    hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
-  })
-
-  newBook.append(newBookName)
-  newBook.append(bookButtonContainer)
-  mochila.insertBefore(newBook, mochila.lastChild)
-}
-
-function delBook(mochila, caderno) {
-  mochila.removeChild(caderno)
+  newPage() {
+    this.pageArray = this.thisBag.bagRef.currentBag().currentBook().pages
+    this.pageArray.push(
+      new Folha({
+        folhaContainer: this.navBar.folhaContainer,
+        loadedFonts: this.navBar.loadedFonts
+      })
+    )
+    this.navBar.createTab(this.pageArray[this.pageArray.length - 1])
+  }
 }
 
 module.exports = Caderno

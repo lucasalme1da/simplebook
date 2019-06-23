@@ -2,7 +2,6 @@ const Estilo = require("./Estilo")
 const Botao = require('./Botao')
 
 class Blocos extends Estilo {
-
     constructor(options) {
         super()
         this.folhaContainer = options.folhaContainer
@@ -14,539 +13,7 @@ class Blocos extends Estilo {
         this.maximized = false
         this.tempoFadeOut = 8000
     }
-    handleClick() {
 
-        if (!this.maximized) this.maximize(this)
-
-        clearTimeout(this.tempoMinimize)
-        this.tempoMinimize = setTimeout(() => this.minimize(this), this.tempoFadeOut)
-
-
-    }
-    changeContainerPos(ref) {
-
-        if (ref.optionsContainer.style.left == '100%') {
-            ref.addEstilo(ref.optionsContainer, {
-                left: '0%'
-            })
-
-        }
-        else if (ref.optionsContainer.style.left == '0%') {
-            ref.addEstilo(ref.optionsContainer, {
-                left: '100%'
-            })
-
-        }
-
-    }
-    chageOptionsStyle(ref, option) {
-
-        const hideOptionsContainer = () => {
-
-            ref.addEstilo(ref.optionsContainer, {
-                display: 'none',
-                opacity: '0'
-            })
-        }
-
-        const showOptionsContainer = () => {
-            ref.addEstilo(ref.optionsContainer, {
-                display: 'block'
-            })
-
-            let anim = ref.optionsContainer.animate([
-                {
-                    opacity: '0',
-                    transform: 'scale(0.8)'
-                }, {
-                    opacity: '1',
-                    transform: 'scale(1)'
-                }
-            ], 80)
-            anim.onfinish = () => {
-                ref.addEstilo(ref.optionsContainer, {
-                    opacity: '1'
-                })
-            }
-
-        }
-
-
-        if (option == '100%') {
-
-            hideOptionsContainer()
-
-            let botaoWidth = window.innerWidth * 0.03
-            let posMove = this.reparsePx(-(botaoWidth + ref.minEditContainerWidth))
-
-            ref.addEstilo(ref.editContainer, {
-                left: posMove
-            })
-
-            ref.addEstilo(ref.optionsContainer, {
-                paddingLeft: '0px'
-            })
-
-            ref.optionsButtons.forEach(button => {
-
-                ref.addEstilo(button.ref, {
-
-                    left: '-2.5vw'
-
-                })
-
-            })
-            showOptionsContainer()
-
-        } else {
-
-            hideOptionsContainer()
-            ref.addEstilo(ref.editContainer, {
-                left: '2vw'
-            })
-
-            ref.addEstilo(ref.optionsContainer, {
-                paddingLeft: '15px'
-            })
-            ref.optionsButtons.forEach(button => {
-
-
-                ref.addEstilo(button.ref, {
-
-                    left: '0vw'
-                })
-
-            })
-            showOptionsContainer()
-
-        }
-
-    }
-    checkEnd(ref) {
-
-        let optionsPercent = ref.optionsContainer.style.left
-        let posX = ref.parsePx(ref.blocoRef.style.left)
-        let blocoWidth = ref.parsePx(ref.blocoRef.style.width)
-        let folhaWidth = ref.parsePx(getComputedStyle(ref.folhaContainer, null).getPropertyValue('width'))
-        let paddingLeftOptionsContainer = 15
-        let editContainerWidth = (folhaWidth * 0.015) + 200
-        if ((posX + blocoWidth + paddingLeftOptionsContainer + editContainerWidth) >= folhaWidth && optionsPercent == '100%') {
-            ref.changeContainerPos(ref)
-            ref.chageOptionsStyle(ref, '100%')
-        } else if (posX <= ref.alignPadding && optionsPercent == '0%') {
-            ref.changeContainerPos(ref)
-            ref.chageOptionsStyle(ref, '0%')
-        }
-
-    }
-    makeResize(element, resizers) {
-        const minimum_size = 20;
-        let originalWidth = 0;
-        let originalHeight = 0;
-        let originalX = 0;
-        let originalY = 0;
-        let originalMouseX = 0;
-        let originalMouseY = 0;
-
-        const stopResize = resizer => {
-            this.addEstilo(this.folhaContainer, {
-                cursor: "default"
-            })
-            this.addEstilo(resizer, {
-                cursor: "grab",
-                backgroundColor: 'white'
-            })
-            window.onmousemove = () => { }
-        }
-        const resize = (e, resizer) => {
-            this.addEstilo(resizer, {
-                cursor: "grabbing",
-                backgroundColor: "lightblue"
-            })
-            this.addEstilo(this.folhaContainer, {
-                cursor: "grabbing"
-            })
-
-            if (resizer.bottomRight) {
-                const width = originalWidth + (e.pageX - originalMouseX);
-                const height = originalHeight + (e.pageY - originalMouseY)
-                if (width > minimum_size) {
-                    element.style.width = this.reparsePx(width)
-                }
-                if (height > minimum_size) {
-                    element.style.height = this.reparsePx(height)
-                }
-            }
-            else if (resizer.bottomLeft) {
-                const height = originalHeight + (e.pageY - originalMouseY)
-                const width = originalWidth - (e.pageX - originalMouseX)
-                if (height > minimum_size) {
-                    element.style.height = this.reparsePx(height)
-                }
-                if (width > minimum_size) {
-                    element.style.width = this.reparsePx(width)
-                    element.style.left = this.reparsePx(originalX + (e.pageX - originalMouseX))
-                }
-            }
-            else if (resizer.topRight) {
-                const width = originalWidth + (e.pageX - originalMouseX)
-                const height = originalHeight - (e.pageY - originalMouseY)
-                if (width > minimum_size) {
-                    element.style.width = this.reparsePx(width)
-                }
-                if (height > minimum_size) {
-                    element.style.height = this.reparsePx(height)
-                    element.style.top = this.reparsePx(originalY + (e.pageY - originalMouseY))
-                }
-            }
-            else if (resizer.topLeft) {
-                const width = originalWidth - (e.pageX - originalMouseX)
-                const height = originalHeight - (e.pageY - originalMouseY)
-                if (width > minimum_size) {
-                    element.style.width = this.reparsePx(width)
-                    element.style.left = this.reparsePx(originalX + (e.pageX - originalMouseX))
-                }
-                if (height > minimum_size) {
-                    element.style.height = this.reparsePx(height)
-                    element.style.top = this.reparsePx(originalY + (e.pageY - originalMouseY))
-                }
-            }
-            else if (resizer.bottom) {
-                const height = originalHeight + (e.pageY - originalMouseY)
-                if (height > minimum_size) {
-                    element.style.height = this.reparsePx(height)
-                }
-            }
-            else if (resizer.top) {
-                const height = originalHeight - (e.pageY - originalMouseY)
-                if (height > minimum_size) {
-                    element.style.height = this.reparsePx(height)
-                    element.style.top = this.reparsePx(originalY + (e.pageY - originalMouseY))
-
-                }
-            }
-            else if (resizer.right) {
-
-                const width = originalWidth + (e.pageX - originalMouseX)
-                if (width > minimum_size) {
-                    element.style.width = this.reparsePx(width)
-                }
-
-            }
-            else if (resizer.left) {
-                const width = originalWidth - (e.pageX - originalMouseX)
-                if (width > minimum_size) {
-                    element.style.width = this.reparsePx(width)
-                    element.style.left = this.reparsePx(originalX + (e.pageX - originalMouseX))
-                }
-
-
-            }
-        }
-        resizers.forEach(resizer => {
-
-            resizer.onmousedown = e => {
-                e.preventDefault()
-                originalWidth = this.parsePx(getComputedStyle(element, null).getPropertyValue('width'))
-                originalHeight = this.parsePx(getComputedStyle(element, null).getPropertyValue('height'))
-                originalX = this.parsePx(element.style.left);
-                originalY = this.parsePx(element.style.top);
-                originalMouseX = e.pageX;
-                originalMouseY = e.pageY;
-                window.onmousemove = ew => {
-                    resize(ew, resizer)
-                }
-                window.onmouseup = () => {
-                    stopResize(resizer)
-                }
-            }
-
-
-        })
-
-
-    }
-    removeBloco(ref) {
-
-        let anim = ref.blocoRef.animate([{
-            opacity: '1',
-            transform: 'scale(1)'
-
-        }, {
-            opacity: '0',
-            transform: 'scale(0.8)'
-
-        }], 200)
-
-        anim.onfinish = () => {
-            ref.blocoRef.style.display = 'none'
-            ref.folhaContainer.removeChild(ref.blocoRef)
-            ref.folha.removeBloco(ref)
-            //Remover do array folha
-        }
-
-    }
-    appearOptions(ref) {
-    }
-    openEditContainer(ref) {
-
-
-        if (ref.editContainer.style.display == 'none') {
-
-            let openRight = () => {
-
-                let anim = ref.editContainer.animate([{
-
-                    opacity: '0',
-                    left: '1vw'
-
-                }, {
-                    opacity: '1',
-                    left: '2vw'
-                }], {
-                        duration: 100,
-                    })
-
-                anim.onfinish = () => {
-                    ref.addEstilo(ref.editContainer, {
-                        opacity: '1',
-                        left: '2vw'
-                    })
-                }
-            }
-
-            let openLeft = () => {
-                let botaoWidth = window.innerWidth * 0.03
-                let posMove = -(botaoWidth + ref.minEditContainerWidth)
-                let posMoveInit = posMove + 20
-                posMove = ref.reparsePx(posMove)
-                posMoveInit = ref.reparsePx(posMoveInit)
-                let anim = ref.editContainer.animate([{
-
-                    opacity: '0',
-                    left: posMoveInit
-
-                }, {
-                    opacity: '1',
-                    left: posMove
-                }], {
-                        duration: 100,
-                    })
-
-                anim.onfinish = () => {
-                    ref.addEstilo(ref.editContainer, {
-                        opacity: '1',
-                        left: posMove
-                    })
-                }
-
-
-
-
-                ref.addEstilo(ref.editContainer, {
-                    left: posMove
-                })
-
-            }
-            ref.addEstilo(ref.editContainer, {
-                display: 'flex',
-                opacity: '0'
-            })
-
-
-            if (ref.optionsContainer.style.left == '100%') {
-
-                openRight()
-
-            } else {
-                openLeft()
-            }
-
-        } else {
-
-            let anim = ref.editContainer.animate([{
-                opacity: '1',
-                transform: 'scale(1)'
-            }, {
-                opacity: '0',
-                transform: 'scale(0.8)'
-
-            }], 100)
-
-            anim.onfinish = () => {
-
-                ref.addEstilo(ref.editContainer, {
-                    display: 'none',
-
-                })
-
-            }
-
-
-        }
-
-
-
-
-    }
-    alignRight(ref) {
-        let folhaEnd = ref.parsePx(getComputedStyle(ref.folhaContainer, null).getPropertyValue('width')) - ref.alignPadding
-        let blocoWidth = ref.parsePx(ref.blocoRef.style.width)
-        let posX = ref.reparsePx(folhaEnd - blocoWidth)
-
-
-        let anim = ref.blocoRef.animate([
-            {
-                left: ref.blocoRef.style.left
-            }, {
-                left: posX
-            }
-        ], {
-                duration: 100,
-            })
-
-        anim.onfinish = () => {
-
-            ref.addEstilo(ref.blocoRef, {
-                left: posX
-            })
-            ref.checkEnd(ref)
-        }
-
-    }
-    alignLeft(ref) {
-
-        let folhaInit = ref.reparsePx(ref.alignPadding)
-
-        let anim = ref.blocoRef.animate([
-            {
-                left: ref.blocoRef.style.left
-            }, {
-                left: folhaInit
-            }
-        ], {
-                duration: 100,
-            })
-
-        anim.onfinish = () => {
-
-            ref.addEstilo(ref.blocoRef, {
-                left: folhaInit
-            })
-            ref.checkEnd(ref)
-        }
-    }
-    alignCenter(ref) {
-        let halfFolhaWidth = this.parsePx(getComputedStyle(ref.folhaContainer, null).getPropertyValue('width')) / 2
-        let halfBlocoWidth = ref.parsePx(ref.blocoRef.style.width) / 2
-
-        let posX = this.reparsePx(halfFolhaWidth - halfBlocoWidth)
-
-        let anim = ref.blocoRef.animate([
-            {
-                left: ref.blocoRef.style.left
-            }, {
-                left: posX
-            }
-        ], {
-                duration: 100,
-            })
-
-        anim.onfinish = () => {
-
-            ref.addEstilo(ref.blocoRef, {
-                left: posX
-            })
-        }
-
-
-    }
-    minimize(ref) {
-
-        ref.addEstilo(ref.blocoRef, {
-            border: 'none'
-        })
-
-        ref.resizesContainer.forEach(container => {
-
-            let anim = container.animate([{
-                opacity: '1'
-
-            }, {
-                opacity: '0'
-            }], 80)
-
-            anim.onfinish = () => {
-                ref.addEstilo(container, {
-                    display: 'none'
-                })
-
-            }
-
-        })
-
-        let anim = ref.optionsContainer.animate([{
-
-            opacity: '1'
-
-        }, {
-            opacity: '0'
-
-        }], 80)
-
-        anim.onfinish = () => {
-            ref.addEstilo(ref.optionsContainer, {
-                display: 'none'
-            })
-            ref.maximized = false
-        }
-
-    }
-    maximize(ref) {
-        ref.addEstilo(ref.blocoRef, {
-            border: '1px solid var(--cor-escura)'
-        })
-        ref.resizesContainer.forEach(container => {
-            ref.addEstilo(container, {
-                display: 'block',
-            })
-            let anim = container.animate([{
-                opacity: '0'
-
-            }, {
-                opacity: '1'
-            }], 80)
-
-
-        })
-
-        ref.addEstilo(ref.optionsContainer, {
-            display: 'block'
-        })
-        let anim = ref.optionsContainer.animate([{
-
-            opacity: '0'
-
-        }, {
-            opacity: '1'
-
-        }], 80)
-
-        ref.maximized = true
-
-    }
-    trazerFrente(ref) {
-        ref.folha.trazerFrente(ref)
-    }
-    addMainContent(element) {
-        this.blocoRef.appendChild(element)
-    }
-    addConfig(elements) {
-        elements.forEach(element => {
-
-            this.editContainer.prepend(element)
-        })
-    }
     criar() {
 
         this.blocoRef = document.createElement('bloco')
@@ -871,6 +338,554 @@ class Blocos extends Estilo {
         this.blocoRef.append(...this.resizesContainer)
         this.folhaContainer.appendChild(this.blocoRef)
         this.minimize(this)
+    }
+    handleClick() {
+
+        if (!this.maximized) this.maximize(this)
+
+        clearTimeout(this.tempoMinimize)
+        this.tempoMinimize = setTimeout(() => this.minimize(this), this.tempoFadeOut)
+
+
+    }
+
+    changeContainerPos(ref) {
+
+        if (ref.optionsContainer.style.left == '100%') {
+            ref.addEstilo(ref.optionsContainer, {
+                left: '0%'
+            })
+
+        }
+        else if (ref.optionsContainer.style.left == '0%') {
+            ref.addEstilo(ref.optionsContainer, {
+                left: '100%'
+            })
+
+        }
+
+    }
+
+    chageOptionsStyle(ref, option) {
+
+        const hideOptionsContainer = () => {
+
+            ref.addEstilo(ref.optionsContainer, {
+                display: 'none',
+                opacity: '0'
+            })
+        }
+
+        const showOptionsContainer = () => {
+            ref.addEstilo(ref.optionsContainer, {
+                display: 'block'
+            })
+
+            let anim = ref.optionsContainer.animate([
+                {
+                    opacity: '0',
+                    transform: 'scale(0.8)'
+                }, {
+                    opacity: '1',
+                    transform: 'scale(1)'
+                }
+            ], 80)
+            anim.onfinish = () => {
+                ref.addEstilo(ref.optionsContainer, {
+                    opacity: '1'
+                })
+            }
+
+        }
+
+
+        if (option == '100%') {
+
+            hideOptionsContainer()
+
+            let botaoWidth = window.innerWidth * 0.03
+            let posMove = this.reparsePx(-(botaoWidth + ref.minEditContainerWidth))
+
+            ref.addEstilo(ref.editContainer, {
+                left: posMove
+            })
+
+            ref.addEstilo(ref.optionsContainer, {
+                paddingLeft: '0px'
+            })
+
+            ref.optionsButtons.forEach(button => {
+
+                ref.addEstilo(button.ref, {
+
+                    left: '-2.5vw'
+
+                })
+
+            })
+            showOptionsContainer()
+
+        } else {
+
+            hideOptionsContainer()
+            ref.addEstilo(ref.editContainer, {
+                left: '2vw'
+            })
+
+            ref.addEstilo(ref.optionsContainer, {
+                paddingLeft: '15px'
+            })
+            ref.optionsButtons.forEach(button => {
+
+
+                ref.addEstilo(button.ref, {
+
+                    left: '0vw'
+                })
+
+            })
+            showOptionsContainer()
+
+        }
+
+    }
+
+    checkEnd(ref) {
+
+        let optionsPercent = ref.optionsContainer.style.left
+        let posX = ref.parsePx(ref.blocoRef.style.left)
+        let blocoWidth = ref.parsePx(ref.blocoRef.style.width)
+        let folhaWidth = ref.parsePx(getComputedStyle(ref.folhaContainer, null).getPropertyValue('width'))
+        let paddingLeftOptionsContainer = 15
+        let editContainerWidth = (folhaWidth * 0.015) + 200
+        if ((posX + blocoWidth + paddingLeftOptionsContainer + editContainerWidth) >= folhaWidth && optionsPercent == '100%') {
+            ref.changeContainerPos(ref)
+            ref.chageOptionsStyle(ref, '100%')
+        } else if (posX <= ref.alignPadding && optionsPercent == '0%') {
+            ref.changeContainerPos(ref)
+            ref.chageOptionsStyle(ref, '0%')
+        }
+
+    }
+
+    makeResize(element, resizers) {
+        const minimum_size = 20;
+        let originalWidth = 0;
+        let originalHeight = 0;
+        let originalX = 0;
+        let originalY = 0;
+        let originalMouseX = 0;
+        let originalMouseY = 0;
+
+        const stopResize = resizer => {
+            this.addEstilo(this.folhaContainer, {
+                cursor: "default"
+            })
+            this.addEstilo(resizer, {
+                cursor: "grab",
+                backgroundColor: 'white'
+            })
+            window.onmousemove = () => { }
+        }
+        const resize = (e, resizer) => {
+            this.addEstilo(resizer, {
+                cursor: "grabbing",
+                backgroundColor: "lightblue"
+            })
+            this.addEstilo(this.folhaContainer, {
+                cursor: "grabbing"
+            })
+
+            if (resizer.bottomRight) {
+                const width = originalWidth + (e.pageX - originalMouseX);
+                const height = originalHeight + (e.pageY - originalMouseY)
+                if (width > minimum_size) {
+                    element.style.width = this.reparsePx(width)
+                }
+                if (height > minimum_size) {
+                    element.style.height = this.reparsePx(height)
+                }
+            }
+            else if (resizer.bottomLeft) {
+                const height = originalHeight + (e.pageY - originalMouseY)
+                const width = originalWidth - (e.pageX - originalMouseX)
+                if (height > minimum_size) {
+                    element.style.height = this.reparsePx(height)
+                }
+                if (width > minimum_size) {
+                    element.style.width = this.reparsePx(width)
+                    element.style.left = this.reparsePx(originalX + (e.pageX - originalMouseX))
+                }
+            }
+            else if (resizer.topRight) {
+                const width = originalWidth + (e.pageX - originalMouseX)
+                const height = originalHeight - (e.pageY - originalMouseY)
+                if (width > minimum_size) {
+                    element.style.width = this.reparsePx(width)
+                }
+                if (height > minimum_size) {
+                    element.style.height = this.reparsePx(height)
+                    element.style.top = this.reparsePx(originalY + (e.pageY - originalMouseY))
+                }
+            }
+            else if (resizer.topLeft) {
+                const width = originalWidth - (e.pageX - originalMouseX)
+                const height = originalHeight - (e.pageY - originalMouseY)
+                if (width > minimum_size) {
+                    element.style.width = this.reparsePx(width)
+                    element.style.left = this.reparsePx(originalX + (e.pageX - originalMouseX))
+                }
+                if (height > minimum_size) {
+                    element.style.height = this.reparsePx(height)
+                    element.style.top = this.reparsePx(originalY + (e.pageY - originalMouseY))
+                }
+            }
+            else if (resizer.bottom) {
+                const height = originalHeight + (e.pageY - originalMouseY)
+                if (height > minimum_size) {
+                    element.style.height = this.reparsePx(height)
+                }
+            }
+            else if (resizer.top) {
+                const height = originalHeight - (e.pageY - originalMouseY)
+                if (height > minimum_size) {
+                    element.style.height = this.reparsePx(height)
+                    element.style.top = this.reparsePx(originalY + (e.pageY - originalMouseY))
+
+                }
+            }
+            else if (resizer.right) {
+
+                const width = originalWidth + (e.pageX - originalMouseX)
+                if (width > minimum_size) {
+                    element.style.width = this.reparsePx(width)
+                }
+
+            }
+            else if (resizer.left) {
+                const width = originalWidth - (e.pageX - originalMouseX)
+                if (width > minimum_size) {
+                    element.style.width = this.reparsePx(width)
+                    element.style.left = this.reparsePx(originalX + (e.pageX - originalMouseX))
+                }
+
+
+            }
+        }
+        resizers.forEach(resizer => {
+
+            resizer.onmousedown = e => {
+                e.preventDefault()
+                originalWidth = this.parsePx(getComputedStyle(element, null).getPropertyValue('width'))
+                originalHeight = this.parsePx(getComputedStyle(element, null).getPropertyValue('height'))
+                originalX = this.parsePx(element.style.left);
+                originalY = this.parsePx(element.style.top);
+                originalMouseX = e.pageX;
+                originalMouseY = e.pageY;
+                window.onmousemove = ew => {
+                    resize(ew, resizer)
+                }
+                window.onmouseup = () => {
+                    stopResize(resizer)
+                }
+            }
+
+
+        })
+
+
+    }
+
+    removeBloco(ref) {
+
+        let anim = ref.blocoRef.animate([{
+            opacity: '1',
+            transform: 'scale(1)'
+
+        }, {
+            opacity: '0',
+            transform: 'scale(0.8)'
+
+        }], 200)
+
+        anim.onfinish = () => {
+            ref.blocoRef.style.display = 'none'
+            ref.folhaContainer.removeChild(ref.blocoRef)
+            ref.folha.removeBloco(ref)
+            //Remover do array folha
+        }
+
+    }
+
+    appearOptions(ref) {
+    }
+
+    openEditContainer(ref) {
+
+
+        if (ref.editContainer.style.display == 'none') {
+
+            let openRight = () => {
+
+                let anim = ref.editContainer.animate([{
+
+                    opacity: '0',
+                    left: '1vw'
+
+                }, {
+                    opacity: '1',
+                    left: '2vw'
+                }], {
+                        duration: 100,
+                    })
+
+                anim.onfinish = () => {
+                    ref.addEstilo(ref.editContainer, {
+                        opacity: '1',
+                        left: '2vw'
+                    })
+                }
+            }
+
+            let openLeft = () => {
+                let botaoWidth = window.innerWidth * 0.03
+                let posMove = -(botaoWidth + ref.minEditContainerWidth)
+                let posMoveInit = posMove + 20
+                posMove = ref.reparsePx(posMove)
+                posMoveInit = ref.reparsePx(posMoveInit)
+                let anim = ref.editContainer.animate([{
+
+                    opacity: '0',
+                    left: posMoveInit
+
+                }, {
+                    opacity: '1',
+                    left: posMove
+                }], {
+                        duration: 100,
+                    })
+
+                anim.onfinish = () => {
+                    ref.addEstilo(ref.editContainer, {
+                        opacity: '1',
+                        left: posMove
+                    })
+                }
+
+
+
+
+                ref.addEstilo(ref.editContainer, {
+                    left: posMove
+                })
+
+            }
+            ref.addEstilo(ref.editContainer, {
+                display: 'flex',
+                opacity: '0'
+            })
+
+
+            if (ref.optionsContainer.style.left == '100%') {
+
+                openRight()
+
+            } else {
+                openLeft()
+            }
+
+        } else {
+
+            let anim = ref.editContainer.animate([{
+                opacity: '1',
+                transform: 'scale(1)'
+            }, {
+                opacity: '0',
+                transform: 'scale(0.8)'
+
+            }], 100)
+
+            anim.onfinish = () => {
+
+                ref.addEstilo(ref.editContainer, {
+                    display: 'none',
+
+                })
+
+            }
+
+
+        }
+
+
+
+
+    }
+
+    alignRight(ref) {
+        let folhaEnd = ref.parsePx(getComputedStyle(ref.folhaContainer, null).getPropertyValue('width')) - ref.alignPadding
+        let blocoWidth = ref.parsePx(ref.blocoRef.style.width)
+        let posX = ref.reparsePx(folhaEnd - blocoWidth)
+
+
+        let anim = ref.blocoRef.animate([
+            {
+                left: ref.blocoRef.style.left
+            }, {
+                left: posX
+            }
+        ], {
+                duration: 100,
+            })
+
+        anim.onfinish = () => {
+
+            ref.addEstilo(ref.blocoRef, {
+                left: posX
+            })
+            ref.checkEnd(ref)
+        }
+
+    }
+
+    alignLeft(ref) {
+
+        let folhaInit = ref.reparsePx(ref.alignPadding)
+
+        let anim = ref.blocoRef.animate([
+            {
+                left: ref.blocoRef.style.left
+            }, {
+                left: folhaInit
+            }
+        ], {
+                duration: 100,
+            })
+
+        anim.onfinish = () => {
+
+            ref.addEstilo(ref.blocoRef, {
+                left: folhaInit
+            })
+            ref.checkEnd(ref)
+        }
+    }
+
+    alignCenter(ref) {
+        let halfFolhaWidth = this.parsePx(getComputedStyle(ref.folhaContainer, null).getPropertyValue('width')) / 2
+        let halfBlocoWidth = ref.parsePx(ref.blocoRef.style.width) / 2
+
+        let posX = this.reparsePx(halfFolhaWidth - halfBlocoWidth)
+
+        let anim = ref.blocoRef.animate([
+            {
+                left: ref.blocoRef.style.left
+            }, {
+                left: posX
+            }
+        ], {
+                duration: 100,
+            })
+
+        anim.onfinish = () => {
+
+            ref.addEstilo(ref.blocoRef, {
+                left: posX
+            })
+        }
+
+
+    }
+
+    minimize(ref) {
+
+        ref.addEstilo(ref.blocoRef, {
+            border: 'none'
+        })
+
+        ref.resizesContainer.forEach(container => {
+
+            let anim = container.animate([{
+                opacity: '1'
+
+            }, {
+                opacity: '0'
+            }], 80)
+
+            anim.onfinish = () => {
+                ref.addEstilo(container, {
+                    display: 'none'
+                })
+
+            }
+
+        })
+
+        let anim = ref.optionsContainer.animate([{
+
+            opacity: '1'
+
+        }, {
+            opacity: '0'
+
+        }], 80)
+
+        anim.onfinish = () => {
+            ref.addEstilo(ref.optionsContainer, {
+                display: 'none'
+            })
+            ref.maximized = false
+        }
+
+    }
+
+    maximize(ref) {
+        ref.addEstilo(ref.blocoRef, {
+            border: '1px solid var(--cor-escura)'
+        })
+        ref.resizesContainer.forEach(container => {
+            ref.addEstilo(container, {
+                display: 'block',
+            })
+            let anim = container.animate([{
+                opacity: '0'
+
+            }, {
+                opacity: '1'
+            }], 80)
+
+
+        })
+
+        ref.addEstilo(ref.optionsContainer, {
+            display: 'block'
+        })
+        let anim = ref.optionsContainer.animate([{
+
+            opacity: '0'
+
+        }, {
+            opacity: '1'
+
+        }], 80)
+
+        ref.maximized = true
+
+    }
+
+    trazerFrente(ref) {
+        ref.folha.trazerFrente(ref)
+    }
+
+    addMainContent(element) {
+        this.blocoRef.appendChild(element)
+    }
+
+    addConfig(elements) {
+        elements.forEach(element => {
+
+            this.editContainer.prepend(element)
+        })
     }
 }
 

@@ -274,14 +274,14 @@ function dragging(div, ref) {
     document.addEventListener("mousemove", onMouseMove)
     console.log(ref.parsePx(placeholder.style.left))
 
-    document.onmouseup = function() {
+    document.onmouseup = () => {
       document.body.removeChild(placeholder)
-      ref.navBar.tabs[0].folha.criarTexto({
+      ref.navBar.currentPage().criarTexto({
         posX: ref.parsePx(placeholder.style.left),
         posY: ref.parsePx(placeholder.style.top)
       })
-      document.removeEventListener("mousemove", onMouseMove)
       placeholder.onmouseup = null
+      document.onmouseup = () => {}
     }
   }
 
@@ -289,125 +289,5 @@ function dragging(div, ref) {
     return false
   }
 }
-
-// function dragg(div, child) {
-//   div.onmousedown = function(event) {
-//     let block = div.cloneNode(true)
-//     child.insertBefore(block, child.firstChild)
-//     div.style.width = block.offsetWidth + "px"
-//     div.style.height = block.offsetHeigh + "px"
-
-//     let shiftX = event.clientX - div.getBoundingClientRect().left
-//     let shiftY = event.clientY - div.getBoundingClientRect().top
-
-//     div.style.position = "absolute"
-//     div.style.zIndex = 1000
-//     document.body.append(div)
-
-//     moveAt(event.pageX, event.pageY)
-
-//     function moveAt(pageX, pageY) {
-//       div.style.left = pageX - shiftX + "px"
-//       div.style.top = pageY - shiftY + "px"
-//     }
-
-//     function onMouseMove(event) {
-//       moveAt(event.pageX, event.pageY)
-//     }
-
-//     document.addEventListener("mousemove", onMouseMove)
-
-//     div.onmouseup = function() {
-//       document.removeEventListener("mousemove", onMouseMove)
-//       div.onmouseup = null
-//     }
-//   }
-
-//   div.ondragstart = function() {
-//     return false
-//   }
-// }
-
-// function newBook(caderno, mochila) {
-//   let newBook = document.createElement("caderno")
-//   caderno.addEstilo(newBook, {
-//     width: "94%",
-//     height: "5%",
-//     margin: "2%",
-//     backgroundColor: "var(--cor-escura)",
-//     display: "flex",
-//     justifyContent: "space-between",
-//     alignItems: "center",
-//     borderRadius: "8px",
-//     color: "white",
-//     fontSize: "15px",
-//
-//   })
-//   caderno.hover(newBook, {
-//     backgroundColor: "var(--cor-clara)"
-//   })
-
-//   const newBookName = document.createElement("p")
-//   newBookName.textContent = "Novo Caderno " + ("(" + ++bookCounter + ")")
-//   newBookName.ondblclick = () => {
-//     caderno.addEstilo(newBookName, {
-//       transitionTimingFunction: "ease",
-//       textDecoration: "underline white"
-//     })
-//     newBookName.contentEditable = true
-//     newBookName.onkeydown = function(event) {
-//       if (event.keyCode == 13) {
-//         newBookName.contentEditable = false
-//         caderno.addEstilo(newBookName, {
-//           textDecoration: "none"
-//         })
-//       }
-//     }
-//   }
-
-//   const bookButtonContainer = document.createElement("div")
-//   caderno.addEstilo(bookButtonContainer, {
-//     width: "30%",
-//     height: "100%",
-//     backgroundColor: "none",
-//     display: "flex",
-//     justifyContent: "space-evenly",
-//     alignItems: "center"
-//   })
-
-//   const favoriteBook = new Botao({
-//     icon: "favoriteBook",
-//     imageWidth: "18px",
-//     imageHeigth: "18px",
-//     width: "40%",
-//     height: "80%",
-//     ref: bookButtonContainer,
-//     action: () => {
-//       console.log("action")
-//     },
-//     hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
-//   })
-
-//   const deleteBook = new Botao({
-//     icon: "deleteBook",
-//     imageWidth: "20px",
-//     imageHeigth: "20px",
-//     width: "40%",
-//     height: "80%",
-//     ref: bookButtonContainer,
-//     action: () => {
-//       delBook(mochila, newBook)
-//     },
-//     hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
-//   })
-
-//   newBook.append(newBookName)
-//https://github.com/lucasalme1da/simplebook.git/   newBook.append(bookButtonContainer)
-//   mochila.insertBefore(newBook, mochila.lastChild)
-// }
-
-// function delBook(mochila, caderno) {
-//   mochila.removeChild(caderno)
-// }
 
 module.exports = BlocoDash
