@@ -6,6 +6,7 @@ const Lista = require('./Lista')
 const Tabela = require('./Tabela')
 const { clipboard, Tray } = require('electron')
 const fs = require('fs')
+const { app, globalShortcut } = require('electron')
 
 class Folha extends Estilo {
     constructor(options) {
@@ -19,6 +20,43 @@ class Folha extends Estilo {
         this.mouseX = 0
         this.mouseY = 0
         this.windowOnMouseMoveActions = []
+
+        window.onkeydown = e => {
+            if (e.ctrlKey && e.keyCode == 84) {
+                const { x, y } = this.getMousePos(100, 50)
+                this.criarTexto({
+                    posX: x,
+                    posY: y,
+                    initialWidth: 100,
+                    initialHeight: 50,
+                })
+            } else if (e.ctrlKey && e.keyCode == 73) {
+                const { x, y } = this.getMousePos(400, 400)
+                this.criarImagem({
+                    posX: x,
+                    posY: y,
+                    initialWidth: 400,
+                    initialHeight: 400,
+                })
+            } else if (e.ctrlKey && e.keyCode == 76) {
+                const { x, y } = this.getMousePos(400, 400)
+                this.criarLista({
+                    posX: x,
+                    posY: y,
+                    initialWidth: 400,
+                    initialHeight: 400,
+                })
+            } else if (e.ctrlKey && e.keyCode == 71) {
+                const { x, y } = this.getMousePos(400, 400)
+                this.criarTabela({
+                    posX: x,
+                    posY: y,
+                    initialWidth: 400,
+                    initialHeight: 400,
+                })
+
+            }
+        }
 
         this.addWindowMouseMoveAction(e => {
 
@@ -63,6 +101,13 @@ class Folha extends Estilo {
         })
 
     }
+
+    getMousePos(width, height) {
+        let x = this.mouseX - this.folhaContainer.offsetLeft - (width / 2)
+        let y = this.mouseY - this.folhaContainer.offsetTop - (height / 2)
+        return { x, y }
+    }
+
     removeWindowMouseMoveAction(ind) {
         this.windowOnMouseMoveActions.splice(ind, 1)
 
@@ -113,6 +158,8 @@ class Folha extends Estilo {
                 posX: `${options.posX}px`,
                 posY: `${options.posY}px`,
                 loadedFonts: this.loadedFonts,
+                initialHeight: options.initialHeight,
+                initialWidth: options.initialWidth,
                 folha: this
             })
         )
@@ -126,6 +173,8 @@ class Folha extends Estilo {
                 posX: `${options.posX}px`,
                 posY: `${options.posY}px`,
                 loadedFonts: this.loadedFonts,
+                initialHeight: options.initialHeight,
+                initialWidth: options.initialWidth,
                 folha: this
             })
         )

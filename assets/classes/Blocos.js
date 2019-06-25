@@ -175,6 +175,8 @@ class Blocos extends Estilo {
             border: '1px solid var(--cor-escura)',
             backgroundColor: 'white',
             position: 'absolute',
+            opacity: '1',
+            transform: 'scale(1)',
             zIndex: '100',
             top: '50px',
             left: '50px',
@@ -339,7 +341,17 @@ class Blocos extends Estilo {
 
         this.blocoRef.append(...this.resizesContainer)
         this.folhaContainer.appendChild(this.blocoRef)
-        this.minimize(this)
+        let animBloco = this.blocoRef.animate([{
+            opacity: '0',
+            transform: 'scale(0.8)'
+
+        }, {
+            opacity: '1',
+            transform: 'scale(1)'
+
+        }], 500)
+        animBloco.onfinish = () => this.minimize(this)
+
     }
     handleClick() {
 
@@ -1048,6 +1060,8 @@ class Blocos extends Estilo {
             width: this.reparsePx(this.initialWidth),
             height: this.reparsePx(this.initialHeight),
             border: '1px solid var(--cor-escura)',
+            opacity: '1',
+            transform: 'scale(1)',
             backgroundColor: 'white',
             position: 'absolute',
             zIndex: '100',
@@ -1214,7 +1228,16 @@ class Blocos extends Estilo {
 
         this.blocoRef.append(...this.resizesContainer)
         this.folhaContainer.appendChild(this.blocoRef)
-        this.minimize(this)
+        let animBloco = this.blocoRef.animate([{
+            opacity: '0',
+            transform: 'scale(0.8)'
+
+        }, {
+            opacity: '1',
+            transform: 'scale(1)'
+
+        }], this.animationTimes.medium)
+        animBloco.onfinish = () => this.minimize(this)
     }
 
 }
