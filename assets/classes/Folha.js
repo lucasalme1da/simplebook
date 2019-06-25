@@ -4,6 +4,8 @@ const Texto = require("./Texto")
 const Imagem = require('./Imagem')
 const Lista = require('./Lista')
 const Tabela = require('./Tabela')
+const { clipboard, Tray } = require('electron')
+const fs = require('fs')
 
 class Folha extends Estilo {
     constructor(options) {
@@ -12,15 +14,47 @@ class Folha extends Estilo {
         this.folhaContainer = options.folhaContainer
         this.zIndexBlocoMin = 5
         this.zIndexBlocoMax = 300
+        this.imageCount = -1
         this.loadedFonts = options.loadedFonts
-        this.criarImagem({
-            posX: 100,
-            posY: 100,
+        this.mouseX = 0
+        this.mouseY = 0
+        this.windowOnMouseMoveActions = []
+
+        this.addWindowMouseMoveAction(e => {
+
+            this.mouseX = e.clientX
+            this.mouseY = e.clientY
         })
-        this.criarLista({
-            posX: 100,
-            posY: 100,
-        })
+
+        this.folhaContainer.onpaste = e => {
+
+            const image = clipboard.readImage()
+            this.countImgs()
+
+            if (!image.isEmpty()) {
+                const { height, width } = image.getSize()
+                let x = this.mouseX - this.folhaContainer.offsetLeft - (width / 2)
+                let y = this.mouseY - this.folhaContainer.offsetTop - (height / 2)
+                fs.writeFileSync(`./imgs/Imagem-${this.imageCount + 1}.jpg`, image.toJPEG(100))
+                this.criarImagem({
+                    posX: x,
+                    posY: y,
+                    initialWidth: width,
+                    initialHeight: height,
+                    src: `Imagem-${this.imageCount + 1}.jpg`
+                })
+
+            }
+        }
+
+        // this.criarImagem({
+        //     posX: 100,
+        //     posY: 100,
+        // })
+        // this.criarLista({
+        //     posX: 100,
+        //     posY: 100,
+        // })
         this.criarTabela({
             posX: 200,
             posY: 200,
@@ -29,6 +63,34 @@ class Folha extends Estilo {
         })
 
     }
+    removeWindowMouseMoveAction(ind) {
+        this.windowOnMouseMoveActions.splice(ind, 1)
+
+    }
+
+    addWindowMouseMoveAction(action) {
+        this.windowOnMouseMoveActions.push(action)
+        window.onmousemove = e => {
+            this.windowOnMouseMoveActions.forEach(action => {
+                action(e)
+            })
+        }
+        return this.windowOnMouseMoveActions.length - 1
+    }
+
+    countImgs() {
+
+        let images = fs.readdirSync('./imgs')
+        if (images.length > 0) {
+            let imagesNumber = images.map(image => parseInt(image.split('-')[1]))
+            this.imageCount = Math.max(...imagesNumber)
+
+        } else {
+            this.imageCount = 0
+        }
+
+    }
+
     criarTabela(options) {
 
         this.blocos.push(
@@ -74,6 +136,9 @@ class Folha extends Estilo {
                 folhaContainer: this.folhaContainer,
                 posX: `${options.posX}px`,
                 posY: `${options.posY}px`,
+                initialHeight: options.initialHeight,
+                initialWidth: options.initialWidth,
+                src: options.src,
                 folha: this
             })
         )

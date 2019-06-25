@@ -1,25 +1,17 @@
-<svg width="128" height="96" xmlns="http://www.w3.org/2000/svg">
+<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
 
  <g>
   <title>background</title>
-  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+  <rect fill="none" id="canvas_background" height="22" width="22" y="-1" x="-1"/>
  </g>
  <g>
   <title>Layer 1</title>
-  <g id="svg_1">
-   <path id="svg_2" fill="#cccccc" d="m128,96l-128,0l0,-96l128,0l0,96z"/>
-   <path id="svg_3" fill="#cccccc" d="m1.33333,1.33334l125.33367,0l0,93.33336l-125.33367,0l0,-93.33336z"/>
-   <path id="svg_4" fill="#FFFFFF" d="m2.66667,2.66666l122.66633,0l0,90.66664l-122.66633,0l0,-90.66664z"/>
-   <path id="svg_5" fill="#e5e5e5" d="m125.333,14.6667l-122.66633,0l0,-12.00004l122.66633,0l0,12.00004z"/>
-   <path id="svg_6" fill="#cccccc" d="m2.66667,14.6667l122.66633,0l0,-1.3334l-122.66633,0l0,1.3334z"/>
-   <path id="svg_7" fill="#B4E2FF" d="m40,93.3333l1.3333,0l0,-90.66664l-1.3333,0l0,90.66664z"/>
-   <path id="svg_8" fill="#B4E2FF" d="m86.6667,93.3333l1.3333,0l0,-90.66664l-1.3333,0l0,90.66664z"/>
-   <path id="svg_9" fill="#cccccc" d="m2.66667,28l122.66633,0l0,-1.3333l-122.66633,0l0,1.3333z"/>
-   <path id="svg_10" fill="#cccccc" d="m2.66667,41.3333l122.66633,0l0,-1.3333l-122.66633,0l0,1.3333z"/>
-   <path id="svg_11" fill="#cccccc" d="m2.66667,54.6667l122.66633,0l0,-1.3334l-122.66633,0l0,1.3334z"/>
-   <path id="svg_12" fill="#cccccc" d="m2.66667,68l122.66633,0l0,-1.3347l-122.66633,0l0,1.3347z"/>
-   <path id="svg_13" fill="#cccccc" d="m2.66667,81.3333l122.66633,0l0,-1.3333l-122.66633,0l0,1.3333z"/>
-   <path id="svg_14" fill="#999999" d="m88,0l-48,0l0,96l48,0m-4,-4l-40,0l0,-88l40,0l0,88z"/>
+  <g stroke="null" id="Grupo_32">
+   <path stroke="null" fill="#fff" d="m16.46875,17.09125l-5.821875,0l0,-14.3725l5.821875,0l0,14.371774l0,0.000726zm-4.528125,-2.791065l0,1.4728l3.234375,0l0,-1.4728l-3.234375,0zm0,-2.930365l0,1.471349l3.234375,0l0,-1.471349l-3.234375,0zm0,-2.93109l0,1.472075l3.234375,0l0,-1.472075l-3.234375,0zm0,-3.883695l0,2.197592l3.234375,0l0,-2.197592l-3.234375,0z" id="Subtração_15"/>
+   <g stroke="null" id="Grupo_28">
+    <rect stroke="null" x="5.471875" y="2.71875" fill="#fff" height="6.529657" width="1.940625" id="Retângulo_110"/>
+    <rect stroke="null" x="12.747326" y="-2.458936" fill="#fff" transform="matrix(0,0.7255173921585083,-0.6468750238418579,0,7.762500524520874,-4.35310410667946) " height="9" width="3" id="Retângulo_111"/>
+   </g>
   </g>
  </g>
 </svg>

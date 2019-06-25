@@ -478,17 +478,7 @@ class Blocos extends Estilo {
         let originalY = 0;
         let originalMouseX = 0;
         let originalMouseY = 0;
-
-        const stopResize = resizer => {
-            this.addEstilo(this.folhaContainer, {
-                cursor: "default"
-            })
-            this.addEstilo(resizer, {
-                cursor: "grab",
-                backgroundColor: 'white'
-            })
-            window.onmousemove = () => { }
-        }
+        let ind
         const resize = (e, resizer) => {
             this.addEstilo(resizer, {
                 cursor: "grabbing",
@@ -574,6 +564,17 @@ class Blocos extends Estilo {
 
             }
         }
+        const stopResize = resizer => {
+            this.addEstilo(this.folhaContainer, {
+                cursor: "default"
+            })
+            this.addEstilo(resizer, {
+                cursor: "grab",
+                backgroundColor: 'white'
+            })
+            this.folha.removeWindowMouseMoveAction(ind)
+        }
+
         resizers.forEach(resizer => {
 
             resizer.onmousedown = e => {
@@ -584,9 +585,11 @@ class Blocos extends Estilo {
                 originalY = this.parsePx(element.style.top);
                 originalMouseX = e.pageX;
                 originalMouseY = e.pageY;
-                window.onmousemove = ew => {
+
+                ind = this.folha.addWindowMouseMoveAction(ew => {
                     resize(ew, resizer)
-                }
+                })
+
                 window.onmouseup = () => {
                     stopResize(resizer)
                 }

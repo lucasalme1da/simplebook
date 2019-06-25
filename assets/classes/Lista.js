@@ -101,6 +101,7 @@ class Lista extends Blocos {
             overflow: 'hidden'
         })
         this.lista = document.createElement('ul')
+        this.lista.setAttribute('draggable', 'false')
         this.addEstilo(this.lista, {
             width: '100%',
             marginBottom: '15px',

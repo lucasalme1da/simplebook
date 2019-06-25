@@ -306,6 +306,7 @@ class Tabela extends Blocos {
 
   criarTabela() {
     this.tabela = document.createElement("table")
+    this.tabela.setAttribute('draggable', 'false')
     this.tabela.innerHTML = `<tr>
         <th contenteditable >Itens</th>
         <th contenteditable >Descrição</th>
@@ -336,12 +337,16 @@ class Tabela extends Blocos {
       marginBottom: "20px"
     })
 
+    let buttonWidth = '2vw'
+    let btiImageWidth = '20px'
+    let btImageHeight = '20px'
+
     this.addBtColuna = new Botao({
       icon: "addColumn",
-      width: "2vw",
-      height: "2vw",
-      imageWidth: "16px",
-      imageHeight: "16px",
+      width: buttonWidth,
+      height: buttonWidth,
+      imageWidth: btiImageWidth,
+      imageHeight: btImageHeight,
       ref: this.tabelaContainer,
       animation: true,
       style: {
@@ -359,10 +364,10 @@ class Tabela extends Blocos {
     })
     this.addBtLine = new Botao({
       icon: "addLine",
-      width: "2vw",
-      height: "2vw",
-      imageWidth: "16px",
-      imageHeight: "16px",
+      width: buttonWidth,
+      height: buttonWidth,
+      imageWidth: btiImageWidth,
+      imageHeight: btImageHeight,
       ref: this.tabelaContainer,
       animation: true,
       style: {
@@ -378,11 +383,11 @@ class Tabela extends Blocos {
       action: () => this.addLine(this)
     })
     this.removeBtColuna = new Botao({
-      icon: "close",
-      width: "2vw",
-      height: "2vw",
-      imageWidth: "16px",
-      imageHeight: "16px",
+      icon: "removeColumn",
+      width: buttonWidth,
+      height: buttonWidth,
+      imageWidth: btiImageWidth,
+      imageHeight: btImageHeight,
       ref: this.tabelaContainer,
       animation: true,
       style: {
@@ -399,11 +404,11 @@ class Tabela extends Blocos {
       action: () => this.removeColuna(this)
     })
     this.removeBtLine = new Botao({
-      icon: "close",
-      width: "2vw",
-      height: "2vw",
-      imageWidth: "16px",
-      imageHeight: "16px",
+      icon: "removeLine",
+      width: buttonWidth,
+      height: buttonWidth,
+      imageWidth: btiImageWidth,
+      imageHeight: btImageHeight,
       ref: this.tabelaContainer,
       animation: true,
       style: {

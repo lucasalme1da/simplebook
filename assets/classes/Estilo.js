@@ -7,7 +7,11 @@ class Estilo {
       medium: 80,
       slow: 180
     }
+
+
   }
+
+
   getWidth(element) {
     return getComputedStyle(element, null).getPropertyValue("width")
   }
