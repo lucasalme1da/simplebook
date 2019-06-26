@@ -12,6 +12,14 @@ class Imagem extends Blocos {
         this.criarImagem()
 
     }
+    export() {
+
+        this.exportData = {
+            type: this.constructor.name,
+            src: this.src
+        }
+        return super.export()
+    }
 
     createFilesDirectory() {
         try {
@@ -56,6 +64,9 @@ class Imagem extends Blocos {
     criarImagem() {
 
         this.imagem = document.createElement('img')
+        this.imagem.ondrag = e => {
+            e.preventDefault()
+        }
         this.imagem.setAttribute('draggable', 'false')
         this.file = document.createElement('input')
         this.file.setAttribute('type', 'file')

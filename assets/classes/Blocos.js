@@ -14,11 +14,28 @@ class Blocos extends Estilo {
         this.criar(options)
         this.maximized = false
         this.tempoFadeOut = 8000
+        this.exportData = {}
+    }
+
+    export() {
+
+        let exportOb = {
+            width: this.parsePx(this.blocoRef.style.width),
+            height: this.parsePx(this.blocoRef.style.height),
+            posX: this.parsePx(this.blocoRef.style.left),
+            posY: this.parsePx(this.blocoRef.style.top)
+        }
+        Object.assign(exportOb, this.exportData)
+        return exportOb
     }
 
     criar() {
 
         this.blocoRef = document.createElement('bloco')
+
+        this.blocoRef.ondrag = e => {
+            e.preventDefault()
+        }
 
         this.blocoRef.onclick = () => {
             this.handleClick()

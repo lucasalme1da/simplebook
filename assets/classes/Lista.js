@@ -47,6 +47,15 @@ class Lista extends Blocos {
         this.criarLista()
 
     }
+    export() {
+
+        this.exportData = {
+            type: this.constructor.name,
+
+        }
+        return super.export()
+
+    }
     removeItem(ref) {
         let removedLista = ref.lista.lastChild
         if (removedLista) {
@@ -101,6 +110,9 @@ class Lista extends Blocos {
             overflow: 'hidden'
         })
         this.lista = document.createElement('ul')
+        this.lista.ondrag = e => {
+            e.preventDefault()
+        }
         this.lista.setAttribute('draggable', 'false')
         this.addEstilo(this.lista, {
             width: '100%',

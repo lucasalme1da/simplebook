@@ -11,7 +11,7 @@ const { app, globalShortcut } = require('electron')
 class Folha extends Estilo {
     constructor(options) {
         super()
-        this.blocos = options.blocos || []
+        this.blocos = []
         this.folhaContainer = options.folhaContainer
         this.zIndexBlocoMin = 5
         this.zIndexBlocoMax = 300
@@ -19,8 +19,9 @@ class Folha extends Estilo {
         this.loadedFonts = options.loadedFonts
         this.mouseX = 0
         this.mouseY = 0
+        this.scrollPadding = 20
+        this.scrollAdd = 200
         this.windowOnMouseMoveActions = []
-
         window.onkeydown = e => {
             if (e.ctrlKey && e.keyCode == 84) {
                 const { x, y } = this.getMousePos(100, 50)
@@ -64,6 +65,23 @@ class Folha extends Estilo {
             this.mouseY = e.clientY
         })
 
+        window.onmousewheel = e => {
+            if (e.wheelDelta < 0) {
+                const height = this.folhaContainer.parentElement.offsetHeight
+                const scrollTop = this.folhaContainer.parentElement.scrollTop
+                const scrollHeight = this.folhaContainer.scrollHeight
+
+                const diff = scrollHeight - (height + scrollTop)
+                if (diff <= this.scrollPadding) {
+                    const height = this.parsePx(this.folhaContainer.style.height) + this.scrollAdd
+                    this.folhaContainer.style.height = this.reparsePx(height)
+                }
+
+
+            }
+
+        }
+
         this.folhaContainer.onpaste = e => {
 
             const image = clipboard.readImage()
@@ -71,8 +89,8 @@ class Folha extends Estilo {
 
             if (!image.isEmpty()) {
                 const { height, width } = image.getSize()
-                let x = this.mouseX - this.folhaContainer.offsetLeft - (width / 2)
-                let y = this.mouseY - this.folhaContainer.offsetTop - (height / 2)
+                const { x, y } = this.getMousePos(width, height)
+
                 fs.writeFileSync(`./imgs/Imagem-${this.imageCount + 1}.jpg`, image.toJPEG(100))
                 this.criarImagem({
                     posX: x,
@@ -85,26 +103,54 @@ class Folha extends Estilo {
             }
         }
 
-        // this.criarImagem({
-        //     posX: 100,
-        //     posY: 100,
-        // })
-        // this.criarLista({
-        //     posX: 100,
-        //     posY: 100,
-        // })
-        this.criarTabela({
-            posX: 200,
-            posY: 200,
-            initialHeight: 400,
-            initialWidth: 500
-        })
+        let length = options.blocos ? options.blocos.length : null
+
+        if (length > 0) {
+
+            options.blocos.forEach(bloco => {
+                this.loadBloco(bloco)
+            })
+        }
 
     }
 
+    loadBloco(bloco) {
+
+        switch (bloco.type) {
+
+            case 'Texto':
+                this.criarTexto(bloco)
+                break
+            case 'Imagem':
+                criarImagem(bloco)
+                break
+            case 'Lista':
+                criarLista(bloco)
+                break
+            case 'Tabela':
+                criarTabela(bloco)
+                break
+
+        }
+
+    }
+
+
+    export() {
+
+        let exportBlocos = []
+        this.blocos.forEach(bloco => {
+
+            exportBlocos.push(bloco.export())
+        })
+
+        console.log('blocos', exportBlocos)
+        return { name: 'folha', exportBlocos }
+    }
+
     getMousePos(width, height) {
-        let x = this.mouseX - this.folhaContainer.offsetLeft - (width / 2)
-        let y = this.mouseY - this.folhaContainer.offsetTop - (height / 2)
+        let x = (this.mouseX) - this.folhaContainer.offsetLeft - (width / 2)
+        let y = (this.mouseY + this.folhaContainer.parentElement.scrollTop) - this.folhaContainer.offsetTop - (height / 2)
         return { x, y }
     }
 
@@ -144,8 +190,8 @@ class Folha extends Estilo {
                 posX: `${options.posX}px`,
                 posY: `${options.posY}px`,
                 loadedFonts: this.loadedFonts,
-                initialHeight: options.initialHeight,
-                initialWidth: options.initialWidth,
+                initialHeight: options.initialHeight || options.width,
+                initialWidth: options.initialWidth || options.height,
                 folha: this
             })
         )
@@ -158,8 +204,8 @@ class Folha extends Estilo {
                 posX: `${options.posX}px`,
                 posY: `${options.posY}px`,
                 loadedFonts: this.loadedFonts,
-                initialHeight: options.initialHeight,
-                initialWidth: options.initialWidth,
+                initialHeight: options.initialHeight || options.width,
+                initialWidth: options.initialWidth || options.height,
                 folha: this
             })
         )
@@ -173,8 +219,8 @@ class Folha extends Estilo {
                 posX: `${options.posX}px`,
                 posY: `${options.posY}px`,
                 loadedFonts: this.loadedFonts,
-                initialHeight: options.initialHeight,
-                initialWidth: options.initialWidth,
+                initialHeight: options.initialHeight || options.width,
+                initialWidth: options.initialWidth || options.height,
                 folha: this
             })
         )
@@ -185,8 +231,8 @@ class Folha extends Estilo {
                 folhaContainer: this.folhaContainer,
                 posX: `${options.posX}px`,
                 posY: `${options.posY}px`,
-                initialHeight: options.initialHeight,
-                initialWidth: options.initialWidth,
+                initialHeight: options.initialHeight || options.width,
+                initialWidth: options.initialWidth || options.height,
                 src: options.src,
                 folha: this
             })
