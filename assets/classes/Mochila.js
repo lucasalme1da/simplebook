@@ -7,6 +7,7 @@ class Mochila extends Estilo {
   constructor(options) {
     super()
     this.criar(options)
+    this.bagDashRef = options.bagRef
   }
 
   criar(options) {
@@ -33,84 +34,11 @@ class Mochila extends Estilo {
 
     // Editar Nome da Bolsa
     const newBagName = document.createElement("p")
+
     newBagName.textContent = "Nova Mochila " + ("(" + ++bagCounter + ")")
     this.bagName = newBagName.textContent
-    newBagName.ondblclick = e => {
-      this.addEstilo(newBagName, {
-        transitionTimingFunction: "ease",
-        textDecoration: "underline white",
-        cursor: "text"
-      })
-      newBagName.contentEditable = true
-      let oldTextContent = newBagName.textContent
-      let range, selection
-      // Selecionando todo texto dentro da div
-      if (document.body.createTextRange) {
-        range = document.body.createTextRange()
-        range.moveToElementText(newBagName)
-        range.select()
-      } else if (window.getSelection) {
-        selection = window.getSelection()
-        range = document.createRange()
-        range.selectNodeContents(newBagName)
-        selection.removeAllRanges()
-        selection.addRange(range)
-      }
-      newBagName.onkeydown = e => {
-        if (e.keyCode == 13) {
-          if (newBagName.innerText.trim() == "") {
-            newBagName.textContent = oldTextContent
-          } else {
-            this.bagName = newBagName.textContent
-          }
-          newBagName.contentEditable = false
-          this.addEstilo(newBagName, {
-            textDecoration: "none",
-            cursor: "pointer"
-          })
-          options.bagRef.updateBagInfo()
-          //options.bagRef.selectBag(this)
-        }
-      }
 
-      document.onclick = e => {
-        console.log("agora sim kappa")
-        if (e.target != newBagName) {
-          if (newBagName.innerText.trim() == "") {
-            newBagName.textContent = oldTextContent
-          } else {
-            this.bagName = newBagName.textContent
-          }
-          newBagName.contentEditable = false
-          this.addEstilo(newBagName, {
-            textDecoration: "none",
-            cursor: "pointer"
-          })
-          options.bagRef.updateBagInfo()
-          options.bagRef.selectBag(this)
-          document.onclick = () => {}
-        }
-      }
-      // let confirm = () => {
-      //   console.log("tessaaaaaaaa")
-      //   if (e.target != newBagName) {
-      //     if (newBagName.innerText.trim() == "") {
-      //       newBagName.textContent = oldTextContent
-      //     } else {
-      //       this.bagName = newBagName.textContent
-      //     }
-      //     newBagName.contentEditable = false
-      //     this.addEstilo(newBagName, {
-      //       textDecoration: "none",
-      //       cursor: "pointer"
-      //     })
-      //     options.bagRef.updateBagInfo()
-      //     //options.bagRef.selectBag(this)
-      //     document.body.removeEventListener("click", confirm)
-      //   }
-      // }
-      // document.body.addEventListener("click", confirm)
-    }
+    this.addRenamable(newBagName, 19, this)
 
     const bagButtonContainer = document.createElement("div")
     this.addEstilo(bagButtonContainer, {
@@ -250,6 +178,7 @@ class Mochila extends Estilo {
   }
 
   selectBook(bookRef) {
+    this.previousBook = this.currentBook()
     bookRef.isSelected = true
     for (let i = 0; i < this.cadernos.length; i++) {
       if (bookRef == this.cadernos[i]) {
@@ -264,8 +193,12 @@ class Mochila extends Estilo {
       }
     }
     console.log(this.bagRef.dashRefObj.navBar.updateTabs())
-
+    this.esconderCadernos()
     this.bagRef.dashRefObj.navBar.updateTabs()
+  }
+
+  previousBook() {
+    return this.previousBook
   }
 
   currentBook() {
@@ -277,6 +210,18 @@ class Mochila extends Estilo {
   updateBookInfo() {
     console.log(this.bagName)
     this.bagRef.dashRefObj.getBook().titleNameContainer.textContent = this.bagName
+  }
+
+  esconderCadernos() {
+    for (let i = 0; i < this.cadernos.length; i++) {
+      this.cadernos[i].esconderFolhas()
+    }
+  }
+
+  mostrarCadernos() {
+    for (let i = 0; i < this.cadernos.length; i++) {
+      this.cadernos[i].mostrarFolhas()
+    }
   }
 }
 

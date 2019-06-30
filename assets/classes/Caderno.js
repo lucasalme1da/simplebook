@@ -12,10 +12,6 @@ class Caderno extends Estilo {
     this.thisBag = options.thisBag
     this.bookRef = options.bookRef
     this.navBar = options.thisBag.bagRef.dashRefObj.navBar
-    // this.folha = new Folha({
-    //   folhaContainer: this.navBar.folhaContainer,
-    //   loadedFonts: this.navBar.loadedFonts
-    // })
   }
 
   criar(options) {
@@ -79,8 +75,6 @@ class Caderno extends Estilo {
         }
       }
       document.onclick = e => {
-        console.log("clicccccccccccccccc")
-
         if (e.target != this.newBookName) {
           if (this.newBookName.innerText.trim() == "") {
             this.newBookName.textContent = oldTextContent
@@ -135,8 +129,9 @@ class Caderno extends Estilo {
     })
 
     this.newBook.onclick = e => {
-      if (e.target == this.newBook || e.target == this.newBookName)
+      if (e.target == this.newBook || e.target == this.newBookName) {
         options.thisBag.selectBook(this)
+      }
     }
 
     this.newBook.onmouseover = () => {
@@ -226,6 +221,18 @@ class Caderno extends Estilo {
       })
     )
     this.navBar.createTab(this.pageArray[this.pageArray.length - 1])
+  }
+
+  esconderFolhas() {
+    for (let i = 0; i < this.pages.length; i++) {
+      this.pages[i].esconderBlocos()
+    }
+  }
+
+  mostrarFolhas() {
+    for (let i = 0; i < this.pages.length; i++) {
+      this.pages[i].mostrarBlocos()
+    }
   }
 }
 
