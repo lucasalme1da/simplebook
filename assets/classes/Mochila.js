@@ -7,7 +7,6 @@ let bagCounter = 0
 class Mochila extends Estilo {
   constructor(options) {
     super()
-
     this.criar(options)
   }
 

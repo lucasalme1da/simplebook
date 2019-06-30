@@ -199,12 +199,11 @@ class MochilaDash extends Estilo {
     this.ref.append(this.titleContainer, this.contentContainer)
     this.dashRef.appendChild(this.ref)
 
-    // this.load()
-    //   .catch(erro => {
-    //     this.createBag(this.contentContainer)
-    //   })
-    this.createBag(this.contentContainer)
-    this.updateBagInfo()
+    this.load()
+      .catch(erro => {
+        this.createBag(this.contentContainer)
+      })
+    //this.createBag(this.contentContainer)
   }
 
   load() {
@@ -215,6 +214,7 @@ class MochilaDash extends Estilo {
         let data = fs.readFileSync(`./save/${bag}.bag`);
         data = JSON.parse(data)
         createBag(this.contentContainer, data.cadernosData)
+        console.log(data.cadernosData)
       })
       resolve()
     })
@@ -222,6 +222,7 @@ class MochilaDash extends Estilo {
   }
 
   createBag(container, cadernos) {
+
     this.mochilas.push(
       new Mochila({
         bagRef: this,

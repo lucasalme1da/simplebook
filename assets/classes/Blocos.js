@@ -46,9 +46,11 @@ class Blocos extends Estilo {
             position: 'absolute',
             left: '100%',
             paddingLeft: '15px',
-            zIndex: '301'
+            zIndex: '302'
         })
-
+        this.optionsContainer.ondrag = e => {
+            e.preventDefault()
+        }
         this.optionsButtons = []
 
         this.close = new Botao({
