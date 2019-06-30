@@ -7,6 +7,7 @@ class Caderno extends Estilo {
   constructor(options) {
     super()
     this.criar(options)
+
     this.selectedBook = null
     this.previousSelectedBag = null
     this.thisBag = options.thisBag
@@ -93,7 +94,7 @@ class Caderno extends Estilo {
             textDecoration: "none",
             cursor: "pointer"
           })
-          document.onclick = () => {}
+          document.onclick = () => { }
         }
       }
     }
@@ -171,6 +172,23 @@ class Caderno extends Estilo {
         duration: this.animationTimes.slow
       }
     )
+    let length = options.folhas ? options.folha.length : null
+    if (length > 0) {
+      this.options.folha.forEach(page => {
+        newPage(page.exportBlocos)
+      })
+    }
+
+  }
+
+  export() {
+
+    let folhas = []
+    this.pages.forEach(page => {
+      folhas.push(page.export())
+    })
+    console.log('folhas', folhas)
+    return { name: this.newBookName.textConten, folhas }
   }
 
   deleteBook(ref, book) {
@@ -217,12 +235,13 @@ class Caderno extends Estilo {
     return this.isSelected
   }
 
-  newPage() {
+  newPage(blocos) {
     this.pageArray = this.thisBag.bagRef.currentBag().currentBook().pages
     this.pageArray.push(
       new Folha({
         folhaContainer: this.navBar.folhaContainer,
-        loadedFonts: this.navBar.loadedFonts
+        loadedFonts: this.navBar.loadedFonts,
+        blocos
       })
     )
     this.navBar.createTab(this.pageArray[this.pageArray.length - 1])

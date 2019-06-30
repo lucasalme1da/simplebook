@@ -55,7 +55,15 @@ class Tabela extends Blocos {
     ]
     this.criarTabela()
   }
+  export() {
 
+    this.exportData = {
+      type: this.constructor.name,
+
+    }
+    return super.export()
+
+  }
   addColuna(ref) {
     let trs = ref.tabela.children[0].children
     if (trs.length > 0) {
@@ -306,6 +314,9 @@ class Tabela extends Blocos {
 
   criarTabela() {
     this.tabela = document.createElement("table")
+    this.tabela.ondrag = e => {
+      e.preventDefault()
+    }
     this.tabela.setAttribute('draggable', 'false')
     this.tabela.innerHTML = `<tr>
         <th contenteditable >Itens</th>

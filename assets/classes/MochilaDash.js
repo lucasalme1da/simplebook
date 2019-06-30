@@ -199,15 +199,34 @@ class MochilaDash extends Estilo {
     this.ref.append(this.titleContainer, this.contentContainer)
     this.dashRef.appendChild(this.ref)
 
+    // this.load()
+    //   .catch(erro => {
+    //     this.createBag(this.contentContainer)
+    //   })
     this.createBag(this.contentContainer)
     this.updateBagInfo()
   }
 
-  createBag(container) {
+  load() {
+    return new Promise((resolve, reject) => {
+      let bags = fs.readdirSync('./save')
+      if (!bags.length) reject()
+      bags.forEach(bag => {
+        let data = fs.readFileSync(`./save/${bag}.bag`);
+        data = JSON.parse(data)
+        createBag(this.contentContainer, data.cadernosData)
+      })
+      resolve()
+    })
+
+  }
+
+  createBag(container, cadernos) {
     this.mochilas.push(
       new Mochila({
         bagRef: this,
-        containerRef: container
+        containerRef: container,
+        cadernos
       })
     )
     this.selectBag(this.mochilas[this.mochilas.length - 1])
