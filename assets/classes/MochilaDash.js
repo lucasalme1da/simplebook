@@ -112,7 +112,7 @@ class MochilaDash extends Estilo {
       height: "100%",
       ref: btnTitleContainer,
       action: () => {
-        console.log(this.mochilas)
+        console.log("action")
       },
       style: {
         backgroundColor: "var(--cor-escura)",
@@ -250,6 +250,7 @@ class MochilaDash extends Estilo {
     }
     this.updateBagInfo()
     this.currentBag().updateBookInfo()
+    this.esconderMochilas()
     this.dashRefObj.navBar.updateTabs()
   }
 
@@ -340,6 +341,7 @@ class MochilaDash extends Estilo {
     let arrayOfElBooks = [
       ...document.querySelectorAll("cadernos")[0].children[1].children
     ]
+
     for (let i = 0; i < arrayOfElBooks.length - 1; i++) {
       // console.log(arrayOfElBooks[i])
       arrayOfElBooks[i].style.display = "none"
@@ -347,6 +349,24 @@ class MochilaDash extends Estilo {
     for (let j = 0; j < this.currentBag().cadernos.length; j++) {
       // console.log(this.currentBag().cadernos[j].newBook)
       this.currentBag().cadernos[j].newBook.style.display = "flex"
+    }
+    // console.log(this.currentBag().cadernos)
+
+    if (this.currentBag().cadernos.length == 0) {
+      // console.log("empty books")
+      this.dashRefObj.getBook().emptyBookWarningCreator()
+    }
+  }
+
+  esconderMochilas() {
+    for (let i = 0; i < this.mochilas.length; i++) {
+      this.mochilas[i].esconderCadernos()
+    }
+  }
+
+  mostrarMochilas() {
+    for (let i = 0; i < this.mochilas.length; i++) {
+      this.mochilas[i].mostrarCadernos()
     }
   }
 }

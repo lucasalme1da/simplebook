@@ -31,35 +31,52 @@ class Imagem extends Blocos {
             console.log(erro)
         }
     }
+  }
 
-    countImgs() {
-
-        let images = fs.readdirSync('./imgs')
-        if (images.length > 0) {
-            let imagesNumber = images.map(image => parseInt(image.split('-')[1]))
-            this.imageCount = Math.max(...imagesNumber)
-
-        } else {
-            this.imageCount = 0
-        }
-
+  copyImg(file) {
+    if (this.imageCount == -1) {
+      this.countImgs()
     }
-
-    copyImg(file) {
-
-        if (this.imageCount == -1) {
-
-            this.countImgs()
+    return new Promise((resolve, reject) => {
+      let [name, type] = file.name.split(".")
+      fs.copyFile(
+        file.path,
+        `imgs/imagem-${this.imageCount + 1}.${type}`,
+        erro => {
+          if (erro) reject(erro)
+          resolve(type)
         }
-        return new Promise((resolve, reject) => {
-            let [name, type] = file.name.split('.')
-            fs.copyFile(file.path, `imgs/imagem-${this.imageCount + 1}.${type}`, (erro) => {
-                if (erro) reject(erro);
-                resolve(type)
-            });
+      )
+    })
+  }
 
-        })
-
+  criarImagem() {
+    this.imagem = document.createElement("img")
+    this.imagem.setAttribute("draggable", "false")
+    this.file = document.createElement("input")
+    this.file.setAttribute("type", "file")
+    this.imagem.setAttribute("src", "./assets/icons/imgDefaultFinal.svg")
+    this.file.setAttribute("accept", "image/*")
+    this.addEstilo(this.imagem, {
+      width: "100%",
+      height: "100%",
+      borderRadius: "8px",
+      border: "1px solid lightgray"
+    })
+    this.imagem.onload = () => {
+      let anim = this.imagem.animate(
+        [
+          {
+            transform: "scale(0.8)",
+            opacity: "0"
+          },
+          {
+            transform: "scale(1)",
+            opacity: "1"
+          }
+        ],
+        this.animationTimes.slow
+      )
     }
     criarImagem() {
 
@@ -110,9 +127,10 @@ class Imagem extends Blocos {
 
         this.addMainContent(this.imagem)
 
-
     }
 
+    this.addMainContent(this.imagem)
+  }
 }
 
-module.exports = Imagem 
+module.exports = Imagem

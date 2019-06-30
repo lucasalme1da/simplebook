@@ -1,22 +1,25 @@
 const Estilo = require("./Estilo")
 const Botao = require("./Botao")
 const Folha = require("./Folha")
+let folhaCounter = 1
 class NavTabs extends Estilo {
   constructor(options) {
     super()
     this.criar(options)
     this.belongsTo = options.belongsTo
     this.pageRef = options.pageRef
-    // this.folha = new Folha({
-    //   folhaContainer: options.folhaContainer,
-    //   loadedFonts: options.loadedFonts
-    // })
+    this.navbar = options.navbar
+    this.tabs = options.tabs
   }
 
   criar(options) {
     this.ref = document.createElement("navtab")
     this.text = document.createElement("p")
-    this.text.textContent = options.text
+
+    // Manipulação do Título da Aba
+    this.text.textContent = `Nova Folha (${folhaCounter++})`
+    this.addRenamable(this.text, 12)
+
     this.moreTabs = options.moreTabs
     this.folhaContainer = options.folhaContainer
     this.addEstilo(this.text, {
@@ -24,7 +27,11 @@ class NavTabs extends Estilo {
       fontSize: "1.1em",
       fontWeight: "bold",
       opacity: 0,
-      userSelect: "none"
+      userSelect: "none",
+      whiteSpace: "pre-wrap",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      width: "80%"
     })
     this.addEstilo(this.ref, {
       width: "150px",
@@ -36,14 +43,17 @@ class NavTabs extends Estilo {
       flexShrink: 3,
       justifyContent: "space-between",
       padding: "10px",
-      backgroundColor: "var(--cor-escura)"
+      backgroundColor: "var(--cor-escura)",
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      flexDirection: "row"
     })
     this.hover(this.ref, {
       cursor: "pointer",
       backgroundColor: "var(--cor-clara)"
     })
     this.ref.onclick = () => {
-      this.setActive(options.tabs)
+      this.setActive()
     }
     this.ref.appendChild(this.text)
     this.close = new Botao({
@@ -79,11 +89,14 @@ class NavTabs extends Estilo {
       [{ width: "0px", opacity: 1 }, { width: "150px", opacity: 0 }],
       100
     )
-    anim.onfinish = () => this.addEstilo(this.text, { opacity: 1 })
+    anim.onfinish = () => {
+      this.addEstilo(this.text, { opacity: 1 })
+      this.setActive()
+    }
   }
 
-  setActive(tabs) {
-    tabs.forEach(tab => {
+  setActive() {
+    this.tabs.forEach(tab => {
       tab.removeActive()
     })
 
@@ -102,8 +115,13 @@ class NavTabs extends Estilo {
         )
         anim.onfinish = () => {
           options.ref.removeChild(this.ref)
-          options.tabs.splice(options.index, 1)
+          options.navbar.tabs.splice(options.index, 1)
           options.navbar.atualizarNumAbas()
+          this.navbar.updateTabs()
+          if (this.tabs.length == 0) {
+            let book = this.navbar.dashBag.currentBook()
+            book.esconderFolhas()
+          }
         }
       } else {
         let tab = options.tabs.find(tab => tab.moreTabs == true)
@@ -121,9 +139,14 @@ class NavTabs extends Estilo {
             options.ref.appendChild(tab.ref)
             tab.moreTabs = false
             options.ref.removeChild(this.ref)
-            options.tabs.splice(options.index, 1)
+            options.navbar.tabs.splice(options.index, 1)
             options.navbar.atualizarNumAbas()
             options.navbar.fecharMoreButton()
+            this.navbar.updateTabs()
+            if (this.tabs.length == 0) {
+              let book = this.navbar.dashBag.currentBook()
+              book.esconderFolhas()
+            }
           }
         } else {
           this.addEstilo(this.text, {
@@ -135,9 +158,18 @@ class NavTabs extends Estilo {
           )
           anim.onfinish = () => {
             options.ref.removeChild(this.ref)
-            options.tabs.splice(options.index, 1)
+            console.log(options.navbar.tabs)
+            options.navbar.tabs.splice(options.index - 1, 1)
+            console.log(options.navbar.tabs)
             options.navbar.atualizarNumAbas()
             options.navbar.fecharMoreButton()
+            this.navbar.updateTabs()
+            if (this.tabs.length == 0) {
+              this.navbar.dashBag
+                .getBag()
+                .currentBag()
+                .esconderCadernos()
+            }
           }
         }
       }
@@ -152,6 +184,15 @@ class NavTabs extends Estilo {
   }
 
   action() {
+    // this.bag = this.belongsTo.thisBag
+    // this.bag.esconderCadernos()
+
+    this.book = this.belongsTo.thisBag.currentBook()
+    this.book.esconderFolhas()
+
+    this.page = this.pageRef
+    this.page.mostrarBlocos()
+
     this.canhover = false
 
     this.addEstilo(this.ref, {

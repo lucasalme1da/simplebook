@@ -30,6 +30,7 @@ class NavBar extends Estilo {
       navBar: this
     })
     this.dashs = [this.dashBook, this.dashBag, this.dashBlock]
+    this.lastActiveTabIndex = -1
   }
 
   criar() {
@@ -241,7 +242,6 @@ class NavBar extends Estilo {
   }
 
   fecharMoreButton() {
-    console.log(this.tabs.length)
     if (this.tabs.length <= this.limiteAbas) {
       if (this.moreButton.ref.style.display != "none") {
         let anim = this.moreButton.ref.animate(
@@ -321,8 +321,6 @@ class NavBar extends Estilo {
   }
 
   createTab(newPageRef) {
-    console.log("PRESTENÇÃO->", newPageRef)
-
     this.currentBook = this.dashBag
       .getBag()
       .currentBag()
@@ -331,7 +329,6 @@ class NavBar extends Estilo {
       this.abrirMoreButton()
       this.tabs.push(
         new NavTabs({
-          text: "Folha 1",
           ref: this.moreNavTabs,
           tabs: this.tabs,
           moreTabs: true,
@@ -345,7 +342,6 @@ class NavBar extends Estilo {
     } else {
       this.tabs.push(
         new NavTabs({
-          text: "Folha 1",
           ref: this.tabsContainer,
           moreTabsRef: this.moreNavTabs,
           tabs: this.tabs,
@@ -376,9 +372,17 @@ class NavBar extends Estilo {
           .getBag()
           .currentBag()
           .currentBook()
-      )
+      ) {
         this.tabs[j].ref.style.display = "flex"
+        this.lastActiveTabIndex = j
+      }
     }
+    this.selectLastVisibleTab()
+  }
+
+  selectLastVisibleTab() {
+    if (this.tabs.length > 0 && this.lastActiveTabIndex != -1)
+      this.tabs[this.lastActiveTabIndex].setActive()
   }
 
   currentPage() {

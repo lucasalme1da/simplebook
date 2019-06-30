@@ -210,8 +210,6 @@ class Folha extends Estilo {
             })
         )
 
-    }
-
     criarTexto(options) {
         this.blocos.push(
             new Texto({
@@ -225,6 +223,7 @@ class Folha extends Estilo {
             })
         )
     }
+      
     criarImagem(options) {
         this.blocos.push(
             new Imagem({
@@ -238,38 +237,41 @@ class Folha extends Estilo {
             })
         )
 
+  esconderBlocos() {
+    for (let i = 0; i < this.blocos.length; i++) {
+      while (this.blocos[i].folhaContainer.firstChild)
+        this.blocos[i].folhaContainer.firstChild.remove()
     }
-    criarBloco(options) {
-        this.blocos.push(
-            new Blocos({
-                folhaContainer: this.folhaContainer,
-                posX: `${options.posX - this.folhaContainer.offsetWidth}px`,
-                posY: `${options.posY - this.folhaContainer.offsetHeight}px`,
-                folha: this
-            })
-        )
-    }
-    removeBloco(bloco) {
-        let ind = this.blocos.findIndex(b => b.blocoRef == bloco.blocoRef)
-        this.blocos.splice(ind, 1)
-        console.log(this.blocos)
-    }
-    trazerFrente(bloco) {
-        let ind
-        let zindex = bloco.blocoRef.style.zIndex
-        if (zindex + 1 != this.zIndexBlocoMax) zindex++
-        this.blocos.forEach((bloc, index) => {
-            if (bloc.blocoRef == bloco.blocoRef) {
-                ind = index
-            }
-            let zIndex = bloc.blocoRef.style.zIndex
-            if (zIndex - 1 != this.zIndexBlocoMin) {
-                bloc.blocoRef.style.zIndex = zIndex - 1
-            }
-        })
+  }
 
-        this.blocos[ind].blocoRef.style.zIndex = zindex
+  mostrarBlocos() {
+    for (let i = 0; i < this.blocos.length; i++) {
+      this.blocos[i].folhaContainer.appendChild(this.blocos[i].blocoRef)
     }
+  }
+
+  removeBloco(bloco) {
+    let ind = this.blocos.findIndex(b => b.blocoRef == bloco.blocoRef)
+    this.blocos.splice(ind, 1)
+    console.log(this.blocos)
+  }
+
+  trazerFrente(bloco) {
+    let ind
+    let zindex = bloco.blocoRef.style.zIndex
+    if (zindex + 1 != this.zIndexBlocoMax) zindex++
+    this.blocos.forEach((bloc, index) => {
+      if (bloc.blocoRef == bloco.blocoRef) {
+        ind = index
+      }
+      let zIndex = bloc.blocoRef.style.zIndex
+      if (zIndex - 1 != this.zIndexBlocoMin) {
+        bloc.blocoRef.style.zIndex = zIndex - 1
+      }
+    })
+
+    this.blocos[ind].blocoRef.style.zIndex = zindex
+  }
 }
 
 module.exports = Folha
