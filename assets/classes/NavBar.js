@@ -51,6 +51,7 @@ class NavBar extends Estilo {
       display: 'block',
       width: "100%",
       backgroundColor: "white",
+      overflow: 'hidden',
       position: "relative",
       overflowY: "auto",
       overflowX: "hidden"
