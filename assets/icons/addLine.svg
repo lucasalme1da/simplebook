@@ -1,25 +1,9 @@
-<svg width="128" height="96" xmlns="http://www.w3.org/2000/svg">
-
- <g>
-  <title>background</title>
-  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
- </g>
- <g>
-  <title>Layer 1</title>
-  <g id="svg_1">
-   <path id="svg_2" fill="#b2b2b2" d="m128,96l-128,0l0,-96l128,0l0,96z"/>
-   <path id="svg_3" fill="#b2b2b2" d="m1.33333,1.33334l125.33367,0l0,93.33336l-125.33367,0l0,-93.33336z"/>
-   <path id="svg_4" fill="#FFFFFF" d="m2.66667,2.66666l122.66633,0l0,90.66664l-122.66633,0l0,-90.66664z"/>
-   <path id="svg_5" fill="#e5e5e5" d="m125.333,14.6667l-122.66633,0l0,-12.00004l122.66633,0l0,12.00004z"/>
-   <path id="svg_6" fill="#cccccc" d="m2.41667,14.4167l122.66633,0l0,-1.3334l-122.66633,0l0,1.3334z"/>
-   <path id="svg_7" fill="#cccccc" d="m40,93.3333l1.3333,0l0,-90.66664l-1.3333,0l0,90.66664z"/>
-   <path id="svg_8" fill="#cccccc" d="m86.6667,93.3333l1.3333,0l0,-90.66664l-1.3333,0l0,90.66664z"/>
-   <path id="svg_9" fill="#cccccc" d="m2.66667,28l122.66633,0l0,-1.3333l-122.66633,0l0,1.3333z"/>
-   <path id="svg_10" fill="#B4E2FF" d="m2.66667,41.3333l122.66633,0l0,-1.3333l-122.66633,0l0,1.3333z"/>
-   <path id="svg_11" fill="#B4E2FF" d="m2.66667,54.6667l122.66633,0l0,-1.3334l-122.66633,0l0,1.3334z"/>
-   <path id="svg_12" fill="#b2b2b2" d="m2.66667,68l122.66633,0l0,-1.3347l-122.66633,0l0,1.3347z"/>
-   <path id="svg_13" fill="#b2b2b2" d="m2.66667,81.3333l122.66633,0l0,-1.3333l-122.66633,0l0,1.3333z"/>
-   <path id="svg_14" fill="#999999" d="m128,40l-128,0l0,16l128,0m-4,-4l-120,0l0,-8l120,0l0,8z"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="17" viewBox="0 0 24 17">
+  <g id="Grupo_33" data-name="Grupo 33" transform="translate(-588 -192)">
+    <path id="Subtração_14" data-name="Subtração 14" d="M-3985-2296h-24v-6h24v6Zm-7.073-4v2h4.748v-2Zm-7.212,0v2h4.569v-2Zm-7.39,0v2h4.748v-2Z" transform="translate(4597 2505)" fill="#fff"/>
+    <g id="Grupo_29" data-name="Grupo 29" transform="translate(40)">
+      <rect id="Retângulo_110" data-name="Retângulo 110" width="3" height="9" transform="translate(552 192)" fill="#fff"/>
+      <rect id="Retângulo_111" data-name="Retângulo 111" width="3" height="9" transform="translate(558 195) rotate(90)" fill="#fff"/>
+    </g>
   </g>
- </g>
 </svg>

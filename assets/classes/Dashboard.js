@@ -31,6 +31,7 @@ class Dashboard extends Estilo {
       top: "5vh",
       height: "95vh",
       width: "20vw",
+      zIndex: '302',
       background: "var(--cor-escura)",
       alignSelf: "flex-end"
     })
@@ -38,13 +39,32 @@ class Dashboard extends Estilo {
 
   openDash() {
     if (this.ref.style.display == "none") {
+
       this.addEstilo(this.ref, {
         display: "block"
       })
+      this.ref.animate([{
+        opacity: '0',
+        right: '-10vw'
+      }, {
+        opacity: '1',
+        right: '0vw'
+      }], this.animationTimes.medium)
     } else {
-      this.addEstilo(this.ref, {
-        display: "none"
-      })
+      let anim = this.ref.animate([{
+        opacity: '1',
+        right: '0vw'
+      }, {
+        opacity: '1',
+        right: '-10vw'
+      }], this.animationTimes.medium)
+      anim.onfinish = () => {
+        this.addEstilo(this.ref, {
+          display: "none"
+        })
+
+
+      }
     }
   }
 

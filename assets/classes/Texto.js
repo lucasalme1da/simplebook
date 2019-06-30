@@ -9,7 +9,21 @@ class Texto extends Blocos {
     this.underlined = false
     this.criarTexto()
   }
+  export() {
 
+    this.exportData = {
+      type: this.constructor.name,
+      text: this.texto.value,
+      font: this.fontFamily.value,
+      size: parseInt(this.fontSize.value),
+      bold: this.bolded,
+      italiced: this.italiced,
+      underlined: this.underlined,
+      align: this.texto.style.textAlign || 'left'
+    }
+    return super.export()
+
+  }
   checkSelection() {
     if (window.getSelection) {
       let selection = window.getSelection()
@@ -131,7 +145,9 @@ class Texto extends Blocos {
 
   criarTexto() {
     this.texto = document.createElement("textarea")
-
+    this.texto.ondrag = e => {
+      e.preventDefault()
+    }
     // this.texto.classList.add('textarea')
     // this.texto.setAttribute('contenteditable', 'true')
     this.addEstilo(this.texto, {

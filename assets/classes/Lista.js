@@ -78,8 +78,30 @@ class Lista extends Blocos {
         ref.lista.removeChild(removedLista)
       }
     }
-  }
 
+    export() {
+
+        this.exportData = {
+            type: this.constructor.name,
+
+        }
+        return super.export()
+
+    }
+    
+    removeItem(ref) {
+        let removedLista = ref.lista.lastChild
+        if (removedLista) {
+
+            let anim = removedLista.animate([{
+                opacity: '1',
+                left: '0px'
+
+            }, {
+                opacity: '0',
+                left: '20px'
+            }], ref.animationTimes.medium)
+            
   addItem(ref) {
     let li = document.createElement("li")
     li.textContent = this.placeholder
@@ -222,16 +244,95 @@ class Lista extends Blocos {
         fontFamily: this.fontFamily.value
       })
     }
-    //this.waitFontsDefinitions(this, this.fontFamily)
-    this.loadedFonts.fonts.forEach(font => {
-      let option = document.createElement("option")
-      option.textContent = font
-      option.setAttribute("value", font)
-      this.addEstilo(option, {
-        backgroundColor: "var(--cor-clara)"
-      })
-      this.fontFamily.appendChild(option)
-    })
+
+    criarLista() {
+
+        this.container = document.createElement('div')
+        this.addEstilo(this.container, {
+            width: '95%',
+            height: '95%',
+            overflow: 'hidden'
+        })
+        this.lista = document.createElement('ul')
+        this.lista.ondrag = e => {
+            e.preventDefault()
+        }
+        this.lista.setAttribute('draggable', 'false')
+        this.addEstilo(this.lista, {
+            width: '100%',
+            marginBottom: '15px',
+            listStylePosition: 'inside'
+        })
+        this.plusContainer = document.createElement('plusContainer')
+        this.addEstilo(this.plusContainer, {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end'
+        })
+        this.plus = new Botao({
+            icon: "plus",
+            width: "2vw",
+            height: "2vw",
+            imageWidth: "12px",
+            imageHeight: "12px",
+            ref: this.plusContainer,
+            animation: true,
+            style: {
+                display: "flex",
+                justifyContent: "space-around",
+                alignItems: "center",
+                borderRadius: "50%",
+                position: 'relative',
+                flexShrink: '0',
+                backgroundColor: "var(--cor-media)",
+                boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+                marginRight: '10px'
+            },
+            action: () => this.addItem(this)
+        })
+        this.close = new Botao({
+            icon: "close",
+            width: "2vw",
+            height: "2vw",
+            imageWidth: "12px",
+            imageHeight: "12px",
+            ref: this.plusContainer,
+            animation: true,
+            style: {
+                display: "flex",
+                justifyContent: "space-around",
+                alignItems: "center",
+                flexShrink: '0',
+                borderRadius: "50%",
+                position: 'relative',
+                backgroundColor: "var(--cor-media)",
+                boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
+            },
+            action: () => this.removeItem(this)
+        })
+
+
+
+        this.listStyle = document.createElement('select')
+        let firstOption = document.createElement('option')
+        firstOption.setAttribute('selected', 'true')
+        firstOption.setAttribute('disabled', 'true')
+        firstOption.textContent = 'Tipo de lista'
+        this.listStyle.appendChild(firstOption)
+        this.addEstilo(firstOption, {
+            backgroundColor: 'var(--cor-clara)'
+        })
+        this.addEstilo(this.listStyle, {
+            width: '90%',
+            backgroundColor: 'transparent',
+            border: 'none',
+            color: 'white',
+            borderBottom: '1px solid white',
+            marginBottom: '10px'
+        })
+
+        this.listStyle.onchange = () => {
+            this.addEstilo(this.lista, {
 
     this.addEstilo(this.lista, {
       fontFamily: this.fontFamily.value

@@ -34,12 +34,25 @@ class NavBar extends Estilo {
   }
 
   criar() {
-    this.folhaContainer = document.createElement("folhaContainer")
-    this.addEstilo(this.folhaContainer, {
+    let container = document.createElement('div')
+    this.addEstilo(container, {
       height: "93vh",
       width: "95vw",
       marginTop: "7vh",
       backgroundColor: "white",
+      position: "relative",
+      overflowY: "auto",
+      overflowX: "hidden"
+    })
+    this.folhaContainer = document.createElement("folhaContainer")
+    container.appendChild(this.folhaContainer)
+
+    this.addEstilo(this.folhaContainer, {
+      height: this.reparsePx(window.innerHeight),
+      display: 'block',
+      width: "100%",
+      backgroundColor: "white",
+      overflow: 'hidden',
       position: "relative",
       overflowY: "auto",
       overflowX: "hidden"
@@ -201,7 +214,7 @@ class NavBar extends Estilo {
     novaAba.hover(novaAba.ref, { backgroundColor: "var(--cor-clara)" })
     this.ref.append(tabs, buttons)
     this.bodyRef.appendChild(this.ref)
-    this.bodyRef.appendChild(this.folhaContainer)
+    this.bodyRef.appendChild(container)
     this.addEstilo(this.bodyRef, {
       backgroundColor: "var(--cor-fundo)",
       display: "flex",
@@ -209,6 +222,10 @@ class NavBar extends Estilo {
       alignItems: "center",
       flexDirection: "column"
     })
+  }
+
+  load() {
+
   }
 
   abrirMoreButton() {
@@ -276,6 +293,8 @@ class NavBar extends Estilo {
         targetDash.getBag().updateBagInfo()
       }
       targetDash.openDash()
+    } else {
+      targetDash.openDash()
     }
   }
 
@@ -288,11 +307,11 @@ class NavBar extends Estilo {
         let loadedFont = new FontFace(name, `url(assets/fonts/${font})`)
         loadedFont
           .load()
-          .then(function(loaded_face) {
+          .then(function (loaded_face) {
             document.fonts.add(loaded_face)
             document.body.style.fontFamily = `"${name}", Arial`
           })
-          .catch(function(error) {})
+          .catch(function (error) { })
       })
     })
   }
