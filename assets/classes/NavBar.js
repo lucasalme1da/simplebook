@@ -34,7 +34,7 @@ class NavBar extends Estilo {
   }
 
   criar() {
-    let container = document.createElement('div')
+    let container = document.createElement("div")
     this.addEstilo(container, {
       height: "93vh",
       width: "95vw",
@@ -49,10 +49,10 @@ class NavBar extends Estilo {
 
     this.addEstilo(this.folhaContainer, {
       height: this.reparsePx(window.innerHeight),
-      display: 'block',
+      display: "block",
       width: "100%",
       backgroundColor: "white",
-      overflow: 'hidden',
+      overflow: "hidden",
       position: "relative",
       overflowY: "auto",
       overflowX: "hidden"
@@ -62,7 +62,7 @@ class NavBar extends Estilo {
     this.addEstilo(this.ref, {
       position: "fixed",
       boxShadow: "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-      zIndex: "2",
+      zIndex: "999",
       borderBottom: "9px solid var(--cor-clara)"
     })
 
@@ -146,7 +146,7 @@ class NavBar extends Estilo {
       justifyContent: "space-around"
     })
     const botao1 = new Botao({
-      icon: "hamburger",
+      icon: "pencilIcon2",
       width: "10%",
       height: "60%",
       ref: buttons,
@@ -155,7 +155,7 @@ class NavBar extends Estilo {
       }
     })
     const botao2 = new Botao({
-      icon: "hamburger",
+      icon: "bookIcon",
       width: "10%",
       height: "60%",
       ref: buttons,
@@ -164,7 +164,7 @@ class NavBar extends Estilo {
       }
     })
     const botao3 = new Botao({
-      icon: "hamburger",
+      icon: "bagIcon2",
       width: "10%",
       height: "60%",
       ref: buttons,
@@ -224,9 +224,7 @@ class NavBar extends Estilo {
     })
   }
 
-  load() {
-
-  }
+  load() {}
 
   abrirMoreButton() {
     if (this.moreButton.ref.style.display != "flex") {
@@ -307,11 +305,11 @@ class NavBar extends Estilo {
         let loadedFont = new FontFace(name, `url(assets/fonts/${font})`)
         loadedFont
           .load()
-          .then(function (loaded_face) {
+          .then(function(loaded_face) {
             document.fonts.add(loaded_face)
             document.body.style.fontFamily = `"${name}", Arial`
           })
-          .catch(function (error) { })
+          .catch(function(error) {})
       })
     })
   }

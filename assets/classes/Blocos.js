@@ -372,6 +372,7 @@ class Blocos extends Estilo {
         animBloco.onfinish = () => this.minimize(this)
 
     }
+
     handleClick() {
 
         if (!this.maximized) this.maximize(this)
@@ -923,6 +924,7 @@ class Blocos extends Estilo {
             this.editContainer.prepend(element)
         })
     }
+
     criar(options) {
 
         this.blocoRef = document.createElement('bloco')
