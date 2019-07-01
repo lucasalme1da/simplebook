@@ -145,6 +145,7 @@ class NavBar extends Estilo {
       alignItems: "center",
       justifyContent: "space-around"
     })
+
     const botao1 = new Botao({
       icon: "pencilIcon2",
       width: "10%",
@@ -154,6 +155,7 @@ class NavBar extends Estilo {
         this.openDash(this.dashBlock)
       }
     })
+
     const botao2 = new Botao({
       icon: "bookIcon",
       width: "10%",
@@ -286,6 +288,10 @@ class NavBar extends Estilo {
       })
       if (targetDash == this.dashBook) {
         targetDash.getBag().updateBooklist()
+        targetDash
+          .getBag()
+          .currentBag()
+          .updateBookInfo()
       }
       if (targetDash == this.dashBag) {
         targetDash.getBag().updateBagInfo()

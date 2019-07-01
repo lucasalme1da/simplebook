@@ -7,10 +7,7 @@ class Estilo {
       medium: 80,
       slow: 180
     }
-
-
   }
-
 
   getWidth(element) {
     return getComputedStyle(element, null).getPropertyValue("width")
@@ -62,13 +59,13 @@ class Estilo {
 
   addRenamable(obj, ellipsisStartPoint, bagName) {
     obj.ondblclick = () => {
+      if (obj.title.length > 0) obj.textContent = obj.title
       this.addEstilo(obj, {
         transitionTimingFunction: "ease",
         objDecoration: "underline white",
         cursor: "text",
         textOverflow: "unset",
         width: "80%",
-        height: "50%",
         overflow: "hidden"
       })
       obj.contentEditable = true
@@ -119,8 +116,7 @@ class Estilo {
             }
           }
           if (obj.textContent.length >= ellipsisStartPoint)
-            
-          obj.textContent = `${obj.textContent.slice(
+            obj.textContent = `${obj.textContent.slice(
               0,
               ellipsisStartPoint
             )}...`

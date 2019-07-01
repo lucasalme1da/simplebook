@@ -32,6 +32,7 @@ class Caderno extends Estilo {
       paddingLeft: "2%",
       cursor: "pointer"
     })
+
     this.hover(this.newBook, {
       backgroundColor: "var(--cor-clara)"
     })
@@ -39,59 +40,64 @@ class Caderno extends Estilo {
     // Editar nome do caderno
     this.newBookName = document.createElement("p")
     this.newBookName.textContent = "Novo Caderno " + ("(" + ++bookCounter + ")")
-    this.newBookName.ondblclick = () => {
-      this.addEstilo(this.newBookName, {
-        transitionTimingFunction: "ease",
-        textDecoration: "underline white",
-        cursor: "text"
-      })
-      this.newBookName.contentEditable = true
-      let oldTextContent = this.newBookName.textContent
-      let range, selection
-      // Selecionando todo texto dentro da div
-      if (document.body.createTextRange) {
-        range = document.body.createTextRange()
-        range.moveToElementText(this.newBookName)
-        range.select()
-      } else if (window.getSelection) {
-        selection = window.getSelection()
-        range = document.createRange()
-        range.selectNodeContents(this.newBookName)
-        selection.removeAllRanges()
-        selection.addRange(range)
-      }
-      this.newBookName.onkeydown = e => {
-        if (e.keyCode == 13) {
-          if (this.newBookName.innerText.trim() == "") {
-            this.newBookName.textContent = oldTextContent
-          }
-          // else {
-          //   this.bagName = this.newBookName.textContent
-          // }
-          this.newBookName.contentEditable = false
-          this.addEstilo(this.newBookName, {
-            textDecoration: "none",
-            cursor: "pointer"
-          })
-        }
-      }
-      document.onclick = e => {
-        if (e.target != this.newBookName) {
-          if (this.newBookName.innerText.trim() == "") {
-            this.newBookName.textContent = oldTextContent
-          }
-          // else {
-          //   this.bagName = this.newBookName.textContent
-          // }
-          this.newBookName.contentEditable = false
-          this.addEstilo(this.newBookName, {
-            textDecoration: "none",
-            cursor: "pointer"
-          })
-          document.onclick = () => { }
-        }
-      }
-    }
+    this.addRenamable(this.newBookName, 19)
+    this.addEstilo(this.newBookName, {
+      height: "50%"
+    })
+
+    // this.newBookName.ondblclick = () => {
+    //   this.addEstilo(this.newBookName, {
+    //     transitionTimingFunction: "ease",
+    //     textDecoration: "underline white",
+    //     cursor: "text"
+    //   })
+    //   this.newBookName.contentEditable = true
+    //   let oldTextContent = this.newBookName.textContent
+    //   let range, selection
+    //   // Selecionando todo texto dentro da div
+    //   if (document.body.createTextRange) {
+    //     range = document.body.createTextRange()
+    //     range.moveToElementText(this.newBookName)
+    //     range.select()
+    //   } else if (window.getSelection) {
+    //     selection = window.getSelection()
+    //     range = document.createRange()
+    //     range.selectNodeContents(this.newBookName)
+    //     selection.removeAllRanges()
+    //     selection.addRange(range)
+    //   }
+    //   this.newBookName.onkeydown = e => {
+    //     if (e.keyCode == 13) {
+    //       if (this.newBookName.innerText.trim() == "") {
+    //         this.newBookName.textContent = oldTextContent
+    //       }
+    //       // else {
+    //       //   this.bagName = this.newBookName.textContent
+    //       // }
+    //       this.newBookName.contentEditable = false
+    //       this.addEstilo(this.newBookName, {
+    //         textDecoration: "none",
+    //         cursor: "pointer"
+    //       })
+    //     }
+    //   }
+    //   document.onclick = e => {
+    //     if (e.target != this.newBookName) {
+    //       if (this.newBookName.innerText.trim() == "") {
+    //         this.newBookName.textContent = oldTextContent
+    //       }
+    //       // else {
+    //       //   this.bagName = this.newBookName.textContent
+    //       // }
+    //       this.newBookName.contentEditable = false
+    //       this.addEstilo(this.newBookName, {
+    //         textDecoration: "none",
+    //         cursor: "pointer"
+    //       })
+    //       document.onclick = () => { }
+    //     }
+    //   }
+    // }
 
     const bookButtonContainer = document.createElement("div")
     this.addEstilo(bookButtonContainer, {
@@ -173,16 +179,14 @@ class Caderno extends Estilo {
         newPage(page.exportBlocos)
       })
     }
-
   }
 
   export() {
-
     let folhas = []
     this.pages.forEach(page => {
       folhas.push(page.export())
     })
-    console.log('folhas', folhas)
+    console.log("folhas", folhas)
     return { name: this.newBookName.textConten, folhas }
   }
 

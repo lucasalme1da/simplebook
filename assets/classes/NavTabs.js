@@ -18,7 +18,7 @@ class NavTabs extends Estilo {
 
     // Manipulação do Título da Aba
     this.text.textContent = `Nova Folha (${folhaCounter++})`
-    this.addRenamable(this.text, 12)
+    this.addRenamable(this.text, 12, null, 45)
 
     this.moreTabs = options.moreTabs
     this.folhaContainer = options.folhaContainer

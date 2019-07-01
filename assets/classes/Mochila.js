@@ -1,7 +1,7 @@
 const Estilo = require("./Estilo")
 const Botao = require("./Botao")
 const Caderno = require("./Caderno")
-const fs = require('fs')
+const fs = require("fs")
 let bagCounter = 0
 
 class Mochila extends Estilo {
@@ -34,12 +34,12 @@ class Mochila extends Estilo {
 
     // Editar Nome da Bolsa
     const newBagName = document.createElement("p")
-
     newBagName.textContent = "Nova Mochila " + ("(" + ++bagCounter + ")")
     this.bagName = newBagName.textContent
-
+    this.addEstilo(newBagName, {
+      height: "50%"
+    })
     this.addRenamable(newBagName, 19, this)
-
 
     const bagButtonContainer = document.createElement("div")
     this.addEstilo(bagButtonContainer, {
@@ -58,7 +58,7 @@ class Mochila extends Estilo {
       width: "40%",
       height: "80%",
       ref: bagButtonContainer,
-      action: () => { },
+      action: () => {},
       hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
     })
 
@@ -126,49 +126,40 @@ class Mochila extends Estilo {
   }
 
   autoSave(options) {
-
     return new Promise((resolve, reject) => {
-
       try {
         let cadernosData = []
         this.cadernos.forEach(caderno => {
-
           cadernosData.push(caderno.export())
-
         })
         debugger
 
         let data = {
-
-          dataSalvamento: '01/01/2019',
+          dataSalvamento: "01/01/2019",
           name: this.bagName,
-          versao: '1.02',
+          versao: "1.02",
           cadernosData
         }
 
         if (!fs.existsSync(`./save/${this.bagName}.bag`)) {
-          fs.writeFile(`./save/${this.bagName}.bag`, JSON.stringify(data), erro => {
-            if (err) {
-              return console.log(err);
+          fs.writeFile(
+            `./save/${this.bagName}.bag`,
+            JSON.stringify(data),
+            erro => {
+              if (err) {
+                return console.log(err)
+              }
             }
-          });
-
+          )
         } else {
-          alert('Eita ! Já tem uma mochila com esse nome.\nNão quer escoher outro ? :)')
+          alert(
+            "Eita ! Já tem uma mochila com esse nome.\nNão quer escoher outro ? :)"
+          )
         }
-
-      }
-      catch (erro) {
-
+      } catch (erro) {
         console.log(erro)
       }
-
-
-
     })
-
-
-
   }
 
   deleteBag(ref, bag) {
@@ -265,7 +256,6 @@ class Mochila extends Estilo {
   updateBookInfo() {
     console.log(this.bagName)
     this.bagRef.dashRefObj.getBook().titleNameContainer.textContent = this.bagName
-
   }
 
   esconderCadernos() {
