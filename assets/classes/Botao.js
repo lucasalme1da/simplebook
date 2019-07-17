@@ -42,9 +42,9 @@ class Botao extends Estilo {
           ],
           this.animationTimes.slow
         )
-        anim.onfinish = () => {}
+        anim.onfinish = () => { }
       }
-      this.ref.onmouseout = () => {}
+      this.ref.onmouseout = () => { }
     }
 
     if (options.animation) {
@@ -80,6 +80,7 @@ class Botao extends Estilo {
     if (options.icon) {
       const image = document.createElement("img")
       image.setAttribute("src", `./assets/icons/${options.icon}.svg`)
+      image.ondrag = e => { e.preventDefault() }
       image.setAttribute("draggable", "false")
       this.addEstilo(image, {
         width: options.imageWidth || "30px",

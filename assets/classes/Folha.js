@@ -4,6 +4,8 @@ const Texto = require("./Texto")
 const Imagem = require("./Imagem")
 const Lista = require("./Lista")
 const Tabela = require("./Tabela")
+const Audio = require("./Audio")
+const Video = require("./Video")
 const { clipboard, Tray } = require("electron")
 const fs = require("fs")
 const { app, globalShortcut } = require("electron")
@@ -55,7 +57,24 @@ class Folha extends Estilo {
           initialWidth: 400,
           initialHeight: 400
         })
+      } else if (e.ctrlKey && e.keyCode == 75) {
+        const { x, y } = this.getMousePos(230, 100)
+        this.criarAudio({
+          posX: x,
+          posY: y,
+          initialWidth: 380,
+          initialHeight: 100
+        })
+      } else if (e.ctrlKey && e.keyCode == 74) {
+        const { x, y } = this.getMousePos(600, 500)
+        this.criarVideo({
+          posX: x,
+          posY: y,
+          initialWidth: 600,
+          initialHeight: 500
+        })
       }
+
     }
 
     this.addWindowMouseMoveAction(e => {
@@ -224,6 +243,33 @@ class Folha extends Estilo {
         folha: this
       })
     )
+  }
+
+  criarAudio(options) {
+    this.blocos.push(
+      new Audio({
+        folhaContainer: this.folhaContainer,
+        posX: `${options.posX}px`,
+        posY: `${options.posY}px`,
+        initialHeight: options.initialHeight || options.width,
+        initialWidth: options.initialWidth || options.height,
+        folha: this
+      })
+    )
+
+  }
+  criarVideo(options) {
+    this.blocos.push(
+      new Video({
+        folhaContainer: this.folhaContainer,
+        posX: `${options.posX}px`,
+        posY: `${options.posY}px`,
+        initialHeight: options.initialHeight || options.width,
+        initialWidth: options.initialWidth || options.height,
+        folha: this
+      })
+    )
+
   }
 
   esconderBlocos() {

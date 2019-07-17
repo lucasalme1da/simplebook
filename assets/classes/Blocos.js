@@ -934,6 +934,7 @@ class Blocos extends Estilo {
         }
 
         this.optionsContainer = document.createElement('optionsContainer')
+        this.optionsContainer.ondrag = e => { e.preventDefault() }
         this.addEstilo(this.optionsContainer, {
             position: 'absolute',
             left: '100%',
@@ -989,6 +990,7 @@ class Blocos extends Estilo {
         this.optionsButtons.push(this.close, this.edit)
 
         this.editContainer = document.createElement('editContainer')
+        this.editContainer.ondrag = e => { e.preventDefault() }
         this.addEstilo(this.editContainer, {
 
             display: 'none',
