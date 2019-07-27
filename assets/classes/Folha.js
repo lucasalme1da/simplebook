@@ -6,6 +6,8 @@ const Lista = require("./Lista")
 const Tabela = require("./Tabela")
 const Audio = require("./Audio")
 const Video = require("./Video")
+const GravadorAudio = require("./GravadorAudio")
+
 const { clipboard, Tray } = require("electron")
 const fs = require("fs")
 const { app, globalShortcut } = require("electron")
@@ -72,6 +74,14 @@ class Folha extends Estilo {
           posY: y,
           initialWidth: 600,
           initialHeight: 500
+        })
+      } else if (e.ctrlKey && e.keyCode == 79) {
+        const { x, y } = this.getMousePos(200, 100)
+        this.criarGravadorAudio({
+          posX: x,
+          posY: y,
+          initialWidth: 200,
+          initialHeight: 100
         })
       }
 
@@ -226,7 +236,8 @@ class Folha extends Estilo {
         loadedFonts: this.loadedFonts,
         initialHeight: options.initialHeight || options.width,
         initialWidth: options.initialWidth || options.height,
-        folha: this
+        folha: this,
+        load: options
       })
     )
   }
@@ -261,6 +272,19 @@ class Folha extends Estilo {
   criarVideo(options) {
     this.blocos.push(
       new Video({
+        folhaContainer: this.folhaContainer,
+        posX: `${options.posX}px`,
+        posY: `${options.posY}px`,
+        initialHeight: options.initialHeight || options.width,
+        initialWidth: options.initialWidth || options.height,
+        folha: this
+      })
+    )
+
+  }
+  criarGravadorAudio(options) {
+    this.blocos.push(
+      new GravadorAudio({
         folhaContainer: this.folhaContainer,
         posX: `${options.posX}px`,
         posY: `${options.posY}px`,

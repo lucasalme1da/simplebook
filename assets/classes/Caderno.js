@@ -6,16 +6,17 @@ let bookCounter = 0
 class Caderno extends Estilo {
   constructor(options) {
     super()
-    this.criar(options)
 
     this.selectedBook = null
     this.previousSelectedBag = null
     this.thisBag = options.thisBag
     this.bookRef = options.bookRef
     this.navBar = options.thisBag.bagRef.dashRefObj.navBar
+    this.criar(options)
   }
 
   criar(options) {
+    const { name, folhas } = options.caderno
     this.pages = []
     this.newBook = document.createElement("caderno")
     this.addEstilo(this.newBook, {
@@ -39,7 +40,7 @@ class Caderno extends Estilo {
 
     // Editar nome do caderno
     this.newBookName = document.createElement("p")
-    this.newBookName.textContent = "Novo Caderno " + ("(" + ++bookCounter + ")")
+    this.newBookName.textContent = name ? name : "Novo Caderno " + ("(" + ++bookCounter + ")")
     this.addRenamable(this.newBookName, 19)
     this.addEstilo(this.newBookName, {
       height: "50%"
@@ -173,10 +174,10 @@ class Caderno extends Estilo {
         duration: this.animationTimes.slow
       }
     )
-    let length = options.folhas ? options.folha.length : null
-    if (length > 0) {
-      this.options.folha.forEach(page => {
-        newPage(page.exportBlocos)
+    let length = folhas ? folhas.length : null
+    if (length && length > 0) {
+      folhas.forEach(page => {
+        this.newPage(page)
       })
     }
   }
@@ -234,16 +235,17 @@ class Caderno extends Estilo {
     return this.isSelected
   }
 
-  newPage(blocos) {
-    this.pageArray = this.thisBag.bagRef.currentBag().currentBook().pages
+  newPage(page) {
+
+    this.pageArray = page ? this.pages : this.thisBag.bagRef.currentBag().currentBook().pages
     this.pageArray.push(
       new Folha({
         folhaContainer: this.navBar.folhaContainer,
         loadedFonts: this.navBar.loadedFonts,
-        blocos
+        blocos: page.exportBlocos
       })
     )
-    this.navBar.createTab(this.pageArray[this.pageArray.length - 1])
+    this.navBar.createTab(this.pageArray[this.pageArray.length - 1], page.name)
   }
 
   esconderFolhas() {

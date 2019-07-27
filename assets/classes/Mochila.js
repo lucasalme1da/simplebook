@@ -34,7 +34,8 @@ class Mochila extends Estilo {
 
     // Editar Nome da Bolsa
     const newBagName = document.createElement("p")
-    newBagName.textContent = "Nova Mochila " + ("(" + ++bagCounter + ")")
+
+    newBagName.textContent = options.name ? options.name : "Nova Mochila " + ("(" + ++bagCounter + ")")
     this.bagName = newBagName.textContent
     this.addEstilo(newBagName, {
       height: "50%"
@@ -58,7 +59,7 @@ class Mochila extends Estilo {
       width: "40%",
       height: "80%",
       ref: bagButtonContainer,
-      action: () => {},
+      action: () => this.autoSave({ ref: this }),
       hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
     })
 
@@ -118,14 +119,17 @@ class Mochila extends Estilo {
     this.bagRef = options.bagRef
 
     let length = options.cadernos ? options.cadernos.length : null
-    if (length > 0) {
-      this.options.cadernos.forEach(caderno => {
-        createBook(folhas)
+    console.log(options.cadernos)
+    if (length && length > 0) {
+      options.cadernos.forEach(caderno => {
+        console.log("folhas", caderno)
+        this.createBook(caderno)
       })
     }
   }
 
   autoSave(options) {
+    const { ref = this } = options
     return new Promise((resolve, reject) => {
       try {
         let cadernosData = []
@@ -146,8 +150,8 @@ class Mochila extends Estilo {
             `./save/${this.bagName}.bag`,
             JSON.stringify(data),
             erro => {
-              if (err) {
-                return console.log(err)
+              if (erro) {
+                return console.log(erro)
               }
             }
           )
@@ -209,13 +213,13 @@ class Mochila extends Estilo {
     return this.isSelected
   }
 
-  createBook(folhas) {
+  createBook(caderno) {
     this.cadernos.push(
       new Caderno({
         thisBag: this,
         bookRef: this.bagRef.dashRefObj.getBook(),
         containerRef: this.bagRef.dashRefObj.getBook().contentContainer,
-        folhas
+        caderno
       })
     )
     this.selectBook(this.cadernos[this.cadernos.length - 1])

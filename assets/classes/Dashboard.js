@@ -79,8 +79,8 @@ class Dashboard extends Estilo {
   }
 
   callBag() {
-    mochilaDash = new mochilaDash(this)
-    mochilaDash.criar()
+    this.mochilaDash = new mochilaDash(this)
+    this.mochilaDash.criar()
     this.bodyRef.appendChild(this.ref)
   }
 

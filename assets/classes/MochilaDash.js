@@ -1,6 +1,7 @@
 const Estilo = require("./Estilo")
 const Botao = require("./Botao")
 const Mochila = require("./Mochila")
+const fs = require("fs")
 
 class MochilaDash extends Estilo {
   constructor(dashRef) {
@@ -199,37 +200,42 @@ class MochilaDash extends Estilo {
     this.ref.append(this.titleContainer, this.contentContainer)
     this.dashRef.appendChild(this.ref)
 
-    this.load()
-      .catch(erro => {
-        this.createBag(this.contentContainer)
-      })
+    // this.load(this)
+
+    // .catch(erro => {
+    //   console.log(erro)
+    //   this.createBag(this.contentContainer)
+    // })
     //this.createBag(this.contentContainer)
   }
 
-  load() {
-    return new Promise((resolve, reject) => {
-      let bags = fs.readdirSync('./save')
-      if (!bags.length) reject()
-      bags.forEach(bag => {
-        let data = fs.readFileSync(`./save/${bag}.bag`);
-        data = JSON.parse(data)
-        createBag(this.contentContainer, data.cadernosData)
-        console.log(data.cadernosData)
-      })
-      resolve()
+  load(ref) {
+
+    // return new Promise((resolve, reject) => {
+    let bags = fs.readdirSync('./save')
+    // if (!bags.length) reject()
+    bags.forEach(bag => {
+      let data = fs.readFileSync(`./save/${bag}`);
+      data = JSON.parse(data)
+      this.createBag(this.contentContainer, data)
     })
+    //   resolve()
+    // })
 
   }
 
-  createBag(container, cadernos) {
+  createBag(container, data) {
+    const { cadernosData, name } = data
 
     this.mochilas.push(
       new Mochila({
         bagRef: this,
         containerRef: container,
-        cadernos
+        cadernos: cadernosData,
+        name
       })
     )
+    debugger
     this.selectBag(this.mochilas[this.mochilas.length - 1])
     if (this.emptyWarning) this.turnOffWarning()
   }
@@ -255,6 +261,7 @@ class MochilaDash extends Estilo {
   }
 
   currentBag() {
+    debugger
     for (let i = 0; i < this.mochilas.length; i++) {
       if (this.mochilas[i].isSelected) return this.mochilas[i]
     }

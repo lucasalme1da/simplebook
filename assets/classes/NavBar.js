@@ -8,10 +8,10 @@ this.Dashboard = Dashboard
 class NavBar extends Estilo {
   constructor() {
     super()
+    this.folhaContainer = document.createElement("folhaContainer")
     this.bodyRef = document.getElementsByTagName("BODY")[0]
     this.loadedFonts = { fonts: [] }
     this.loadFonts()
-    this.criar()
     this.limiteAbas = 10
     this.moreModalAberto = false
     this.dashBook = new Dashboard({
@@ -31,6 +31,8 @@ class NavBar extends Estilo {
     })
     this.dashs = [this.dashBook, this.dashBag, this.dashBlock]
     this.lastActiveTabIndex = -1
+    this.criar()
+    // this.dashBag.mochilaDash.load()
   }
 
   criar() {
@@ -44,7 +46,6 @@ class NavBar extends Estilo {
       overflowY: "auto",
       overflowX: "hidden"
     })
-    this.folhaContainer = document.createElement("folhaContainer")
     container.appendChild(this.folhaContainer)
 
     this.addEstilo(this.folhaContainer, {
@@ -226,7 +227,7 @@ class NavBar extends Estilo {
     })
   }
 
-  load() {}
+  load() { }
 
   abrirMoreButton() {
     if (this.moreButton.ref.style.display != "flex") {
@@ -311,11 +312,11 @@ class NavBar extends Estilo {
         let loadedFont = new FontFace(name, `url(assets/fonts/${font})`)
         loadedFont
           .load()
-          .then(function(loaded_face) {
+          .then(function (loaded_face) {
             document.fonts.add(loaded_face)
             document.body.style.fontFamily = `"${name}", Arial`
           })
-          .catch(function(error) {})
+          .catch(function (error) { })
       })
     })
   }
@@ -324,11 +325,13 @@ class NavBar extends Estilo {
     return Dashboard
   }
 
-  createTab(newPageRef) {
+  createTab(newPageRef, name) {
+    debugger
     this.currentBook = this.dashBag
       .getBag()
       .currentBag()
       .currentBook()
+
     if (this.tabs.length >= this.limiteAbas) {
       this.abrirMoreButton()
       this.tabs.push(
@@ -339,7 +342,8 @@ class NavBar extends Estilo {
           navbar: this,
           index: this.tabs.length + 1,
           belongsTo: this.currentBook,
-          pageRef: newPageRef
+          pageRef: newPageRef,
+          name
         })
       )
       this.atualizarNumAbas()
@@ -353,7 +357,8 @@ class NavBar extends Estilo {
           folhaContainer: this.folhaContainer,
           index: this.tabs.length + 1,
           belongsTo: this.currentBook,
-          pageRef: newPageRef
+          pageRef: newPageRef,
+          name
         })
       )
     }
@@ -407,4 +412,4 @@ class NavBar extends Estilo {
   }
 }
 
-const navBar = new NavBar()
+new NavBar()
