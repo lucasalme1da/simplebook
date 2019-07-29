@@ -6,17 +6,17 @@ let bookCounter = 0
 class Caderno extends Estilo {
   constructor(options) {
     super()
+    this.criar(options)
 
     this.selectedBook = null
+    this.selectedPage = null
     this.previousSelectedBag = null
     this.thisBag = options.thisBag
     this.bookRef = options.bookRef
     this.navBar = options.thisBag.bagRef.dashRefObj.navBar
-    this.criar(options)
   }
 
   criar(options) {
-    const { name, folhas } = options.caderno
     this.pages = []
     this.newBook = document.createElement("caderno")
     this.addEstilo(this.newBook, {
@@ -40,7 +40,7 @@ class Caderno extends Estilo {
 
     // Editar nome do caderno
     this.newBookName = document.createElement("p")
-    this.newBookName.textContent = name ? name : "Novo Caderno " + ("(" + ++bookCounter + ")")
+    this.newBookName.textContent = options.name ? options.name : "Novo Caderno " + ("(" + ++bookCounter + ")")
     this.addRenamable(this.newBookName, 19)
     this.addEstilo(this.newBookName, {
       height: "50%"
@@ -174,12 +174,21 @@ class Caderno extends Estilo {
         duration: this.animationTimes.slow
       }
     )
-    let length = folhas ? folhas.length : null
-    if (length && length > 0) {
-      folhas.forEach(page => {
-        this.newPage(page)
-      })
-    }
+    // let length = options.folhas ? options.folha.length : null
+    // if (length > 0) {
+    //   this.options.folha.forEach(page => {
+    //     newPage(page.exportBlocos)
+    //   })
+    // }
+  }
+
+  load(folhas) {
+    folhas.forEach(fol => {
+      const { exportBlocos, name } = fol
+      let folha = this.newPage(name)
+      folha.load(exportBlocos)
+    })
+    this.selectedPage = this.pages[this.pages.length - 1]
   }
 
   export() {
@@ -188,7 +197,7 @@ class Caderno extends Estilo {
       folhas.push(page.export())
     })
     console.log("folhas", folhas)
-    return { name: this.newBookName.textConten, folhas }
+    return { name: this.newBookName.textContent, folhas }
   }
 
   deleteBook(ref, book) {
@@ -235,17 +244,21 @@ class Caderno extends Estilo {
     return this.isSelected
   }
 
-  newPage(page) {
-
-    this.pageArray = page ? this.pages : this.thisBag.bagRef.currentBag().currentBook().pages
+  newPage(name) {
+    this.pageArray = this.thisBag.bagRef.currentBag().currentBook().pages
     this.pageArray.push(
       new Folha({
         folhaContainer: this.navBar.folhaContainer,
         loadedFonts: this.navBar.loadedFonts,
-        blocos: page.exportBlocos
       })
     )
-    this.navBar.createTab(this.pageArray[this.pageArray.length - 1], page.name)
+    let tab = this.navBar.createTab(this.pageArray[this.pageArray.length - 1], name)
+
+    this.pageArray[this.pageArray.length - 1].navTab = tab
+
+    this.selectedPage = this.pageArray[this.pageArray.length - 1]
+
+    return this.selectedPage
   }
 
   esconderFolhas() {

@@ -8,6 +8,8 @@ class Texto extends Blocos {
     this.italiced = false
     this.underlined = false
     this.criarTexto()
+    if (options.load.text)
+      this.load(options.load)
   }
   export() {
 
@@ -22,6 +24,34 @@ class Texto extends Blocos {
       align: this.texto.style.textAlign || 'left'
     }
     return super.export()
+
+  }
+  load(data) {
+
+    const { text, font, size, align, bold, italiced, underlined } = data
+
+    this.texto.value = text
+    if (bold) this.setBold(this)
+    if (italiced) this.setItalic(this)
+    if (underlined) this.setUnderline(this)
+    this.fontFamily.value = font
+    this.fontSize.value = size
+    this.fontSize.onchange()
+    this.fontFamily.onchange()
+    let bt
+    switch (align) {
+      case 'left':
+        bt = this.btAlignLeft
+        break
+      case 'right':
+        bt = this.btAlignRight
+        break
+      case 'center':
+        bt = this.btAlignCenter
+        break
+    }
+    this.setAlign(this, align, bt)
+
 
   }
   checkSelection() {

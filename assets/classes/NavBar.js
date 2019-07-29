@@ -3,25 +3,27 @@ const Botao = require("./Botao")
 const NavTabs = require("./NavTabs")
 const Dashboard = require("./Dashboard")
 const fs = require("fs")
+const { clipboard, Tray } = require("electron")
+const { app, globalShortcut } = require("electron")
 this.Dashboard = Dashboard
 
 class NavBar extends Estilo {
   constructor() {
     super()
-    this.folhaContainer = document.createElement("folhaContainer")
     this.bodyRef = document.getElementsByTagName("BODY")[0]
+    this.folhaContainer = document.getElementsByTagName("folhacontainer")[0]
+
     this.loadedFonts = { fonts: [] }
     this.loadFonts()
     this.limiteAbas = 10
     this.moreModalAberto = false
+    this.windowOnMouseMoveActions = []
+
+    this.criar()
+
     this.dashBook = new Dashboard({
       bodyRef: this.bodyRef,
       dashType: "caderno",
-      navBar: this
-    })
-    this.dashBag = new Dashboard({
-      bodyRef: this.bodyRef,
-      dashType: "mochila",
       navBar: this
     })
     this.dashBlock = new Dashboard({
@@ -29,12 +31,158 @@ class NavBar extends Estilo {
       dashType: "blocos",
       navBar: this
     })
+    this.dashBag = new Dashboard({
+      bodyRef: this.bodyRef,
+      dashType: "mochila",
+      navBar: this
+    })
     this.dashs = [this.dashBook, this.dashBag, this.dashBlock]
     this.lastActiveTabIndex = -1
-    this.criar()
-    // this.dashBag.mochilaDash.load()
+    this.dashBag.getBag().load()
+
+    window.onkeydown = e => {
+
+      let folha = this.dashBag.getBag().currentBag().currentBook().selectedPage
+
+      if (folha) {
+
+        if (e.ctrlKey && e.keyCode == 84) {
+          const { x, y } = this.getMousePos(100, 50)
+          folha.criarTexto({
+            posX: x,
+            posY: y,
+            initialWidth: 100,
+            initialHeight: 50
+          })
+        } else if (e.ctrlKey && e.keyCode == 73) {
+          const { x, y } = this.getMousePos(400, 400)
+          folha.criarImagem({
+            posX: x,
+            posY: y,
+            initialWidth: 400,
+            initialHeight: 400
+          })
+        } else if (e.ctrlKey && e.keyCode == 76) {
+          const { x, y } = this.getMousePos(400, 400)
+          folha.criarLista({
+            posX: x,
+            posY: y,
+            initialWidth: 400,
+            initialHeight: 400
+          })
+        } else if (e.ctrlKey && e.keyCode == 71) {
+          const { x, y } = this.getMousePos(400, 400)
+          folha.criarTabela({
+            posX: x,
+            posY: y,
+            initialWidth: 400,
+            initialHeight: 400
+          })
+        } else if (e.ctrlKey && e.keyCode == 75) {
+          const { x, y } = this.getMousePos(230, 100)
+          folha.criarAudio({
+            posX: x,
+            posY: y,
+            initialWidth: 380,
+            initialHeight: 100
+          })
+        } else if (e.ctrlKey && e.keyCode == 74) {
+          const { x, y } = this.getMousePos(600, 500)
+          folha.criarVideo({
+            posX: x,
+            posY: y,
+            initialWidth: 600,
+            initialHeight: 500
+          })
+        } else if (e.ctrlKey && e.keyCode == 79) {
+          const { x, y } = this.getMousePos(200, 100)
+          folha.criarGravadorAudio({
+            posX: x,
+            posY: y,
+            initialWidth: 200,
+            initialHeight: 100
+          })
+        }
+
+      }
+
+
+    }
+    this.addWindowMouseMoveAction(e => {
+      this.mouseX = e.clientX
+      this.mouseY = e.clientY
+    })
+
+    window.onmousewheel = e => {
+      if (e.wheelDelta < 0) {
+        const height = this.folhaContainer.parentElement.offsetHeight
+        const scrollTop = this.folhaContainer.parentElement.scrollTop
+        const scrollHeight = this.folhaContainer.scrollHeight
+
+        const diff = scrollHeight - (height + scrollTop)
+        if (diff <= this.scrollPadding) {
+          const height = this.parsePx(this.folhaContainer.style.height) + this.scrollAdd
+          this.folhaContainer.style.height = this.reparsePx(height)
+        }
+      }
+    }
+
+    this.folhaContainer.onpaste = e => {
+
+      let folha = this.dashBag.getBag().currentBag().currentBook().selectedPage
+
+      const image = clipboard.readImage()
+      this.countImgs()
+
+      if (!image.isEmpty()) {
+        const { height, width } = image.getSize()
+        const { x, y } = this.getMousePos(width, height)
+
+        fs.writeFileSync(
+          `./imgs/Imagem-${this.imageCount + 1}.jpg`,
+          image.toJPEG(100)
+        )
+        folha.criarImagem({
+          posX: x,
+          posY: y,
+          initialWidth: width,
+          initialHeight: height,
+          src: `./imgs/Imagem-${this.imageCount + 1}.jpg`
+        })
+      }
+    }
+  }
+  getMousePos(width, height) {
+    let x = this.mouseX - this.folhaContainer.offsetLeft - width / 2
+    let y =
+      this.mouseY +
+      this.folhaContainer.parentElement.scrollTop -
+      this.folhaContainer.offsetTop -
+      height / 2
+    return { x, y }
+  }
+  countImgs() {
+    let images = fs.readdirSync("./imgs")
+    if (images.length > 0) {
+      let imagesNumber = images.map(image => parseInt(image.split("-")[1]))
+      this.imageCount = Math.max(...imagesNumber)
+    } else {
+      this.imageCount = 0
+    }
+  }
+  removeWindowMouseMoveAction(ind) {
+    this.windowOnMouseMoveActions.splice(ind, 1)
   }
 
+  addWindowMouseMoveAction(action) {
+    this.windowOnMouseMoveActions.push(action)
+    window.onmousemove = e => {
+      this.windowOnMouseMoveActions.forEach(action => {
+        action(e)
+      })
+    }
+    return this.windowOnMouseMoveActions.length - 1
+  }
   criar() {
     let container = document.createElement("div")
     this.addEstilo(container, {
@@ -46,6 +194,7 @@ class NavBar extends Estilo {
       overflowY: "auto",
       overflowX: "hidden"
     })
+    this.folhaContainer = document.createElement("folhaContainer")
     container.appendChild(this.folhaContainer)
 
     this.addEstilo(this.folhaContainer, {
@@ -326,43 +475,41 @@ class NavBar extends Estilo {
   }
 
   createTab(newPageRef, name) {
-    debugger
     this.currentBook = this.dashBag
       .getBag()
       .currentBag()
       .currentBook()
-
+    let tab
     if (this.tabs.length >= this.limiteAbas) {
       this.abrirMoreButton()
-      this.tabs.push(
-        new NavTabs({
-          ref: this.moreNavTabs,
-          tabs: this.tabs,
-          moreTabs: true,
-          navbar: this,
-          index: this.tabs.length + 1,
-          belongsTo: this.currentBook,
-          pageRef: newPageRef,
-          name
-        })
-      )
+      tab = new NavTabs({
+        ref: this.moreNavTabs,
+        tabs: this.tabs,
+        moreTabs: true,
+        navbar: this,
+        index: this.tabs.length + 1,
+        belongsTo: this.currentBook,
+        pageRef: newPageRef,
+        name
+      })
+      this.tabs.push(tab)
       this.atualizarNumAbas()
-    } else {
-      this.tabs.push(
-        new NavTabs({
-          ref: this.tabsContainer,
-          moreTabsRef: this.moreNavTabs,
-          tabs: this.tabs,
-          navbar: this,
-          folhaContainer: this.folhaContainer,
-          index: this.tabs.length + 1,
-          belongsTo: this.currentBook,
-          pageRef: newPageRef,
-          name
-        })
-      )
-    }
 
+    } else {
+      tab = new NavTabs({
+        ref: this.tabsContainer,
+        moreTabsRef: this.moreNavTabs,
+        tabs: this.tabs,
+        navbar: this,
+        folhaContainer: this.folhaContainer,
+        index: this.tabs.length + 1,
+        belongsTo: this.currentBook,
+        pageRef: newPageRef,
+        name
+      })
+      this.tabs.push(tab)
+    }
+    return tab
     // for (let j = 0; j < this.currentBag().cadernos.length; j++) {
     //   // console.log(this.currentBag().cadernos[j].newBook)
     //   this.currentBag().cadernos[j].newBook.style.display = "flex"
@@ -412,4 +559,4 @@ class NavBar extends Estilo {
   }
 }
 
-new NavBar()
+const navBar = new NavBar()

@@ -1,7 +1,7 @@
 const Estilo = require("./Estilo")
 const Botao = require("./Botao")
 const Mochila = require("./Mochila")
-const fs = require("fs")
+const fs = require('fs')
 
 class MochilaDash extends Estilo {
   constructor(dashRef) {
@@ -200,42 +200,60 @@ class MochilaDash extends Estilo {
     this.ref.append(this.titleContainer, this.contentContainer)
     this.dashRef.appendChild(this.ref)
 
-    // this.load(this)
-
+    this.loadBags()
     // .catch(erro => {
-    //   console.log(erro)
     //   this.createBag(this.contentContainer)
     // })
-    //this.createBag(this.contentContainer)
   }
 
-  load(ref) {
+  load() {
+    let cadernos = this.CadernosDasMochilas
+    this.mochilas.forEach((mochila, indice) => {
 
+      mochila.load(cadernos[indice])
+
+      // cadernos[indice].forEach(caderno => {
+      //   const { name, folhas } = caderno
+      //   let cad = mochila.createBook(name)
+      //   folhas.forEach(folha => {
+      //     const { exportBlocos, name } = folha
+      //     cad.newPage(name)
+      //   })
+
+      // })
+
+    })
+
+  }
+
+  loadBags() {
     // return new Promise((resolve, reject) => {
     let bags = fs.readdirSync('./save')
-    // if (!bags.length) reject()
+    let cadernos = []
+    if (!bags.length) reject()
     bags.forEach(bag => {
       let data = fs.readFileSync(`./save/${bag}`);
       data = JSON.parse(data)
-      this.createBag(this.contentContainer, data)
+      console.log(data)
+      const { cadernosData } = data
+      cadernos.push(cadernosData)
+      this.createBag(this.contentContainer, data.name)
     })
+    this.CadernosDasMochilas = cadernos
     //   resolve()
     // })
 
   }
 
-  createBag(container, data) {
-    const { cadernosData, name } = data
+  createBag(container, name) {
 
     this.mochilas.push(
       new Mochila({
         bagRef: this,
         containerRef: container,
-        cadernos: cadernosData,
         name
       })
     )
-    debugger
     this.selectBag(this.mochilas[this.mochilas.length - 1])
     if (this.emptyWarning) this.turnOffWarning()
   }
@@ -261,7 +279,6 @@ class MochilaDash extends Estilo {
   }
 
   currentBag() {
-    debugger
     for (let i = 0; i < this.mochilas.length; i++) {
       if (this.mochilas[i].isSelected) return this.mochilas[i]
     }

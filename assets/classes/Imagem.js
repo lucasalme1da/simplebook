@@ -12,11 +12,12 @@ class Imagem extends Blocos {
     this.criarImagem()
 
   }
+
   export() {
 
     this.exportData = {
       type: this.constructor.name,
-      src: this.src
+      src: this.imagem.src
     }
     return super.export()
   }
@@ -70,7 +71,7 @@ class Imagem extends Blocos {
     this.imagem.setAttribute('draggable', 'false')
     this.file = document.createElement('input')
     this.file.setAttribute('type', 'file')
-    this.src ? this.imagem.setAttribute('src', `./imgs/${this.src}`) : this.imagem.setAttribute('src', './assets/icons/imgDefaultFinal.svg')
+    this.src ? this.imagem.setAttribute('src', `${this.src}`) : this.imagem.setAttribute('src', './assets/icons/imgDefaultFinal.svg')
     this.file.setAttribute('accept', 'image/*')
     this.addEstilo(this.imagem, {
       width: '100%',

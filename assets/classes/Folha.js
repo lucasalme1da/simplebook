@@ -26,108 +26,68 @@ class Folha extends Estilo {
     this.scrollPadding = 20
     this.scrollAdd = 200
     this.windowOnMouseMoveActions = []
-    window.onkeydown = e => {
-      if (e.ctrlKey && e.keyCode == 84) {
-        const { x, y } = this.getMousePos(100, 50)
-        this.criarTexto({
-          posX: x,
-          posY: y,
-          initialWidth: 100,
-          initialHeight: 50
-        })
-      } else if (e.ctrlKey && e.keyCode == 73) {
-        const { x, y } = this.getMousePos(400, 400)
-        this.criarImagem({
-          posX: x,
-          posY: y,
-          initialWidth: 400,
-          initialHeight: 400
-        })
-      } else if (e.ctrlKey && e.keyCode == 76) {
-        const { x, y } = this.getMousePos(400, 400)
-        this.criarLista({
-          posX: x,
-          posY: y,
-          initialWidth: 400,
-          initialHeight: 400
-        })
-      } else if (e.ctrlKey && e.keyCode == 71) {
-        const { x, y } = this.getMousePos(400, 400)
-        this.criarTabela({
-          posX: x,
-          posY: y,
-          initialWidth: 400,
-          initialHeight: 400
-        })
-      } else if (e.ctrlKey && e.keyCode == 75) {
-        const { x, y } = this.getMousePos(230, 100)
-        this.criarAudio({
-          posX: x,
-          posY: y,
-          initialWidth: 380,
-          initialHeight: 100
-        })
-      } else if (e.ctrlKey && e.keyCode == 74) {
-        const { x, y } = this.getMousePos(600, 500)
-        this.criarVideo({
-          posX: x,
-          posY: y,
-          initialWidth: 600,
-          initialHeight: 500
-        })
-      } else if (e.ctrlKey && e.keyCode == 79) {
-        const { x, y } = this.getMousePos(200, 100)
-        this.criarGravadorAudio({
-          posX: x,
-          posY: y,
-          initialWidth: 200,
-          initialHeight: 100
-        })
-      }
+    // window.onkeydown = e => {
+    //   if (e.ctrlKey && e.keyCode == 84) {
+    //     const { x, y } = this.getMousePos(100, 50)
+    //     this.criarTexto({
+    //       posX: x,
+    //       posY: y,
+    //       initialWidth: 100,
+    //       initialHeight: 50
+    //     })
+    //   } else if (e.ctrlKey && e.keyCode == 73) {
+    //     const { x, y } = this.getMousePos(400, 400)
+    //     this.criarImagem({
+    //       posX: x,
+    //       posY: y,
+    //       initialWidth: 400,
+    //       initialHeight: 400
+    //     })
+    //   } else if (e.ctrlKey && e.keyCode == 76) {
+    //     const { x, y } = this.getMousePos(400, 400)
+    //     this.criarLista({
+    //       posX: x,
+    //       posY: y,
+    //       initialWidth: 400,
+    //       initialHeight: 400
+    //     })
+    //   } else if (e.ctrlKey && e.keyCode == 71) {
+    //     const { x, y } = this.getMousePos(400, 400)
+    //     this.criarTabela({
+    //       posX: x,
+    //       posY: y,
+    //       initialWidth: 400,
+    //       initialHeight: 400
+    //     })
+    //   } else if (e.ctrlKey && e.keyCode == 75) {
+    //     const { x, y } = this.getMousePos(230, 100)
+    //     this.criarAudio({
+    //       posX: x,
+    //       posY: y,
+    //       initialWidth: 380,
+    //       initialHeight: 100
+    //     })
+    //   } else if (e.ctrlKey && e.keyCode == 74) {
+    //     const { x, y } = this.getMousePos(600, 500)
+    //     this.criarVideo({
+    //       posX: x,
+    //       posY: y,
+    //       initialWidth: 600,
+    //       initialHeight: 500
+    //     })
+    //   } else if (e.ctrlKey && e.keyCode == 79) {
+    //     const { x, y } = this.getMousePos(200, 100)
+    //     this.criarGravadorAudio({
+    //       posX: x,
+    //       posY: y,
+    //       initialWidth: 200,
+    //       initialHeight: 100
+    //     })
+    //   }
 
-    }
+    // }
 
-    this.addWindowMouseMoveAction(e => {
-      this.mouseX = e.clientX
-      this.mouseY = e.clientY
-    })
 
-    window.onmousewheel = e => {
-      if (e.wheelDelta < 0) {
-        const height = this.folhaContainer.parentElement.offsetHeight
-        const scrollTop = this.folhaContainer.parentElement.scrollTop
-        const scrollHeight = this.folhaContainer.scrollHeight
-
-        const diff = scrollHeight - (height + scrollTop)
-        if (diff <= this.scrollPadding) {
-          const height =
-            this.parsePx(this.folhaContainer.style.height) + this.scrollAdd
-          this.folhaContainer.style.height = this.reparsePx(height)
-        }
-      }
-    }
-
-    this.folhaContainer.onpaste = e => {
-      const image = clipboard.readImage()
-      this.countImgs()
-
-      if (!image.isEmpty()) {
-        const { height, width } = image.getSize()
-        const { x, y } = this.getMousePos(width, height)
-
-        fs.writeFileSync(
-          `./imgs/Imagem-${this.imageCount + 1}.jpg`,
-          image.toJPEG(100)
-        )
-        this.criarImagem({
-          posX: x,
-          posY: y,
-          initialWidth: width,
-          initialHeight: height,
-          src: `Imagem-${this.imageCount + 1}.jpg`
-        })
-      }
-    }
 
     let length = options.blocos ? options.blocos.length : null
 
@@ -137,20 +97,24 @@ class Folha extends Estilo {
       })
     }
   }
-
+  load(blocos) {
+    blocos.forEach(bloco => {
+      this.loadBloco(bloco)
+    })
+  }
   loadBloco(bloco) {
     switch (bloco.type) {
       case "Texto":
         this.criarTexto(bloco)
         break
       case "Imagem":
-        criarImagem(bloco)
+        this.criarImagem(bloco)
         break
       case "Lista":
-        criarLista(bloco)
+        this.criarLista(bloco)
         break
       case "Tabela":
-        criarTabela(bloco)
+        this.criarTabela(bloco)
         break
     }
   }
@@ -162,17 +126,8 @@ class Folha extends Estilo {
     })
 
     console.log("blocos", exportBlocos)
-    return { name: "folha", exportBlocos }
-  }
 
-  getMousePos(width, height) {
-    let x = this.mouseX - this.folhaContainer.offsetLeft - width / 2
-    let y =
-      this.mouseY +
-      this.folhaContainer.parentElement.scrollTop -
-      this.folhaContainer.offsetTop -
-      height / 2
-    return { x, y }
+    return { name: this.navTab.text.textContent, exportBlocos }
   }
 
   removeWindowMouseMoveAction(ind) {
@@ -234,8 +189,8 @@ class Folha extends Estilo {
         posX: `${options.posX}px`,
         posY: `${options.posY}px`,
         loadedFonts: this.loadedFonts,
-        initialHeight: options.initialHeight || options.width,
-        initialWidth: options.initialWidth || options.height,
+        initialHeight: options.initialHeight || options.height,
+        initialWidth: options.initialWidth || options.width,
         folha: this,
         load: options
       })
