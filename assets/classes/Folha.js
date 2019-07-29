@@ -17,6 +17,7 @@ class Folha extends Estilo {
     super()
     this.blocos = []
     this.folhaContainer = options.folhaContainer
+    this.height = 1095
     this.zIndexBlocoMin = 5
     this.zIndexBlocoMax = 300
     this.imageCount = -1
@@ -129,7 +130,9 @@ class Folha extends Estilo {
 
     return { name: this.navTab.text.textContent, exportBlocos }
   }
-
+  setPageHeight() {
+    this.folhaContainer.style.height = this.reparsePx(this.height)
+  }
   removeWindowMouseMoveAction(ind) {
     this.windowOnMouseMoveActions.splice(ind, 1)
   }

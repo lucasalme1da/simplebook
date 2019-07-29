@@ -12,6 +12,8 @@ class NavBar extends Estilo {
     super()
     this.bodyRef = document.getElementsByTagName("BODY")[0]
     this.folhaContainer = document.getElementsByTagName("folhacontainer")[0]
+    this.scrollPadding = 20
+    this.scrollAdd = 500
 
     this.loadedFonts = { fonts: [] }
     this.loadFonts()
@@ -120,9 +122,13 @@ class NavBar extends Estilo {
         const scrollHeight = this.folhaContainer.scrollHeight
 
         const diff = scrollHeight - (height + scrollTop)
+        console.log(diff, this.scrollPadding)
         if (diff <= this.scrollPadding) {
           const height = this.parsePx(this.folhaContainer.style.height) + this.scrollAdd
           this.folhaContainer.style.height = this.reparsePx(height)
+          let folha = this.dashBag.getBag().currentBag().currentBook().selectedPage
+          folha.height = height
+
         }
       }
     }

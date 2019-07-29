@@ -190,9 +190,9 @@ class NavTabs extends Estilo {
     this.book = this.belongsTo.thisBag.currentBook()
     this.book.esconderFolhas()
 
-    this.book.selectedPage = this.page
-
     this.page = this.pageRef
+    this.book.selectedPage = this.page
+    this.page.setPageHeight()
     this.page.mostrarBlocos()
 
     this.canhover = false
