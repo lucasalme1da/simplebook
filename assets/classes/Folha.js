@@ -17,7 +17,7 @@ class Folha extends Estilo {
     super()
     this.blocos = []
     this.folhaContainer = options.folhaContainer
-    this.height = 1095
+    this.height = options.height ? options.height : 1095
     this.zIndexBlocoMin = 5
     this.zIndexBlocoMax = 300
     this.imageCount = -1
@@ -27,68 +27,6 @@ class Folha extends Estilo {
     this.scrollPadding = 20
     this.scrollAdd = 200
     this.windowOnMouseMoveActions = []
-    // window.onkeydown = e => {
-    //   if (e.ctrlKey && e.keyCode == 84) {
-    //     const { x, y } = this.getMousePos(100, 50)
-    //     this.criarTexto({
-    //       posX: x,
-    //       posY: y,
-    //       initialWidth: 100,
-    //       initialHeight: 50
-    //     })
-    //   } else if (e.ctrlKey && e.keyCode == 73) {
-    //     const { x, y } = this.getMousePos(400, 400)
-    //     this.criarImagem({
-    //       posX: x,
-    //       posY: y,
-    //       initialWidth: 400,
-    //       initialHeight: 400
-    //     })
-    //   } else if (e.ctrlKey && e.keyCode == 76) {
-    //     const { x, y } = this.getMousePos(400, 400)
-    //     this.criarLista({
-    //       posX: x,
-    //       posY: y,
-    //       initialWidth: 400,
-    //       initialHeight: 400
-    //     })
-    //   } else if (e.ctrlKey && e.keyCode == 71) {
-    //     const { x, y } = this.getMousePos(400, 400)
-    //     this.criarTabela({
-    //       posX: x,
-    //       posY: y,
-    //       initialWidth: 400,
-    //       initialHeight: 400
-    //     })
-    //   } else if (e.ctrlKey && e.keyCode == 75) {
-    //     const { x, y } = this.getMousePos(230, 100)
-    //     this.criarAudio({
-    //       posX: x,
-    //       posY: y,
-    //       initialWidth: 380,
-    //       initialHeight: 100
-    //     })
-    //   } else if (e.ctrlKey && e.keyCode == 74) {
-    //     const { x, y } = this.getMousePos(600, 500)
-    //     this.criarVideo({
-    //       posX: x,
-    //       posY: y,
-    //       initialWidth: 600,
-    //       initialHeight: 500
-    //     })
-    //   } else if (e.ctrlKey && e.keyCode == 79) {
-    //     const { x, y } = this.getMousePos(200, 100)
-    //     this.criarGravadorAudio({
-    //       posX: x,
-    //       posY: y,
-    //       initialWidth: 200,
-    //       initialHeight: 100
-    //     })
-    //   }
-
-    // }
-
-
 
     let length = options.blocos ? options.blocos.length : null
 
@@ -100,24 +38,9 @@ class Folha extends Estilo {
   }
   load(blocos) {
     blocos.forEach(bloco => {
-      this.loadBloco(bloco)
+
+      this.criarBloco(bloco)
     })
-  }
-  loadBloco(bloco) {
-    switch (bloco.type) {
-      case "Texto":
-        this.criarTexto(bloco)
-        break
-      case "Imagem":
-        this.criarImagem(bloco)
-        break
-      case "Lista":
-        this.criarLista(bloco)
-        break
-      case "Tabela":
-        this.criarTabela(bloco)
-        break
-    }
   }
 
   export() {
@@ -128,23 +51,22 @@ class Folha extends Estilo {
 
     console.log("blocos", exportBlocos)
 
-    return { name: this.navTab.text.textContent, exportBlocos }
+    return {
+      name: this.navTab.text.textContent,
+      height: this.height,
+      exportBlocos
+    }
   }
   setPageHeight() {
     this.folhaContainer.style.height = this.reparsePx(this.height)
   }
   removeWindowMouseMoveAction(ind) {
-    this.windowOnMouseMoveActions.splice(ind, 1)
+    return this.navTab.navbar.removeWindowMouseMoveAction(ind)
   }
 
   addWindowMouseMoveAction(action) {
-    this.windowOnMouseMoveActions.push(action)
-    window.onmousemove = e => {
-      this.windowOnMouseMoveActions.forEach(action => {
-        action(e)
-      })
-    }
-    return this.windowOnMouseMoveActions.length - 1
+
+    return this.navTab.navbar.addWindowMouseMoveAction(action)
   }
 
   countImgs() {
@@ -157,102 +79,54 @@ class Folha extends Estilo {
     }
   }
 
-  criarTabela(options) {
-    this.blocos.push(
-      new Tabela({
-        folhaContainer: this.folhaContainer,
-        posX: `${options.posX}px`,
-        posY: `${options.posY}px`,
-        loadedFonts: this.loadedFonts,
-        initialHeight: options.initialHeight || options.width,
-        initialWidth: options.initialWidth || options.height,
-        folha: this
-      })
-    )
-  }
 
-  criarLista(options) {
-    this.blocos.push(
-      new Lista({
-        folhaContainer: this.folhaContainer,
-        posX: `${options.posX}px`,
-        posY: `${options.posY}px`,
-        loadedFonts: this.loadedFonts,
-        initialHeight: options.initialHeight || options.width,
-        initialWidth: options.initialWidth || options.height,
-        folha: this
-      })
-    )
-  }
+  criarBloco(options) {
 
-  criarTexto(options) {
-    this.blocos.push(
-      new Texto({
-        folhaContainer: this.folhaContainer,
-        posX: `${options.posX}px`,
-        posY: `${options.posY}px`,
-        loadedFonts: this.loadedFonts,
-        initialHeight: options.initialHeight || options.height,
-        initialWidth: options.initialWidth || options.width,
-        folha: this,
-        load: options
-      })
-    )
-  }
+    let defaultOptions = {
+      folhaContainer: this.folhaContainer,
+      posX: `${options.posX}px`,
+      posY: `${options.posY}px`,
+      loadedFonts: this.loadedFonts,
+      initialHeight: options.initialHeight || options.height,
+      initialWidth: options.initialWidth || options.width,
+      src: options.src,
+      folha: this,
+      load: options.load,
+    }
 
-  criarImagem(options) {
-    this.blocos.push(
-      new Imagem({
-        folhaContainer: this.folhaContainer,
-        posX: `${options.posX}px`,
-        posY: `${options.posY}px`,
-        initialHeight: options.initialHeight || options.width,
-        initialWidth: options.initialWidth || options.height,
-        src: options.src,
-        folha: this
-      })
-    )
-  }
+    switch (options.type) {
+      case 'Texto':
+        this.blocos.push(new Texto(defaultOptions))
+        break
+      case 'Imagem':
+        this.blocos.push(new Imagem(defaultOptions))
+        break
 
-  criarAudio(options) {
-    this.blocos.push(
-      new Audio({
-        folhaContainer: this.folhaContainer,
-        posX: `${options.posX}px`,
-        posY: `${options.posY}px`,
-        initialHeight: options.initialHeight || options.width,
-        initialWidth: options.initialWidth || options.height,
-        folha: this
-      })
-    )
+      case 'Tabela':
+        this.blocos.push(new Tabela(defaultOptions))
+        break
+
+      case 'Lista':
+        this.blocos.push(new Lista(defaultOptions))
+        break
+
+      case 'Audio':
+        this.blocos.push(new Audio(defaultOptions))
+        break
+
+      case 'Video':
+        this.blocos.push(new Video(defaultOptions))
+        break
+
+      case 'GravadorAudio':
+        this.blocos.push(new GravadorAudio(defaultOptions))
+        break
+
+    }
+
 
   }
-  criarVideo(options) {
-    this.blocos.push(
-      new Video({
-        folhaContainer: this.folhaContainer,
-        posX: `${options.posX}px`,
-        posY: `${options.posY}px`,
-        initialHeight: options.initialHeight || options.width,
-        initialWidth: options.initialWidth || options.height,
-        folha: this
-      })
-    )
 
-  }
-  criarGravadorAudio(options) {
-    this.blocos.push(
-      new GravadorAudio({
-        folhaContainer: this.folhaContainer,
-        posX: `${options.posX}px`,
-        posY: `${options.posY}px`,
-        initialHeight: options.initialHeight || options.width,
-        initialWidth: options.initialWidth || options.height,
-        folha: this
-      })
-    )
-
-  }
 
   esconderBlocos() {
     for (let i = 0; i < this.blocos.length; i++) {

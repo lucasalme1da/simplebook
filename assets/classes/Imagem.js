@@ -10,6 +10,12 @@ class Imagem extends Blocos {
     this.src = options.src ? options.src : null
     this.createFilesDirectory()
     this.criarImagem()
+    if (options.load)
+      this.load(options.load)
+  }
+
+  load(data) {
+    this.imagem.src = data.src
 
   }
 

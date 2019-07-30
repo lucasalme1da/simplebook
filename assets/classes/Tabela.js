@@ -54,12 +54,34 @@ class Tabela extends Blocos {
       }
     ]
     this.criarTabela()
+    if (options.load)
+      this.load(options.load)
+  }
+  load(data) {
+    this.tabela.innerHTML = data.html
+    this.fontFamily.value = data.font
+    this.fontSize.value = data.size
+    if (data.estilo != 'Estilo da tabela') {
+      this.selectType.value = data.estilo
+      this.selectType.onchange()
+    }
+    if (data.align != 'Alinhamento') {
+      this.align.value = data.align
+      this.align.onchange()
+    }
+    this.fontSize.onchange()
+    this.fontFamily.onchange()
+
   }
   export() {
-
+    // fonte, tamanho, estilo, alinhamento
     this.exportData = {
       type: this.constructor.name,
-
+      html: this.tabela.innerHTML,
+      font: this.fontFamily.value,
+      size: parseInt(this.fontSize.value),
+      estilo: this.selectType.value,
+      align: this.align.value
     }
     return super.export()
 

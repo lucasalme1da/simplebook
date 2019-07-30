@@ -50,7 +50,8 @@ class NavBar extends Estilo {
 
         if (e.ctrlKey && e.keyCode == 84) {
           const { x, y } = this.getMousePos(100, 50)
-          folha.criarTexto({
+          folha.criarBloco({
+            type: 'Texto',
             posX: x,
             posY: y,
             initialWidth: 100,
@@ -58,7 +59,8 @@ class NavBar extends Estilo {
           })
         } else if (e.ctrlKey && e.keyCode == 73) {
           const { x, y } = this.getMousePos(400, 400)
-          folha.criarImagem({
+          folha.criarBloco({
+            type: 'Imagem',
             posX: x,
             posY: y,
             initialWidth: 400,
@@ -66,7 +68,8 @@ class NavBar extends Estilo {
           })
         } else if (e.ctrlKey && e.keyCode == 76) {
           const { x, y } = this.getMousePos(400, 400)
-          folha.criarLista({
+          folha.criarBloco({
+            type: 'Lista',
             posX: x,
             posY: y,
             initialWidth: 400,
@@ -74,7 +77,8 @@ class NavBar extends Estilo {
           })
         } else if (e.ctrlKey && e.keyCode == 71) {
           const { x, y } = this.getMousePos(400, 400)
-          folha.criarTabela({
+          folha.criarBloco({
+            type: 'Tabela',
             posX: x,
             posY: y,
             initialWidth: 400,
@@ -82,7 +86,8 @@ class NavBar extends Estilo {
           })
         } else if (e.ctrlKey && e.keyCode == 75) {
           const { x, y } = this.getMousePos(230, 100)
-          folha.criarAudio({
+          folha.criarBloco({
+            type: 'Audio',
             posX: x,
             posY: y,
             initialWidth: 380,
@@ -90,7 +95,8 @@ class NavBar extends Estilo {
           })
         } else if (e.ctrlKey && e.keyCode == 74) {
           const { x, y } = this.getMousePos(600, 500)
-          folha.criarVideo({
+          folha.criarBloco({
+            type: 'Video',
             posX: x,
             posY: y,
             initialWidth: 600,
@@ -98,7 +104,8 @@ class NavBar extends Estilo {
           })
         } else if (e.ctrlKey && e.keyCode == 79) {
           const { x, y } = this.getMousePos(200, 100)
-          folha.criarGravadorAudio({
+          folha.criarBloco({
+            type: 'GravadorAudio',
             posX: x,
             posY: y,
             initialWidth: 200,
@@ -122,7 +129,6 @@ class NavBar extends Estilo {
         const scrollHeight = this.folhaContainer.scrollHeight
 
         const diff = scrollHeight - (height + scrollTop)
-        console.log(diff, this.scrollPadding)
         if (diff <= this.scrollPadding) {
           const height = this.parsePx(this.folhaContainer.style.height) + this.scrollAdd
           this.folhaContainer.style.height = this.reparsePx(height)
@@ -208,10 +214,7 @@ class NavBar extends Estilo {
       display: "block",
       width: "100%",
       backgroundColor: "white",
-      overflow: "hidden",
       position: "relative",
-      overflowY: "auto",
-      overflowX: "hidden"
     })
 
     this.ref = document.createElement("nav")

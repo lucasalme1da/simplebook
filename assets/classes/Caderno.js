@@ -184,8 +184,8 @@ class Caderno extends Estilo {
 
   load(folhas) {
     folhas.forEach(fol => {
-      const { exportBlocos, name } = fol
-      let folha = this.newPage(name)
+      const { exportBlocos, name, height } = fol
+      let folha = this.newPage(name, height)
       folha.load(exportBlocos)
     })
     this.selectedPage = this.pages[this.pages.length - 1]
@@ -244,12 +244,13 @@ class Caderno extends Estilo {
     return this.isSelected
   }
 
-  newPage(name) {
+  newPage(name, height) {
     this.pageArray = this.thisBag.bagRef.currentBag().currentBook().pages
     this.pageArray.push(
       new Folha({
         folhaContainer: this.navBar.folhaContainer,
         loadedFonts: this.navBar.loadedFonts,
+        height
       })
     )
     let tab = this.navBar.createTab(this.pageArray[this.pageArray.length - 1], name)

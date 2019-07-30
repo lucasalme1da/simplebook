@@ -23,9 +23,10 @@ class Blocos extends Estilo {
             width: this.parsePx(this.blocoRef.style.width),
             height: this.parsePx(this.blocoRef.style.height),
             posX: this.parsePx(this.blocoRef.style.left),
-            posY: this.parsePx(this.blocoRef.style.top)
+            posY: this.parsePx(this.blocoRef.style.top),
+            load: this.exportData,
+            type: this.exportData.type
         }
-        Object.assign(exportOb, this.exportData)
         return exportOb
     }
 
@@ -339,7 +340,7 @@ class Blocos extends Estilo {
         this.resizesContainer.push(reziseContainerBottom)
         reziseContainerBottom.appendChild(this.resizeBottom)
         this.resizes.forEach(resize => {
-
+            resize.ondrag = e => e.preventDefault()
             let vw = window.innerWidth
             let vh = window.innerHeight
 
@@ -357,7 +358,6 @@ class Blocos extends Estilo {
             })
             this.makeResize(this.blocoRef, this.resizes)
         })
-
         this.blocoRef.append(...this.resizesContainer)
         this.folhaContainer.appendChild(this.blocoRef)
         let animBloco = this.blocoRef.animate([{

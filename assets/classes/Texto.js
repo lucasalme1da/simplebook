@@ -8,7 +8,7 @@ class Texto extends Blocos {
     this.italiced = false
     this.underlined = false
     this.criarTexto()
-    if (options.load.text)
+    if (options.load)
       this.load(options.load)
   }
   export() {

@@ -186,17 +186,13 @@ class NavTabs extends Estilo {
   action() {
     // this.bag = this.belongsTo.thisBag
     // this.bag.esconderCadernos()
-
     this.book = this.belongsTo.thisBag.currentBook()
     this.book.esconderFolhas()
-
     this.page = this.pageRef
     this.book.selectedPage = this.page
     this.page.setPageHeight()
     this.page.mostrarBlocos()
-
     this.canhover = false
-
     this.addEstilo(this.ref, {
       backgroundColor: "var(--cor-clara)"
     })

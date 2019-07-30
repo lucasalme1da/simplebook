@@ -12,9 +12,26 @@ class Video extends Blocos {
             type: 'video/mp4',
             action: path => { this.onVideo(path, this) }
         })
+        if (options.load)
+            this.load(options.load)
+
+    }
+    export() {
+
+        this.exportData = {
+            type: this.constructor.name,
+            src: this.source.getAttribute('src'),
+            time: this.video.currentTime.toFixed(2)
+        }
+        return super.export()
 
     }
 
+    load(data) {
+
+        this.onVideo(data.src, this)
+        this.video.currentTime = data.time
+    }
     onVideo(path, ref) {
 
         ref.image.style.display = 'none'

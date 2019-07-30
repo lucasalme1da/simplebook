@@ -14,12 +14,29 @@ class Audio extends Blocos {
             type: 'audio/mp3',
             action: path => { this.onAudio(path, this) }
         })
+        if (options.load)
+            this.load(options.load)
+    }
+    export() {
+
+        this.exportData = {
+            type: this.constructor.name,
+            src: this.source.getAttribute('src'),
+            time: this.audio.currentTime.toFixed(2)
+        }
+        return super.export()
+
     }
 
+    load(data) {
+        this.onAudio(data.src, this)
+        this.audio.currentTime = data.time
+    }
 
     onAudio(path, ref) {
         ref.image.style.display = 'none'
         ref.audio = document.createElement('audio')
+        ref.audio.ondrag = e => e.preventDefault()
         ref.audio.setAttribute('controls', 'true')
         ref.addEstilo(ref.audio, {
             width: '100%',
