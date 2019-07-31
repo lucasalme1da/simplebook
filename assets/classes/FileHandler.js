@@ -44,8 +44,7 @@ class FileHandler {
             console.log(erro)
         }
     }
-    countFiles() {
-
+    countFiles(file) {
         let files = fs.readdirSync(this.directory)
         if (files.length > 0) {
             let filesNumber = files.map(file => parseInt(file.split('-')[1]))
@@ -54,11 +53,13 @@ class FileHandler {
         } else {
             this.filesCount = 0
         }
+        if (file) {
+
+            return `${this.directory}/${this.fileName}-${this.filesCount + 1}.${file}`
+        }
 
     }
     copyFile(file) {
-
-
 
         return new Promise((resolve, reject) => {
             let [name, type] = file.name.split('.')

@@ -233,6 +233,7 @@ class MochilaDash extends Estilo {
     if (!bags.length) reject()
     bags.forEach(bag => {
       let data = fs.readFileSync(`./save/${bag}`);
+
       data = JSON.parse(data)
       console.log(data)
       const { cadernosData } = data

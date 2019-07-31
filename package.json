@@ -54,6 +54,7 @@
     "glob": "^7.1.0",
     "highlight.js": "^9.3.0",
     "mic-recorder": "^4.8.0",
+    "save-file": "^2.3.1",
     "update-electron-app": "^1.1.1"
   },
   "standard": {

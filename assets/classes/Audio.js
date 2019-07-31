@@ -62,6 +62,7 @@ class Audio extends Blocos {
     criarAudio(options) {
 
         this.container = document.createElement('div')
+        this.container.ondrag = e => e.preventDefault()
         this.addEstilo(this.container, {
             width: '100%',
             height: '100%',

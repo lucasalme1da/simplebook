@@ -138,7 +138,6 @@ class Mochila extends Estilo {
         this.cadernos.forEach(caderno => {
           cadernosData.push(caderno.export())
         })
-        debugger
         let now = new Date()
 
         let data = {
@@ -149,9 +148,9 @@ class Mochila extends Estilo {
         }
 
         // if (!fs.existsSync(`./save/${this.bagName}.bag`)) {
-        fs.writeFile(
-          `./save/${this.bagName}.bag`,
-          JSON.stringify(data),
+        // let buffer = Buffer.from(JSON.stringify(data))
+        // console.log(buffer)
+        fs.writeFile(`./save/${this.bagName}.bag`, JSON.stringify(data),
           erro => {
             if (erro) {
               return console.log(err)

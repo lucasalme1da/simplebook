@@ -19,6 +19,8 @@ class Botao extends Estilo {
   criar(options) {
     this.ref = document.createElement("button")
 
+    this.ref.ondrag = e => e.preventDefault()
+
     this.addEstilo(this.ref, {
       width: options.width,
       height: options.height,
@@ -47,8 +49,11 @@ class Botao extends Estilo {
       this.ref.onmouseout = () => { }
     }
 
+    if (options.dbaction)
+      this.ref.ondblclick = options.dbaction
+
     if (options.animation) {
-      this.ref.onclick = () => {
+      this.ref.onclick = e => {
         this.ref.animate(
           [
             {
@@ -60,7 +65,7 @@ class Botao extends Estilo {
           ],
           50
         )
-        if (options.action) options.action()
+        if (options.action) options.action(e)
       }
     } else {
       this.ref.onclick = options.action
@@ -78,18 +83,18 @@ class Botao extends Estilo {
       this.ref.appendChild(this.text)
     }
     if (options.icon) {
-      const image = document.createElement("img")
-      image.setAttribute("src", `./assets/icons/${options.icon}.svg`)
-      image.ondrag = e => { e.preventDefault() }
-      image.setAttribute("draggable", "false")
-      this.addEstilo(image, {
+      this.image = document.createElement("img")
+      this.image.setAttribute("src", `./assets/icons/${options.icon}.svg`)
+      this.image.ondrag = e => { e.preventDefault() }
+      this.image.setAttribute("draggable", "false")
+      this.addEstilo(this.image, {
         width: options.imageWidth || "30px",
         height: options.imageHeight || "30px",
         animationFillMode: "forwards",
         userSelect: "none"
       })
-      image.draggable = options.draggable
-      this.ref.appendChild(image)
+      this.image.draggable = options.draggable
+      this.ref.appendChild(this.image)
     }
     if (options.icon && options.text) {
       this.addEstilo(this.ref, {
