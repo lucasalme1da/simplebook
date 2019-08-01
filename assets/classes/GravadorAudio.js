@@ -16,25 +16,64 @@ class GravadorAudio extends Blocos {
         })
         this.time = 0;
         this.recording = false
+        this.concluida = false
+        this.salvando = false
+        this.path = null
         this.criarGravadorAudio(options)
         if (options.load)
             this.load(options.load)
     }
+
     export() {
 
-        this.exportData = {
-            type: this.constructor.name,
+        if (!this.concluida) {
+
+            if (this.mediaRecorder.state != 'inactive') {
+
+                this.mediaRecorder.requestData()
+                let path
+                if (!this.path)
+                    path = this.fileHandler.countFiles('webm')
+                this.exportData = {
+                    type: this.constructor.name,
+                    path: this.path || path,
+                    time: this.time
+                }
+                console.log(this.exportData)
+                return super.export()
+
+            }
+            else if (this.mediaRecorder.state == 'inactive' && this.time == 0) {
+
+                this.exportData = {
+                    type: this.constructor.name,
+                }
+                return super.export()
+            }
+
+        } else {
+
+            this.exportData = {
+                type: 'Audio',
+                src: this.source.getAttribute('src'),
+                time: 0
+            }
+            return super.export()
+
         }
-        return super.export()
 
     }
 
     load(data) {
+
+        this.path = data.path
+        this.time = data.time
+        this.setTemp()
+        this.status.innerHTML = 'Gravação Pausada<br>Um clique para continuar gravando<br>Dois cliques para concluir a gravação'
+
     }
 
     onAudio(path, ref) {
-
-
     }
     setTemp() {
 
@@ -72,20 +111,24 @@ class GravadorAudio extends Blocos {
 
             }, 1000)
             this.mediaRecorder.state == 'paused' ? this.mediaRecorder.resume() : this.mediaRecorder.start()
+            this.status.innerHTML = 'Gravando...<br>Um clique para pausar<br>Dois cliques para concluir a gravação'
 
         } else {
             this.recording = false
             clearInterval(this.interval)
             clearInterval(this.temporizadorInterval)
             this.mediaRecorder.pause()
+            this.status.innerHTML = 'Gravação Pausada<br>Um clique para continuar gravando<br>Dois cliques para concluir a gravação'
         }
 
     }
 
     stopRecord(ref, path) {
 
+
         ref.container.removeChild(ref.recordBt.ref)
         ref.container.removeChild(ref.temporizador)
+        ref.container.removeChild(ref.status)
         ref.audio = document.createElement('audio')
         ref.audio.ondrag = e => e.preventDefault()
         ref.audio.setAttribute('controls', 'true')
@@ -107,6 +150,7 @@ class GravadorAudio extends Blocos {
             transform: 'scale(1)'
 
         }], ref.animationTimes.medium)
+        this.concluida = true
 
     }
 
@@ -150,10 +194,24 @@ class GravadorAudio extends Blocos {
 
             fontFamily: 'Roboto',
             fontSize: '22px',
-            userSelect: 'none'
+            userSelect: 'none',
+            marginRight: '15px',
+
+        })
+
+        this.status = document.createElement('p')
+        this.status.innerHTML = 'Um clique para começar a gravar'
+        this.addEstilo(this.status, {
+            color: 'gray',
+            fontFamily: 'Roboto',
+            fontSize: '20px',
+            lineHeight: '1.7em',
+            userSelect: 'none',
+            fontWight: 'bold'
 
         })
         this.container.appendChild(this.temporizador)
+        this.container.appendChild(this.status)
         this.handleRecorder(this)
             .then(() => {
 
@@ -161,6 +219,26 @@ class GravadorAudio extends Blocos {
 
             })
 
+
+
+    }
+
+    writeFile(blob) {
+        let reader = new FileReader()
+
+        reader.readAsDataURL(blob)
+
+        reader.onload = () => {
+            let base64 = reader.result.split(',')[1]
+            let buffer = Buffer.from(base64, 'base64'); // decode
+            if (!this.path) {
+                let path = this.fileHandler.countFiles('webm')
+                this.path = path
+                fs.writeFileSync(path, buffer)
+            } else {
+                fs.appendFileSync(this.path, buffer)
+            }
+        }
 
 
     }
@@ -173,26 +251,14 @@ class GravadorAudio extends Blocos {
                 .then(stream => {
 
                     ref.mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' })
-                    // mediaRecorder.start()
-                    // mediaRecorder.pause()
 
-                    ref.audioChunks = []
 
                     ref.mediaRecorder.addEventListener("dataavailable", event => {
-                        ref.audioChunks.push(event.data)
+                        ref.writeFile(event.data)
                     });
 
                     ref.mediaRecorder.addEventListener("stop", () => {
-                        // const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                        let reader = new FileReader();
-                        reader.readAsDataURL(ref.audioChunks[0])
-                        reader.onload = () => {
-                            let base64 = reader.result.split(',')[1]
-                            let buffer = Buffer.from(base64, 'base64'); // decode
-                            let path = ref.fileHandler.countFiles('webm')
-                            fs.writeFileSync(path, buffer)
-                            ref.stopRecord(ref, path)
-                        }
+                        ref.stopRecord(ref, ref.path)
 
                     });
                     resolve()

@@ -42,81 +42,88 @@ class NavBar extends Estilo {
     this.lastActiveTabIndex = -1
     this.dashBag.getBag().load()
 
+    let blocos = [{
+
+      type: 'Texto',
+      key: 84,
+      width: 100,
+      height: 50,
+    },
+    {
+      type: 'Imagem',
+      key: 73,
+      width: 400,
+      height: 400
+
+    },
+    {
+      type: 'Lista',
+      key: 76,
+      width: 400,
+      height: 400,
+    },
+    {
+      type: 'Audio',
+      key: 75,
+      width: 380,
+      height: 100,
+    },
+    {
+      type: 'Tabela',
+      key: 71,
+      width: 400,
+      height: 400,
+    },
+    {
+      type: 'Video',
+      key: 74,
+      width: 600,
+      height: 500,
+    },
+    {
+      type: 'GravadorAudio',
+      key: 79,
+      width: 500,
+      height: 150,
+    },
+    {
+      type: 'Equacao',
+      key: 69,
+      width: 500,
+      height: 150,
+    }]
+
     window.onkeydown = e => {
 
       let folha = this.dashBag.getBag().currentBag().currentBook().selectedPage
 
       if (folha) {
 
-        if (e.ctrlKey && e.keyCode == 84) {
-          const { x, y } = this.getMousePos(100, 50)
-          folha.criarBloco({
-            type: 'Texto',
-            posX: x,
-            posY: y,
-            initialWidth: 100,
-            initialHeight: 50
-          })
-        } else if (e.ctrlKey && e.keyCode == 73) {
-          const { x, y } = this.getMousePos(400, 400)
-          folha.criarBloco({
-            type: 'Imagem',
-            posX: x,
-            posY: y,
-            initialWidth: 400,
-            initialHeight: 400
-          })
-        } else if (e.ctrlKey && e.keyCode == 76) {
-          const { x, y } = this.getMousePos(400, 400)
-          folha.criarBloco({
-            type: 'Lista',
-            posX: x,
-            posY: y,
-            initialWidth: 400,
-            initialHeight: 400
-          })
-        } else if (e.ctrlKey && e.keyCode == 71) {
-          const { x, y } = this.getMousePos(400, 400)
-          folha.criarBloco({
-            type: 'Tabela',
-            posX: x,
-            posY: y,
-            initialWidth: 400,
-            initialHeight: 400
-          })
-        } else if (e.ctrlKey && e.keyCode == 75) {
-          const { x, y } = this.getMousePos(230, 100)
-          folha.criarBloco({
-            type: 'Audio',
-            posX: x,
-            posY: y,
-            initialWidth: 380,
-            initialHeight: 100
-          })
-        } else if (e.ctrlKey && e.keyCode == 74) {
-          const { x, y } = this.getMousePos(600, 500)
-          folha.criarBloco({
-            type: 'Video',
-            posX: x,
-            posY: y,
-            initialWidth: 600,
-            initialHeight: 500
-          })
-        } else if (e.ctrlKey && e.keyCode == 79) {
-          const { x, y } = this.getMousePos(200, 100)
-          folha.criarBloco({
-            type: 'GravadorAudio',
-            posX: x,
-            posY: y,
-            initialWidth: 200,
-            initialHeight: 100
-          })
+        if (e.ctrlKey) {
+
+          let blocoACriar = blocos.find(bloco => bloco.key == e.keyCode)
+          if (blocoACriar) {
+
+            const { x, y } = this.getMousePos(blocoACriar.width, blocoACriar.height)
+            folha.criarBloco({
+              type: blocoACriar.type,
+              posX: x,
+              posY: y,
+              initialWidth: blocoACriar.width,
+              initialHeight: blocoACriar.height
+            })
+
+          }
+
+
         }
 
       }
 
-
     }
+
+
+
     this.addWindowMouseMoveAction(e => {
       this.mouseX = e.clientX
       this.mouseY = e.clientY

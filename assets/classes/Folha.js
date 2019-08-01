@@ -6,6 +6,7 @@ const Lista = require("./Lista")
 const Tabela = require("./Tabela")
 const Audio = require("./Audio")
 const Video = require("./Video")
+const Equacao = require("./Equacao")
 const GravadorAudio = require("./GravadorAudio")
 
 const { clipboard, Tray } = require("electron")
@@ -38,8 +39,8 @@ class Folha extends Estilo {
   }
   load(blocos) {
     blocos.forEach(bloco => {
-
       this.criarBloco(bloco)
+
     })
   }
 
@@ -81,7 +82,6 @@ class Folha extends Estilo {
 
 
   criarBloco(options) {
-
     let defaultOptions = {
       folhaContainer: this.folhaContainer,
       posX: `${options.posX}px`,
@@ -120,6 +120,9 @@ class Folha extends Estilo {
 
       case 'GravadorAudio':
         this.blocos.push(new GravadorAudio(defaultOptions))
+        break
+      case 'Equacao':
+        this.blocos.push(new Equacao(defaultOptions))
         break
 
     }
