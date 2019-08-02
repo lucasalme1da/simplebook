@@ -924,6 +924,67 @@ class Blocos extends Estilo {
             this.editContainer.prepend(element)
         })
     }
+    addTextEdit(ref, refel) {
+        ref.configFont = document.createElement("configFont")
+        ref.addEstilo(ref.configFont, {
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-evenly",
+            marginBottom: "10px"
+        })
+        ref.fontFamily = document.createElement("select")
+        ref.addEstilo(ref.fontFamily, {
+            width: "60%",
+            backgroundColor: "transparent",
+            border: "none",
+            color: "white",
+            borderBottom: "1px solid white"
+        })
+        ref.fontFamily.onchange = () => {
+            ref.addEstilo(refel, {
+                fontFamily: this.fontFamily.value
+            })
+        }
+        //this.waitFontsDefinitions(this, this.fontFamily)
+        ref.loadedFonts.fonts.forEach(font => {
+            let option = document.createElement("option")
+            option.textContent = font
+            option.setAttribute("value", font)
+            this.addEstilo(option, {
+                backgroundColor: "var(--cor-clara)"
+            })
+            this.fontFamily.appendChild(option)
+        })
+
+        ref.addEstilo(refel, {
+            fontFamily: ref.fontFamily.value
+        })
+
+        ref.fontSize = document.createElement("input")
+        ref.addEstilo(ref.fontSize, {
+            width: "20%",
+            backgroundColor: "transparent",
+            border: "none",
+            color: "white",
+            borderBottom: "1px solid white"
+        })
+        ref.fontSize.setAttribute("type", "number")
+        ref.fontSize.setAttribute("min", "0")
+        ref.fontSize.setAttribute("value", "24")
+
+        ref.fontSize.onchange = () => {
+            ref.addEstilo(refel, {
+                fontSize: ref.reparsePx(ref.fontSize.value)
+            })
+        }
+
+        ref.addEstilo(refel, {
+            fontFamily: ref.fontFamily.value,
+            fontSize: ref.reparsePx(ref.fontSize.value)
+        })
+        ref.configFont.append(ref.fontFamily, ref.fontSize)
+    }
 
     criar(options) {
 
