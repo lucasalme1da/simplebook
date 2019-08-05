@@ -512,6 +512,8 @@ class Blocos extends Estilo {
         let originalMouseY = 0;
         let ind
         const resize = (e, resizer) => {
+            this.disableSelect(this.folhaContainer)
+
             this.addEstilo(resizer, {
                 cursor: "grabbing",
                 backgroundColor: "lightblue"
@@ -597,6 +599,8 @@ class Blocos extends Estilo {
             }
         }
         const stopResize = resizer => {
+            this.enableSelect(this.folhaContainer)
+
             this.addEstilo(this.folhaContainer, {
                 cursor: "default"
             })
@@ -924,7 +928,9 @@ class Blocos extends Estilo {
             this.editContainer.prepend(element)
         })
     }
-    addTextEdit(ref, refel) {
+
+    addTextEdit(options) {
+        const { ref, refel, onchangeSizeAction } = options
         ref.configFont = document.createElement("configFont")
         ref.addEstilo(ref.configFont, {
             display: "flex",
@@ -973,17 +979,219 @@ class Blocos extends Estilo {
         ref.fontSize.setAttribute("min", "0")
         ref.fontSize.setAttribute("value", "24")
 
-        ref.fontSize.onchange = () => {
-            ref.addEstilo(refel, {
-                fontSize: ref.reparsePx(ref.fontSize.value)
-            })
+        if (options.onchangeSizeAction) {
+            ref.fontSize.onchange = options.onchangeSizeAction
+        } else {
+            ref.fontSize.onchange = () => {
+                ref.addEstilo(refel, {
+                    fontSize: ref.reparsePx(ref.fontSize.value)
+                })
+            }
+
         }
+
+
 
         ref.addEstilo(refel, {
             fontFamily: ref.fontFamily.value,
             fontSize: ref.reparsePx(ref.fontSize.value)
         })
         ref.configFont.append(ref.fontFamily, ref.fontSize)
+    }
+
+    addInsertSymbols(options) {
+
+        //Organizados em objetos contendo uma string com o tipo e um array com os symbolos 
+        // symbol: {
+        //     type: 'Grega',
+        //     list: []
+        // }
+        this.symbols = options.symbols
+        let simbolos = this.symbols.map(symbol => {
+
+            let ps = symbol.list.map(code => {
+                let p = document.createElement('p')
+                this.addEstilo(p, {
+                    cursor: 'pointer',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '30px',
+                    height: '30px',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    borderColor: 'white',
+                    marginLeft: '8px',
+                    color: 'var(--cor-fundo)',
+                    marginBottom: '8px',
+                    fontSize: '22px'
+                })
+                this.hover(p, {
+                    backgroundColor: 'var(--cor-escura)'
+                })
+                p.addEventListener('click', () => {
+                    options.ref.appendOnLast(code)
+                })
+                p.innerHTML = code
+                return p
+            })
+
+            return {
+                type: symbol.type,
+                list: ps
+            }
+
+        })
+        let symbolModalContainer = document.createElement('div')
+        this.addEstilo(symbolModalContainer, {
+            position: 'absolute',
+            width: '20%',
+            minWidth: '150px',
+            height: '100%',
+            left: '100%',
+            top: '72px',
+
+        })
+        this.symbolModal = document.createElement('div')
+        symbolModalContainer.appendChild(this.symbolModal)
+        this.addEstilo(this.symbolModal, {
+            display: 'none',
+            backgroundColor: 'var(--cor-clara)',
+            height: '85%',
+            width: '100%',
+            minWidth: '150px',
+            maxHeight: '300px',
+            borderRadius: '8px',
+            flexDirection: 'column',
+            alignItems: 'center',
+            zIndex: '999',
+            position: 'relative',
+            left: '-105%'
+        })
+        const toggleModal = () => {
+            if (this.symbolModal.style.display == 'none') {
+                this.symbolModal.style.display = 'flex'
+                let anim = this.symbolModal.animate([{
+                    opacity: '0',
+                    left: '-90%'
+                }, {
+                    opacity: '1',
+                    left: '-105%'
+                }], this.animationTimes.medium)
+
+
+            } else {
+                let anim = this.symbolModal.animate([{
+                    opacity: '1',
+                    left: '-105%'
+                }, {
+                    opacity: '0',
+                    left: '-90%'
+                }], this.animationTimes.medium)
+                anim.onfinish = () => {
+
+                    this.symbolModal.style.display = 'none'
+
+                }
+
+            }
+
+        }
+        let insertContainer = document.createElement('div')
+        this.addEstilo(insertContainer, {
+            width: '100%',
+            height: '32px',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginTop: '5px'
+        })
+        this.insert = new Botao({
+            icon: "hideRight",
+            width: "32px",
+            height: "32px",
+            imageWidth: "20px",
+            imageHeight: "20px",
+            ref: insertContainer,
+            animation: true,
+            style: {
+                justifyContent: "space-around",
+                alignItems: "center",
+                borderRadius: "8px",
+                backgroundColor: "var(--cor-media)",
+                marginRight: '10px'
+
+            },
+            action: toggleModal
+        })
+        let optionsElements = []
+        simbolos.forEach(simbol => {
+            const { type, list } = simbol
+            let option = document.createElement('option')
+            option.textContent = type
+            this.addEstilo(option, {
+                backgroundColor: "var(--cor-clara)",
+                fontSize: '20px'
+            })
+            let container = document.createElement('div')
+            this.addEstilo(container, {
+                display: 'none',
+                width: '100%',
+                maxHeight: '90%',
+                overflow: 'auto',
+                flexWrap: 'wrap',
+                fontSize: '1em'
+
+            })
+            option.container = container
+            optionsElements.push(option)
+            container.append(...list)
+            this.symbolModal.append(container)
+        })
+        optionsElements[0].container.style.display = 'flex'
+        this.select = document.createElement('select')
+        this.addEstilo(this.select, {
+            width: "90%",
+            backgroundColor: "transparent",
+            border: "none",
+            color: "white",
+            borderBottom: "1px solid white",
+            fontSize: '1em',
+            marginTop: '10px',
+            marginBottom: '15px'
+        })
+        this.select.onchange = () => {
+
+            optionsElements.forEach(el => {
+                el.container.style.display = 'none'
+            })
+            optionsElements[this.select.selectedIndex].container.style.display = 'flex'
+        }
+        this.select.append(...optionsElements)
+        this.symbolModal.prepend(this.select)
+        this.symbolModal.prepend(insertContainer)
+        options.ref.cont.appendChild(symbolModalContainer)
+
+
+        this.insert = new Botao({
+            icon: "pi",
+            width: "100px",
+            height: "80%",
+            text: "Símbolos",
+            imageWidth: "12px",
+            imageHeight: "12px",
+            ref: options.ref.buttons,
+            style: {
+                marginLeft: "10px",
+                marginBottom: "5px",
+                minHeight: '45px',
+                justifyContent: "space-around",
+                alignItems: "center",
+                borderRadius: "8px",
+                backgroundColor: "var(--cor-media)"
+            },
+            action: toggleModal
+        })
+
     }
 
     criar(options) {
@@ -1170,7 +1378,9 @@ class Blocos extends Estilo {
                 let left;
                 let top;
                 this.folhaContainer.onmousemove = e => {
+
                     if (!get) {
+                        this.disableSelect(this.folhaContainer)
                         mousePosX = e.pageX - this.folhaContainer.offsetLeft
                         mousePosY = e.pageY - this.folhaContainer.offsetTop
                         left = mousePosX - originalX;
@@ -1183,6 +1393,7 @@ class Blocos extends Estilo {
                     blocoStyle.top = this.reparsePx(mousePosY - top)
                 }
                 this.folhaContainer.onmouseup = () => {
+                    this.enableSelect(this.folhaContainer)
 
                     this.folhaContainer.onmousemove = () => { }
                     this.addEstilo(this.folhaContainer, {

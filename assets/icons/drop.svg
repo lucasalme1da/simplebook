@@ -1,1 +1,11 @@
-<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg  enable-background="new 0 0 48 48" height="48px" id="Layer_3" version="1.1" viewBox="0 0 48 48" width="48px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><polygon fill="#FFF" points="0,12.438 48,12.438 24,35.562 "/></svg>
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <path fill="#ffffff" id="svg_1" d="m97.9,184.7l1.8,2.1l136,156.5c4.6,5.3 11.5,8.6 19.2,8.6c7.7,0 14.6,-3.4 19.2,-8.6l135.9,-156.2l2.3,-2.6c1.7,-2.5 2.7,-5.5 2.7,-8.7c0,-8.7 -7.4,-15.8 -16.6,-15.8l0,0l-286.8,0l0,0c-9.2,0 -16.6,7.1 -16.6,15.8c0,3.3 1.1,6.4 2.9,8.9z"/>
+ </g>
+</svg>

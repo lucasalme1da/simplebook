@@ -12,6 +12,7 @@ class NavBar extends Estilo {
     super()
     this.bodyRef = document.getElementsByTagName("BODY")[0]
     this.folhaContainer = document.getElementsByTagName("folhacontainer")[0]
+
     this.scrollPadding = 20
     this.scrollAdd = 500
 
@@ -90,7 +91,7 @@ class NavBar extends Estilo {
       type: 'Equacao',
       key: 69,
       width: 500,
-      height: 150,
+      height: 400,
     }]
 
     window.onkeydown = e => {

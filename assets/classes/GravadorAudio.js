@@ -130,7 +130,7 @@ class GravadorAudio extends Blocos {
         ref.container.removeChild(ref.temporizador)
         ref.container.removeChild(ref.status)
         ref.audio = document.createElement('audio')
-        ref.audio.ondrag = e => e.preventDefault()
+        this.removeDrag(audio)
         ref.audio.setAttribute('controls', 'true')
         ref.addEstilo(ref.audio, {
             width: '100%',
@@ -157,6 +157,7 @@ class GravadorAudio extends Blocos {
     criarGravadorAudio(options) {
 
         this.container = document.createElement('div')
+        this.removeDrag(this.container)
         this.addEstilo(this.container, {
             width: '100%',
             height: '100%',

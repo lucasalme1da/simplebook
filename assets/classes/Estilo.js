@@ -8,19 +8,24 @@ class Estilo {
       slow: 180
     }
   }
+  removeDrag(el) {
+    el.ondrag = e => e.preventDefault()
+  }
+  disableSelect(el) {
 
-  getWidth(element) {
-    return getComputedStyle(element, null).getPropertyValue("width")
-  }
-  getHeight(element) {
-    return getComputedStyle(element, null).getPropertyValue("height")
+    el.addEventListener("mousedown", this.disabler, "false");
+
   }
 
-  addEstilo(elemento, estilo) {
-    Object.assign(elemento.style, estilo)
+  enableSelect(el) {
+
+    el.removeEventListener("mousedown", this.disabler, "false");
+
   }
-  parsePx(px) {
-    return parseInt(px.substring(0, px.length - 2))
+
+  disabler(e) {
+    e.preventDefault();
+    return false;
   }
 
   getWidth(element) {
@@ -41,7 +46,6 @@ class Estilo {
   }
   hover(elemento, estilo) {
     const estiloAnterior = {}
-
     Object.assign(estiloAnterior, elemento.style)
 
     elemento.onmouseover = () => {
@@ -56,7 +60,6 @@ class Estilo {
       }
     }
   }
-
   addRenamable(obj, ellipsisStartPoint, bagName) {
     obj.ondblclick = () => {
       if (obj.title.length > 0) obj.textContent = obj.title
@@ -120,7 +123,7 @@ class Estilo {
               0,
               ellipsisStartPoint
             )}...`
-          document.onclick = () => {}
+          document.onclick = () => { }
         }
       }
       obj.onkeydown = e => {

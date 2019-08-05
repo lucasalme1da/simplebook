@@ -18,6 +18,9 @@ class Folha extends Estilo {
     super()
     this.blocos = []
     this.folhaContainer = options.folhaContainer
+    this.folhaContainer.ondrag = e => {
+      e.preventDefault()
+    }
     this.height = options.height ? options.height : 1095
     this.zIndexBlocoMin = 5
     this.zIndexBlocoMax = 300
@@ -37,6 +40,7 @@ class Folha extends Estilo {
       })
     }
   }
+
   load(blocos) {
     blocos.forEach(bloco => {
       this.criarBloco(bloco)

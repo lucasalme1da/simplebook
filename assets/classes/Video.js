@@ -37,6 +37,7 @@ class Video extends Blocos {
         ref.image.style.display = 'none'
 
         ref.video = document.createElement('video')
+        ref.video.ondrag = e => e.preventDefault()
         ref.video.setAttribute('controls', 'true')
         ref.addEstilo(ref.video, {
             width: '100%',
@@ -61,6 +62,8 @@ class Video extends Blocos {
 
     criarVideo(options) {
         this.container = document.createElement('div')
+        this.container.ondrag = e => e.preventDefault()
+
         this.addEstilo(this.container, {
             width: '100%',
             height: '100%',

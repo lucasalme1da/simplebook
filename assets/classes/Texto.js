@@ -175,6 +175,7 @@ class Texto extends Blocos {
 
   criarTexto() {
     this.texto = document.createElement("textarea")
+
     this.texto.ondrag = e => {
       e.preventDefault()
     }
@@ -187,7 +188,8 @@ class Texto extends Blocos {
       width: "95%",
       height: "95%",
       overflow: "hidden",
-      resize: "none"
+      resize: "none",
+      userSelect: 'none'
     })
 
     this.configFont = document.createElement("configFont")
