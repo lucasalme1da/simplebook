@@ -9,6 +9,7 @@ class Caderno extends Estilo {
     this.criar(options)
 
     this.selectedBook = null
+    this.selectedPage = null
     this.previousSelectedBag = null
     this.thisBag = options.thisBag
     this.bookRef = options.bookRef
@@ -39,7 +40,7 @@ class Caderno extends Estilo {
 
     // Editar nome do caderno
     this.newBookName = document.createElement("p")
-    this.newBookName.textContent = "Novo Caderno " + ("(" + ++bookCounter + ")")
+    this.newBookName.textContent = options.name ? options.name : "Novo Caderno " + ("(" + ++bookCounter + ")")
     this.addRenamable(this.newBookName, 19)
     this.addEstilo(this.newBookName, {
       height: "50%"
@@ -173,12 +174,21 @@ class Caderno extends Estilo {
         duration: this.animationTimes.slow
       }
     )
-    let length = options.folhas ? options.folha.length : null
-    if (length > 0) {
-      this.options.folha.forEach(page => {
-        newPage(page.exportBlocos)
-      })
-    }
+    // let length = options.folhas ? options.folha.length : null
+    // if (length > 0) {
+    //   this.options.folha.forEach(page => {
+    //     newPage(page.exportBlocos)
+    //   })
+    // }
+  }
+
+  load(folhas) {
+    folhas.forEach(fol => {
+      const { exportBlocos, name, height } = fol
+      let folha = this.newPage(name, height)
+      folha.load(exportBlocos)
+    })
+    this.selectedPage = this.pages[this.pages.length - 1]
   }
 
   export() {
@@ -187,7 +197,7 @@ class Caderno extends Estilo {
       folhas.push(page.export())
     })
     console.log("folhas", folhas)
-    return { name: this.newBookName.textConten, folhas }
+    return { name: this.newBookName.textContent, folhas }
   }
 
   deleteBook(ref, book) {
@@ -234,16 +244,22 @@ class Caderno extends Estilo {
     return this.isSelected
   }
 
-  newPage(blocos) {
+  newPage(name, height) {
     this.pageArray = this.thisBag.bagRef.currentBag().currentBook().pages
     this.pageArray.push(
       new Folha({
         folhaContainer: this.navBar.folhaContainer,
         loadedFonts: this.navBar.loadedFonts,
-        blocos
+        height
       })
     )
-    this.navBar.createTab(this.pageArray[this.pageArray.length - 1])
+    let tab = this.navBar.createTab(this.pageArray[this.pageArray.length - 1], name)
+
+    this.pageArray[this.pageArray.length - 1].navTab = tab
+
+    this.selectedPage = this.pageArray[this.pageArray.length - 1]
+
+    return this.selectedPage
   }
 
   esconderFolhas() {

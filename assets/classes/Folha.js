@@ -4,6 +4,11 @@ const Texto = require("./Texto")
 const Imagem = require("./Imagem")
 const Lista = require("./Lista")
 const Tabela = require("./Tabela")
+const Audio = require("./Audio")
+const Video = require("./Video")
+const Equacao = require("./Equacao")
+const GravadorAudio = require("./GravadorAudio")
+
 const { clipboard, Tray } = require("electron")
 const fs = require("fs")
 const { app, globalShortcut } = require("electron")
@@ -13,6 +18,10 @@ class Folha extends Estilo {
     super()
     this.blocos = []
     this.folhaContainer = options.folhaContainer
+    this.folhaContainer.ondrag = e => {
+      e.preventDefault()
+    }
+    this.height = options.height ? options.height : 1095
     this.zIndexBlocoMin = 5
     this.zIndexBlocoMax = 300
     this.imageCount = -1
@@ -22,83 +31,6 @@ class Folha extends Estilo {
     this.scrollPadding = 20
     this.scrollAdd = 200
     this.windowOnMouseMoveActions = []
-    window.onkeydown = e => {
-      if (e.ctrlKey && e.keyCode == 84) {
-        const { x, y } = this.getMousePos(100, 50)
-        this.criarTexto({
-          posX: x,
-          posY: y,
-          initialWidth: 100,
-          initialHeight: 50
-        })
-      } else if (e.ctrlKey && e.keyCode == 73) {
-        const { x, y } = this.getMousePos(400, 400)
-        this.criarImagem({
-          posX: x,
-          posY: y,
-          initialWidth: 400,
-          initialHeight: 400
-        })
-      } else if (e.ctrlKey && e.keyCode == 76) {
-        const { x, y } = this.getMousePos(400, 400)
-        this.criarLista({
-          posX: x,
-          posY: y,
-          initialWidth: 400,
-          initialHeight: 400
-        })
-      } else if (e.ctrlKey && e.keyCode == 71) {
-        const { x, y } = this.getMousePos(400, 400)
-        this.criarTabela({
-          posX: x,
-          posY: y,
-          initialWidth: 400,
-          initialHeight: 400
-        })
-      }
-    }
-
-    this.addWindowMouseMoveAction(e => {
-      this.mouseX = e.clientX
-      this.mouseY = e.clientY
-    })
-
-    window.onmousewheel = e => {
-      if (e.wheelDelta < 0) {
-        const height = this.folhaContainer.parentElement.offsetHeight
-        const scrollTop = this.folhaContainer.parentElement.scrollTop
-        const scrollHeight = this.folhaContainer.scrollHeight
-
-        const diff = scrollHeight - (height + scrollTop)
-        if (diff <= this.scrollPadding) {
-          const height =
-            this.parsePx(this.folhaContainer.style.height) + this.scrollAdd
-          this.folhaContainer.style.height = this.reparsePx(height)
-        }
-      }
-    }
-
-    this.folhaContainer.onpaste = e => {
-      const image = clipboard.readImage()
-      this.countImgs()
-
-      if (!image.isEmpty()) {
-        const { height, width } = image.getSize()
-        const { x, y } = this.getMousePos(width, height)
-
-        fs.writeFileSync(
-          `./imgs/Imagem-${this.imageCount + 1}.jpg`,
-          image.toJPEG(100)
-        )
-        this.criarImagem({
-          posX: x,
-          posY: y,
-          initialWidth: width,
-          initialHeight: height,
-          src: `Imagem-${this.imageCount + 1}.jpg`
-        })
-      }
-    }
 
     let length = options.blocos ? options.blocos.length : null
 
@@ -109,21 +41,11 @@ class Folha extends Estilo {
     }
   }
 
-  loadBloco(bloco) {
-    switch (bloco.type) {
-      case "Texto":
-        this.criarTexto(bloco)
-        break
-      case "Imagem":
-        criarImagem(bloco)
-        break
-      case "Lista":
-        criarLista(bloco)
-        break
-      case "Tabela":
-        criarTabela(bloco)
-        break
-    }
+  load(blocos) {
+    blocos.forEach(bloco => {
+      this.criarBloco(bloco)
+
+    })
   }
 
   export() {
@@ -133,31 +55,23 @@ class Folha extends Estilo {
     })
 
     console.log("blocos", exportBlocos)
-    return { name: "folha", exportBlocos }
-  }
 
-  getMousePos(width, height) {
-    let x = this.mouseX - this.folhaContainer.offsetLeft - width / 2
-    let y =
-      this.mouseY +
-      this.folhaContainer.parentElement.scrollTop -
-      this.folhaContainer.offsetTop -
-      height / 2
-    return { x, y }
+    return {
+      name: this.navTab.text.textContent,
+      height: this.height,
+      exportBlocos
+    }
   }
-
+  setPageHeight() {
+    this.folhaContainer.style.height = this.reparsePx(this.height)
+  }
   removeWindowMouseMoveAction(ind) {
-    this.windowOnMouseMoveActions.splice(ind, 1)
+    return this.navTab.navbar.removeWindowMouseMoveAction(ind)
   }
 
   addWindowMouseMoveAction(action) {
-    this.windowOnMouseMoveActions.push(action)
-    window.onmousemove = e => {
-      this.windowOnMouseMoveActions.forEach(action => {
-        action(e)
-      })
-    }
-    return this.windowOnMouseMoveActions.length - 1
+
+    return this.navTab.navbar.addWindowMouseMoveAction(action)
   }
 
   countImgs() {
@@ -170,61 +84,56 @@ class Folha extends Estilo {
     }
   }
 
-  criarTabela(options) {
-    this.blocos.push(
-      new Tabela({
-        folhaContainer: this.folhaContainer,
-        posX: `${options.posX}px`,
-        posY: `${options.posY}px`,
-        loadedFonts: this.loadedFonts,
-        initialHeight: options.initialHeight || options.width,
-        initialWidth: options.initialWidth || options.height,
-        folha: this
-      })
-    )
+
+  criarBloco(options) {
+    let defaultOptions = {
+      folhaContainer: this.folhaContainer,
+      posX: `${options.posX}px`,
+      posY: `${options.posY}px`,
+      loadedFonts: this.loadedFonts,
+      initialHeight: options.initialHeight || options.height,
+      initialWidth: options.initialWidth || options.width,
+      src: options.src,
+      folha: this,
+      load: options.load,
+    }
+
+    switch (options.type) {
+      case 'Texto':
+        this.blocos.push(new Texto(defaultOptions))
+        break
+      case 'Imagem':
+        this.blocos.push(new Imagem(defaultOptions))
+        break
+
+      case 'Tabela':
+        this.blocos.push(new Tabela(defaultOptions))
+        break
+
+      case 'Lista':
+        this.blocos.push(new Lista(defaultOptions))
+        break
+
+      case 'Audio':
+        this.blocos.push(new Audio(defaultOptions))
+        break
+
+      case 'Video':
+        this.blocos.push(new Video(defaultOptions))
+        break
+
+      case 'GravadorAudio':
+        this.blocos.push(new GravadorAudio(defaultOptions))
+        break
+      case 'Equacao':
+        this.blocos.push(new Equacao(defaultOptions))
+        break
+
+    }
+
+
   }
 
-  criarLista(options) {
-    this.blocos.push(
-      new Lista({
-        folhaContainer: this.folhaContainer,
-        posX: `${options.posX}px`,
-        posY: `${options.posY}px`,
-        loadedFonts: this.loadedFonts,
-        initialHeight: options.initialHeight || options.width,
-        initialWidth: options.initialWidth || options.height,
-        folha: this
-      })
-    )
-  }
-
-  criarTexto(options) {
-    this.blocos.push(
-      new Texto({
-        folhaContainer: this.folhaContainer,
-        posX: `${options.posX}px`,
-        posY: `${options.posY}px`,
-        loadedFonts: this.loadedFonts,
-        initialHeight: options.initialHeight || options.width,
-        initialWidth: options.initialWidth || options.height,
-        folha: this
-      })
-    )
-  }
-
-  criarImagem(options) {
-    this.blocos.push(
-      new Imagem({
-        folhaContainer: this.folhaContainer,
-        posX: `${options.posX}px`,
-        posY: `${options.posY}px`,
-        initialHeight: options.initialHeight || options.width,
-        initialWidth: options.initialWidth || options.height,
-        src: options.src,
-        folha: this
-      })
-    )
-  }
 
   esconderBlocos() {
     for (let i = 0; i < this.blocos.length; i++) {

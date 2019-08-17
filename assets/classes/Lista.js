@@ -56,12 +56,30 @@ class Lista extends Blocos {
       }
     ]
     this.criarLista()
+    if (options.load)
+      this.load(options.load)
   }
   export() {
     this.exportData = {
-      type: this.constructor.name
+      type: this.constructor.name,
+      html: this.lista.innerHTML,
+      font: this.fontFamily.value,
+      size: this.fontSize.value,
+      estilo: this.listStyle.value
     }
     return super.export()
+  }
+  load(data) {
+    this.fontFamily.value = data.font
+    this.fontSize.value = data.size
+    this.lista.innerHTML = data.html
+    if (data.estilo != 'Tipo de lista') {
+      this.listStyle.value = data.estilo
+      this.listStyle.onchange()
+    }
+    this.fontSize.onchange()
+    this.fontFamily.onchange()
+
   }
   removeItem(ref) {
     let removedLista = ref.lista.lastChild
@@ -129,6 +147,7 @@ class Lista extends Blocos {
       listStylePosition: "inside"
     })
     this.plusContainer = document.createElement("plusContainer")
+    this.plusContainer.ondrag = e => e.preventDefault()
     this.addEstilo(this.plusContainer, {
       display: "flex",
       alignItems: "center",

@@ -17,7 +17,7 @@ class NavTabs extends Estilo {
     this.text = document.createElement("p")
 
     // Manipulação do Título da Aba
-    this.text.textContent = `Nova Folha (${folhaCounter++})`
+    this.text.textContent = options.name ? options.name : `Nova Folha (${folhaCounter++})`
     this.addRenamable(this.text, 12, null, 45)
 
     this.moreTabs = options.moreTabs
@@ -186,15 +186,13 @@ class NavTabs extends Estilo {
   action() {
     // this.bag = this.belongsTo.thisBag
     // this.bag.esconderCadernos()
-
     this.book = this.belongsTo.thisBag.currentBook()
     this.book.esconderFolhas()
-
     this.page = this.pageRef
+    this.book.selectedPage = this.page
+    this.page.setPageHeight()
     this.page.mostrarBlocos()
-
     this.canhover = false
-
     this.addEstilo(this.ref, {
       backgroundColor: "var(--cor-clara)"
     })

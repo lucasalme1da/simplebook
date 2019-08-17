@@ -34,7 +34,7 @@ class Mochila extends Estilo {
 
     // Editar Nome da Bolsa
     const newBagName = document.createElement("p")
-    newBagName.textContent = "Nova Mochila " + ("(" + ++bagCounter + ")")
+    newBagName.textContent = options.name ? options.name : "Nova Mochila " + ("(" + ++bagCounter + ")")
     this.bagName = newBagName.textContent
     this.addEstilo(newBagName, {
       height: "50%"
@@ -58,7 +58,7 @@ class Mochila extends Estilo {
       width: "40%",
       height: "80%",
       ref: bagButtonContainer,
-      action: () => {},
+      action: () => this.autoSave(),
       hover: { backgroundColor: "var(--cor-escura)", borderRadius: "50%" }
     })
 
@@ -117,14 +117,20 @@ class Mochila extends Estilo {
 
     this.bagRef = options.bagRef
 
-    let length = options.cadernos ? options.cadernos.length : null
-    if (length > 0) {
-      this.options.cadernos.forEach(caderno => {
-        createBook(folhas)
-      })
-    }
+    // let length = options.cadernos ? options.cadernos.length : null
+    // if (length > 0) {
+    //   this.options.cadernos.forEach(caderno => {
+    //     createBook(folhas)
+    //   })
+    // }
   }
-
+  load(cadernos) {
+    cadernos.forEach(cad => {
+      const { name, folhas } = cad
+      let caderno = this.createBook(name)
+      caderno.load(folhas)
+    })
+  }
   autoSave(options) {
     return new Promise((resolve, reject) => {
       try {
@@ -132,30 +138,30 @@ class Mochila extends Estilo {
         this.cadernos.forEach(caderno => {
           cadernosData.push(caderno.export())
         })
-        debugger
+        let now = new Date()
 
         let data = {
-          dataSalvamento: "01/01/2019",
+          dataSalvamento: `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`,
           name: this.bagName,
           versao: "1.02",
           cadernosData
         }
 
-        if (!fs.existsSync(`./save/${this.bagName}.bag`)) {
-          fs.writeFile(
-            `./save/${this.bagName}.bag`,
-            JSON.stringify(data),
-            erro => {
-              if (err) {
-                return console.log(err)
-              }
+        // if (!fs.existsSync(`./save/${this.bagName}.bag`)) {
+        // let buffer = Buffer.from(JSON.stringify(data))
+        // console.log(buffer)
+        fs.writeFile(`./save/${this.bagName}.bag`, JSON.stringify(data),
+          erro => {
+            if (erro) {
+              return console.log(err)
             }
-          )
-        } else {
-          alert(
-            "Eita ! Já tem uma mochila com esse nome.\nNão quer escoher outro ? :)"
-          )
-        }
+          }
+        )
+        // } else {
+        //   alert(
+        //     "Eita ! Já tem uma mochila com esse nome.\nNão quer escoher outro ? :)"
+        //   )
+        // }
       } catch (erro) {
         console.log(erro)
       }
@@ -209,18 +215,20 @@ class Mochila extends Estilo {
     return this.isSelected
   }
 
-  createBook(folhas) {
+  createBook(name) {
     this.cadernos.push(
       new Caderno({
         thisBag: this,
         bookRef: this.bagRef.dashRefObj.getBook(),
         containerRef: this.bagRef.dashRefObj.getBook().contentContainer,
-        folhas
+        name
       })
     )
     this.selectBook(this.cadernos[this.cadernos.length - 1])
     if (this.bagRef.dashRefObj.getBook().emptyWarning)
       this.bagRef.dashRefObj.getBook().turnOffWarning()
+
+    return this.cadernos[this.cadernos.length - 1]
   }
 
   selectBook(bookRef) {

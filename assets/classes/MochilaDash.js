@@ -1,6 +1,7 @@
 const Estilo = require("./Estilo")
 const Botao = require("./Botao")
 const Mochila = require("./Mochila")
+const fs = require('fs')
 
 class MochilaDash extends Estilo {
   constructor(dashRef) {
@@ -199,35 +200,59 @@ class MochilaDash extends Estilo {
     this.ref.append(this.titleContainer, this.contentContainer)
     this.dashRef.appendChild(this.ref)
 
-    this.load()
-      .catch(erro => {
-        this.createBag(this.contentContainer)
-      })
-    //this.createBag(this.contentContainer)
+    this.loadBags()
+    // .catch(erro => {
+    //   this.createBag(this.contentContainer)
+    // })
   }
 
   load() {
-    return new Promise((resolve, reject) => {
-      let bags = fs.readdirSync('./save')
-      if (!bags.length) reject()
-      bags.forEach(bag => {
-        let data = fs.readFileSync(`./save/${bag}.bag`);
-        data = JSON.parse(data)
-        createBag(this.contentContainer, data.cadernosData)
-        console.log(data.cadernosData)
-      })
-      resolve()
+    let cadernos = this.CadernosDasMochilas
+    this.mochilas.forEach((mochila, indice) => {
+
+      mochila.load(cadernos[indice])
+
+      // cadernos[indice].forEach(caderno => {
+      //   const { name, folhas } = caderno
+      //   let cad = mochila.createBook(name)
+      //   folhas.forEach(folha => {
+      //     const { exportBlocos, name } = folha
+      //     cad.newPage(name)
+      //   })
+
+      // })
+
     })
 
   }
 
-  createBag(container, cadernos) {
+  loadBags() {
+    // return new Promise((resolve, reject) => {
+    let bags = fs.readdirSync('./save')
+    let cadernos = []
+    if (!bags.length) reject()
+    bags.forEach(bag => {
+      let data = fs.readFileSync(`./save/${bag}`);
+
+      data = JSON.parse(data)
+      console.log(data)
+      const { cadernosData } = data
+      cadernos.push(cadernosData)
+      this.createBag(this.contentContainer, data.name)
+    })
+    this.CadernosDasMochilas = cadernos
+    //   resolve()
+    // })
+
+  }
+
+  createBag(container, name) {
 
     this.mochilas.push(
       new Mochila({
         bagRef: this,
         containerRef: container,
-        cadernos
+        name
       })
     )
     this.selectBag(this.mochilas[this.mochilas.length - 1])

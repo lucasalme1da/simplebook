@@ -277,12 +277,13 @@ function dragging(div, ref) {
 
     document.onmouseup = () => {
       document.body.removeChild(placeholder)
-      ref.navBar.currentPage().criarTexto({
+      ref.navBar.currentPage().criarBloco({
+        type: 'Texto',
         posX: ref.parsePx(placeholder.style.left),
         posY: ref.parsePx(placeholder.style.top)
       })
       placeholder.onmouseup = null
-      document.onmouseup = () => {}
+      document.onmouseup = () => { }
     }
   }
 
