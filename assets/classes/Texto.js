@@ -175,10 +175,15 @@ class Texto extends Blocos {
 
   criarTexto() {
     this.texto = document.createElement("textarea")
+    // this.texto.addEventListener('mousedown', e => {
+    //   e.stopImmediatePropagation()
+    //   console.log('texto', e)
+    // }, 'false')
 
-    this.texto.ondrag = e => {
-      e.preventDefault()
-    }
+    // this.texto.ondrag = e => {
+
+    //   e.preventDefault()
+    // }
     // this.texto.classList.add('textarea')
     // this.texto.setAttribute('contenteditable', 'true')
     this.addEstilo(this.texto, {

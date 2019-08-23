@@ -65,14 +65,6 @@ class Folha extends Estilo {
   setPageHeight() {
     this.folhaContainer.style.height = this.reparsePx(this.height)
   }
-  removeWindowMouseMoveAction(ind) {
-    return this.navTab.navbar.removeWindowMouseMoveAction(ind)
-  }
-
-  addWindowMouseMoveAction(action) {
-
-    return this.navTab.navbar.addWindowMouseMoveAction(action)
-  }
 
   countImgs() {
     let images = fs.readdirSync("./imgs")

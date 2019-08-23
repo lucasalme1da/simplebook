@@ -8,6 +8,19 @@ class Estilo {
       slow: 180
     }
   }
+  disableHoldSelectionAndDrag(element) {
+    //Desabilita a seleção padrão dos elementos html ao segurar o mouse em algum elemento
+    element.addEventListener('drag', e => {
+      e.preventDefault()
+    }, 'false')
+    element.addEventListener('mousedown', e => {
+      if (e.target == element) {
+        e.preventDefault()
+        e.stopImmediatePropagation()
+      }
+    }, 'false')
+
+  }
   removeDrag(el) {
     el.ondrag = e => e.preventDefault()
   }

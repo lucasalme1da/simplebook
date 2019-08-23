@@ -319,6 +319,7 @@ class Equacao extends Blocos {
             height: '100%',
         })
         this.buttons = document.createElement('div')
+        this.disableHoldSelectionAndDrag(this.buttons)
         this.addEstilo(this.buttons, {
             width: '100%',
             height: '60px',
