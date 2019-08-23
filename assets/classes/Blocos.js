@@ -173,7 +173,6 @@ class Blocos extends Estilo {
         resizers.forEach(resizer => {
 
             let resize = e => {
-
                 this.addEstilo(resizer, {
                     cursor: "grabbing",
                     backgroundColor: "lightblue"
@@ -269,6 +268,8 @@ class Blocos extends Estilo {
                 })
 
                 this.folhaContainer.removeEventListener('mousemove', resize)
+                this.blocoRef.style.transition = 'top 0.1s ease, left 0.1s ease'
+
             }
 
 
@@ -283,7 +284,7 @@ class Blocos extends Estilo {
 
                 this.folhaContainer.addEventListener('mousemove', resize, false)
                 window.addEventListener('mouseup', stopResize, false)
-
+                element.style.transition = 'none'
             }
 
             // initResize = initResize.bind(this)
@@ -871,7 +872,8 @@ class Blocos extends Estilo {
             let left
             let top
             let scrollTop = 0
-
+            let indexAnterior = blocoStyle.zIndex
+            blocoStyle.zIndex = this.folha.zIndexBlocoMax
             let moveFloha = e => {
                 if (!get) {
                     mousePosX = e.pageX - this.folhaContainer.offsetLeft
@@ -910,6 +912,7 @@ class Blocos extends Estilo {
             let stopMoveFolha = e => {
                 this.folhaContainer.removeEventListener('mousemove', moveFloha)
                 this.folhaContainer.parentElement.removeEventListener('scroll', moveBlockWheel)
+                blocoStyle.zIndex = indexAnterior
                 this.addEstilo(this.folhaContainer, {
                     cursor: 'default'
                 })
@@ -1102,7 +1105,7 @@ class Blocos extends Estilo {
             transform: 'scale(1)',
             backgroundColor: 'white',
             position: 'absolute',
-            zIndex: '100',
+            zIndex: this.folha.zIndexBlocoMin,
             top: options.posY,
             left: options.posX,
             padding: '20px',

@@ -22,8 +22,8 @@ class Folha extends Estilo {
       e.preventDefault()
     }
     this.height = options.height ? options.height : 1095
-    this.zIndexBlocoMin = 5
-    this.zIndexBlocoMax = 300
+    this.zIndexBlocoMin = 10000
+    this.zIndexBlocoMax = 20000
     this.imageCount = -1
     this.loadedFonts = options.loadedFonts
     this.mouseX = 0
@@ -147,20 +147,33 @@ class Folha extends Estilo {
   }
 
   trazerFrente(bloco) {
-    let ind
-    let zindex = bloco.blocoRef.style.zIndex
-    if (zindex + 1 != this.zIndexBlocoMax) zindex++
-    this.blocos.forEach((bloc, index) => {
-      if (bloc.blocoRef == bloco.blocoRef) {
-        ind = index
-      }
-      let zIndex = bloc.blocoRef.style.zIndex
-      if (zIndex - 1 != this.zIndexBlocoMin) {
-        bloc.blocoRef.style.zIndex = zIndex - 1
-      }
-    })
+    bloco.blocoRef.style.zIndex = this.zIndexBlocoMax
 
-    this.blocos[ind].blocoRef.style.zIndex = zindex
+    return new Promise(resolve => {
+
+      this.blocos.sort((a, b) => parseInt(a.blocoRef.style.zIndex) - parseInt(b.blocoRef.style.zIndex))
+      let zIndexes = this.blocos.map(blocoElement => parseInt(blocoElement.blocoRef.style.zIndex))
+
+      zIndexes.forEach((zIndex, ind) => {
+        if (ind != 0) {
+          if (zIndex != zIndexes[ind - 1]) {
+            let sum = this.zIndexBlocoMin + ind
+            if (sum >= this.zIndexBlocoMax) {
+              zIndexes[ind] = this.zIndexBlocoMax
+            } else {
+              zIndexes[ind] = sum
+            }
+          }
+
+        } else {
+          zIndexes[0] = this.zIndexBlocoMin
+        }
+        this.blocos[ind].blocoRef.style.zIndex = zIndexes[ind]
+      })
+
+
+
+    })
   }
 }
 
