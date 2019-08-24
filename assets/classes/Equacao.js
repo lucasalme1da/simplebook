@@ -362,6 +362,8 @@ class Equacao extends Blocos {
         this.addInsertSymbols(this.symbolOptions)
         this.addConfig([this.configFont])
         this.addMainContent(this.cont)
+        this.createElement()
+        this.lastElement.focus()
     }
 
 }

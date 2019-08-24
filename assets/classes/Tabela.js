@@ -152,6 +152,9 @@ class Tabela extends Blocos {
     }
 
     ref.numColunas++
+    this.focusElement = this.tabela.firstElementChild.firstElementChild.firstElementChild
+    this.focusElement.focus()
+    this.selectElementContents(this.focusElement)
     console.log(ref.numColunas)
   }
 
@@ -332,6 +335,8 @@ class Tabela extends Blocos {
       ],
       ref.animationTimes.medium
     )
+    line.firstElementChild.focus()
+    this.selectElementContents(line.firstElementChild)
   }
 
   criarTabela() {
@@ -483,6 +488,9 @@ class Tabela extends Blocos {
     this.container.append(this.tabelaContainer, this.tabela)
     this.addMainContent(this.container)
     this.addConfig([this.align, this.selectType, this.configFont])
+    this.focusElement = this.tabela.firstElementChild.firstElementChild.firstElementChild
+    this.focusElement.focus()
+    this.selectElementContents(this.focusElement)
   }
 }
 

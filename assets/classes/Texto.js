@@ -399,6 +399,7 @@ class Texto extends Blocos {
 
     this.addMainContent(this.texto)
     this.addConfig([this.opContainer, this.configFont])
+    this.focusElement.focus()
   }
 }
 

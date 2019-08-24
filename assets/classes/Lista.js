@@ -129,6 +129,8 @@ class Lista extends Blocos {
       ref.animationTimes.medium
     )
     ref.itens.push(li)
+    ref.lista.lastChild.focus()
+    this.selectElementContents(ref.lista.lastChild)
   }
   criarLista() {
     this.container = document.createElement("div")
@@ -296,6 +298,8 @@ class Lista extends Blocos {
     this.container.append(this.plusContainer, this.lista)
     this.addConfig([this.listStyle, this.configFont])
     this.addMainContent(this.container)
+    this.lista.firstElementChild.focus()
+    this.selectElementContents(this.lista.firstElementChild)
   }
 }
 

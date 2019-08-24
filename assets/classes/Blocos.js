@@ -18,6 +18,8 @@ class Blocos extends Estilo {
         this.tempoFadeOut = 8000
         this.tempoFullFadeOut = 16000
         this.exportData = {}
+        // this.operationNav, elemento que será criado para ficar no topo do bloco para auxiliar da edição do bloco
+        // Necessário a definição como operationNav para utilizar o fullMinimize
     }
 
     export() {
@@ -979,6 +981,14 @@ class Blocos extends Estilo {
             e.stopImmediatePropagation()
         }
     }
+    selectElementContents(el) {
+        let range = document.createRange();
+        range.selectNodeContents(el);
+        let sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+
     criar(options) {
 
         this.blocoRef = document.createElement('bloco')
@@ -993,7 +1003,7 @@ class Blocos extends Estilo {
         this.addEstilo(this.optionsContainer, {
             position: 'absolute',
             left: '100%',
-            paddingLeft: '15px',
+            paddingLeft: '20px',
             zIndex: '301'
         })
 
