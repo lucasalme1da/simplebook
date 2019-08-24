@@ -20,7 +20,8 @@ class NavBar extends Estilo {
     this.limiteAbas = 10
     this.moreModalAberto = false
     this.windowOnMouseMoveActions = []
-
+    this.zIndexBlocoMin = 10000
+    this.zIndexBlocoMax = 20000
     this.criar()
 
     this.dashBook = new Dashboard({
@@ -224,7 +225,7 @@ class NavBar extends Estilo {
     this.addEstilo(this.ref, {
       position: "fixed",
       boxShadow: "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-      zIndex: "999",
+      zIndex: (this.zIndexBlocoMax + 2),
       borderBottom: "9px solid var(--cor-clara)"
     })
 
@@ -243,6 +244,7 @@ class NavBar extends Estilo {
       borderRadius: "8px",
       overflowY: "auto",
       maxHeight: "450px",
+      zIndex: (this.zIndexBlocoMax + 2),
       backgroundColor: "var(--cor-escura)"
     })
 

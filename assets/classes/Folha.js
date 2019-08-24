@@ -22,8 +22,8 @@ class Folha extends Estilo {
       e.preventDefault()
     }
     this.height = options.height ? options.height : 1095
-    this.zIndexBlocoMin = 10000
-    this.zIndexBlocoMax = 20000
+    this.zIndexBlocoMin = options.navBar.zIndexBlocoMin
+    this.zIndexBlocoMax = options.navBar.zIndexBlocoMax
     this.imageCount = -1
     this.loadedFonts = options.loadedFonts
     this.mouseX = 0
