@@ -150,6 +150,7 @@ class Lista extends Blocos {
     this.plusContainer = document.createElement("pluscontainer")
 
     this.disableHoldSelectionAndDrag(this.plusContainer)
+    this.operationNav = this.plusContainer
 
     this.addEstilo(this.plusContainer, {
       display: "flex",

@@ -12,8 +12,11 @@ class Blocos extends Estilo {
         this.initialHeight = options.initialHeight || 200
         this.initialWidth = options.initialWidth || 200
         this.criar(options)
+        this.cloneMarginX = 50
+        this.cloneMarginY = 50
         this.maximized = false
         this.tempoFadeOut = 8000
+        this.tempoFullFadeOut = 16000
         this.exportData = {}
     }
 
@@ -32,15 +35,32 @@ class Blocos extends Estilo {
 
 
     handleClick() {
-
+        this.folha.cloneBlock = this
         if (!this.maximized) this.maximize(this)
-
         clearTimeout(this.tempoMinimize)
+        clearTimeout(this.tempoFullMinimize)
         this.tempoMinimize = setTimeout(() => this.minimize(this), this.tempoFadeOut)
+        this.tempoFullMinimize = setTimeout(() => this.fullMinimize(this), this.tempoFullFadeOut)
 
 
     }
 
+    cloneBlock() {
+
+        let exportOb = this.folha.cloneBlock ? this.folha.cloneBlock.export() : this.export()
+        exportOb.posX += this.cloneMarginX
+        exportOb.posY += this.cloneMarginY
+        this.folha.criarBloco(exportOb)
+
+    }
+    keyAction(e) {
+        if (e.ctrlKey) {
+            if (e.keyCode == 68) {
+                this.cloneBlock()
+            }
+        }
+
+    }
     changeContainerPos(ref) {
 
         if (ref.optionsContainer.style.left == '100%') {
@@ -497,6 +517,26 @@ class Blocos extends Estilo {
 
     }
 
+    fullMinimize(ref) {
+
+        ref.addEstilo(ref.blocoRef, {
+            boxShadow: 'none'
+        })
+        if (ref.operationNav) {
+            let animm = ref.operationNav.animate([{
+                opacity: '1',
+                transform: 'scale(1)'
+            }, {
+                opacity: '0',
+                transform: 'scale(0.8)'
+            }], ref.animationTimes.medium)
+            animm.onfinish = () => {
+                ref.operationNav.style.opacity = '0'
+            }
+        }
+
+    }
+
     minimize(ref) {
 
         ref.addEstilo(ref.blocoRef, {
@@ -528,7 +568,7 @@ class Blocos extends Estilo {
         }, {
             opacity: '0'
 
-        }], 80)
+        }], this.animationTimes.medium)
 
         anim.onfinish = () => {
             ref.addEstilo(ref.optionsContainer, {
@@ -541,8 +581,24 @@ class Blocos extends Estilo {
 
     maximize(ref) {
         ref.addEstilo(ref.blocoRef, {
-            border: '1px solid var(--cor-escura)'
+            border: '1px solid var(--cor-escura)',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
         })
+        if (ref.operationNav && ref.operationNav.style.opacity != '1') {
+
+            let anima = ref.operationNav.animate([{
+                opacity: '0',
+                transform: 'scale(0.8)'
+            }, {
+                opacity: '1',
+                transform: 'scale(1)'
+            }], ref.animationTimes.medium)
+            anima.onfinish = () => {
+                ref.operationNav.style.opacity = '1'
+
+            }
+        }
+
         ref.resizesContainer.forEach(container => {
             ref.addEstilo(container, {
                 display: 'block',
@@ -553,7 +609,6 @@ class Blocos extends Estilo {
             }, {
                 opacity: '1'
             }], 80)
-
 
         })
 
@@ -886,23 +941,7 @@ class Blocos extends Estilo {
                 mousePosX = e.pageX - this.folhaContainer.offsetLeft
                 mousePosNoScroll = e.pageY - this.folhaContainer.offsetTop
                 mousePosY = scrollTop + mousePosNoScroll
-                // console.log({
-                //     pageX: e.pageX,
-                //     pageY: e.pageY,
-                //     offsetLeft: this.folhaContainer.offsetLeft,
-                //     offsetTop: this.folhaContainer.offsetLeft,
-                //     originalX,
-                //     originalY,
-                //     blocoStyleTop: blocoStyle.top,
-                //     scrollTop,
-                //     mousePosY: (mousePosY - top)
-                // })
-                // console.log({
-                //     scrollTop,
-                //     mousePosNoScroll,
-                //     blocoStyleTop: blocoStyle.top,
-                //     mousePosY: (mousePosY - top)
-                // })
+
                 blocoStyle.left = this.reparsePx(mousePosX - left)
                 blocoStyle.top = this.reparsePx(mousePosY - top)
             }
@@ -920,8 +959,6 @@ class Blocos extends Estilo {
 
             let moveBlockWheel = e => {
                 scrollTop = Math.ceil(this.folhaContainer.parentElement.scrollTop) - originalScroll
-                // scrollTop += Math.ceil(e.deltaY)
-                console.log('scroll', scrollTop, 'blocoStyle', blocoStyle.top)
                 mousePosY = scrollTop + mousePosNoScroll
                 blocoStyle.top = this.reparsePx(mousePosY - top)
 
@@ -945,10 +982,11 @@ class Blocos extends Estilo {
     criar(options) {
 
         this.blocoRef = document.createElement('bloco')
-
-        this.blocoRef.onclick = () => {
-            this.handleClick()
-        }
+        // this.blocoRef.setAttribute('tabindex', '0')
+        this.blocoRef.addEventListener('click', this.handleClick.bind(this), false)
+        // this.blocoRef.addEventListener('click', this.setFocus.bind(this), false)
+        this.blocoRef.addEventListener('keydown', this.keyAction.bind(this), false)
+        this.blocoRef.addEventListener('mousedown', this.moveBloco.bind(this), false)
 
         this.optionsContainer = document.createElement('optionsContainer')
         this.disableHoldSelectionAndDrag(this.optionsContainer)
@@ -1113,7 +1151,6 @@ class Blocos extends Estilo {
             boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
         })
 
-        this.blocoRef.addEventListener('mousedown', this.moveBloco.bind(this), false)
 
         this.resizes = []
 
@@ -1238,7 +1275,10 @@ class Blocos extends Estilo {
             transform: 'scale(1)'
 
         }], this.animationTimes.medium)
-        animBloco.onfinish = () => this.minimize(this)
+        animBloco.onfinish = () => {
+            this.tempoMinimize = setTimeout(() => this.minimize(this), 100)
+            this.tempoFullMinimize = setTimeout(() => this.fullMinimize(this), this.tempoFullFadeOut)
+        }
     }
 
 }

@@ -362,6 +362,7 @@ class Tabela extends Blocos {
     this.addEstilo(this.tabela, {
       width: "100%"
     })
+    this.operationNav = this.tabelaContainer
     this.addEstilo(this.tabelaContainer, {
       width: "100%",
       display: "flex",

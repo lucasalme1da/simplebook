@@ -30,6 +30,7 @@ class Folha extends Estilo {
     this.mouseY = 0
     this.scrollPadding = 20
     this.scrollAdd = 200
+    this.cloneBlock = null
     this.windowOnMouseMoveActions = []
 
     let length = options.blocos ? options.blocos.length : null
@@ -75,7 +76,6 @@ class Folha extends Estilo {
       this.imageCount = 0
     }
   }
-
 
   criarBloco(options) {
     let defaultOptions = {
@@ -175,6 +175,7 @@ class Folha extends Estilo {
 
     })
   }
+
 }
 
 module.exports = Folha
