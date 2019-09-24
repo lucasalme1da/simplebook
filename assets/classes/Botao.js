@@ -44,13 +44,12 @@ class Botao extends Estilo {
           ],
           this.animationTimes.slow
         )
-        anim.onfinish = () => { }
+        anim.onfinish = () => {}
       }
-      this.ref.onmouseout = () => { }
+      this.ref.onmouseout = () => {}
     }
 
-    if (options.dbaction)
-      this.ref.ondblclick = options.dbaction
+    if (options.dbaction) this.ref.ondblclick = options.dbaction
 
     if (options.animation) {
       this.ref.onclick = e => {
@@ -85,7 +84,9 @@ class Botao extends Estilo {
     if (options.icon) {
       this.image = document.createElement("img")
       this.image.setAttribute("src", `./assets/icons/${options.icon}.svg`)
-      this.image.ondrag = e => { e.preventDefault() }
+      this.image.ondrag = e => {
+        e.preventDefault()
+      }
       this.image.setAttribute("draggable", "false")
       this.addEstilo(this.image, {
         width: options.imageWidth || "30px",
@@ -109,6 +110,20 @@ class Botao extends Estilo {
     }
 
     options.ref.appendChild(this.ref)
+  }
+
+  disable(state) {
+    if (state) {
+      this.ref.disabled = true
+      this.addEstilo(this.ref, {
+        opacity: 0.6
+      })
+    } else {
+      this.ref.disabled = false
+      this.addEstilo(this.ref, {
+        opacity: 1.0
+      })
+    }
   }
 }
 

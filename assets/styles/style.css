@@ -6,27 +6,39 @@
   /* --cor-clara: #a14ebf; */
 }
 
-
-
-*::-webkit-scrollbar-track
-{
-	background-color: transparent;
+*::-webkit-scrollbar-track {
+  background-color: transparent;
 }
 
-*::-webkit-scrollbar
-{
-	width: 12px;
-	background-color: transparent;
+*::-webkit-scrollbar {
+  width: 12px;
+  background-color: transparent;
 }
 
-*::-webkit-scrollbar-thumb
-{
-	background-color: var(--cor-escura);
-	background-image: -webkit-linear-gradient(90deg,
-											  transparent,
-											  var(--cor-clara) 50%,
-											  transparent,
-											  transparent)
+*::-webkit-scrollbar-thumb {
+  background-color: var(--cor-escura);
+  background-image: -webkit-linear-gradient(
+    90deg,
+    transparent,
+    var(--cor-clara) 50%,
+    transparent,
+    transparent
+  );
+}
+
+mochilaContentContainer::-webkit-scrollbar {
+  width: 7px;
+  margin: 2px;
+  cursor: pointer;
+}
+
+mochilaContentContainer::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: var(--cor-clara);
+}
+mochilaContentContainer::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background-color: var(--cor-escura);
 }
 
 * {
@@ -34,20 +46,19 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-ul{
-
-  transition: all 0.3s ease
+ul {
+  transition: all 0.3s ease;
 }
-textarea{
-  transition: all 0.3s ease
+textarea {
+  transition: all 0.3s ease;
 }
-textarea{
+textarea {
   -webkit-font-smoothing: antialiased !important;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.004) !important;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004) !important;
 }
-p.textarea{
+p.textarea {
   -webkit-font-smoothing: antialiased !important;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.004) !important;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004) !important;
   -webkit-user-modify: read-write;
   overflow-wrap: break-word;
   -webkit-line-break: after-white-space;
@@ -65,13 +76,11 @@ p.textarea{
 
   text-align: start;
   -webkit-writing-mode: horizontal-tb !important;
-
 }
-strong{
+strong {
   font-weight: bold !important;
 }
-img{
-
+img {
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -122,16 +131,17 @@ input[type="reset"] {
   outline: inherit;
 }
 table {
-   border-collapse: collapse;
+  border-collapse: collapse;
   width: 100%;
-  transition: all 0.3s ease
+  transition: all 0.3s ease;
 }
-th{
+th {
   font-weight: bold;
   font-size: 1.2em;
 }
 
-td, th {
+td,
+th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
@@ -141,48 +151,54 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 
-
 table.simpleGreen {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
 
-table.simpleGreen td, table .simpleGreen th {
+table.simpleGreen td,
+table .simpleGreen th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-table.simpleGreen tr:nth-child(even){background-color: #f2f2f2;}
+table.simpleGreen tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 
-table.simpleGreen tr:hover {background-color: #ddd;}
+table.simpleGreen tr:hover {
+  background-color: #ddd;
+}
 
 table.simpleGreen th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
-
-table.linhaSimples{
+table.linhaSimples {
   border-collapse: collapse;
   width: 100%;
 }
 
-td.linhaSimples, th.linhaSimples {
+td.linhaSimples,
+th.linhaSimples {
   border: none;
 }
 
-th.linhaSimples, td.linhaSimples {
+th.linhaSimples,
+td.linhaSimples {
   padding: 8px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
-tr.linhaSimples:hover {background-color:#f5f5f5;}
-
+tr.linhaSimples:hover {
+  background-color: #f5f5f5;
+}
 
 table.fl-table {
   border-radius: 5px;
@@ -194,10 +210,11 @@ table.fl-table {
   max-width: 100%;
   white-space: nowrap;
   background-color: white;
-  box-shadow: 0px 5px 5px rgba( 0, 0, 0, 0.2 );
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
 }
 
-table.fl-table td, table.fl-table th {
+table.fl-table td,
+table.fl-table th {
   text-align: center;
   padding: 8px;
 }
@@ -209,9 +226,8 @@ table.fl-table td {
 
 table.fl-table th {
   color: #ffffff;
-  background: #4FC3A1;
+  background: #4fc3a1;
 }
-
 
 table.fl-table th:nth-child(odd) {
   color: #ffffff;
@@ -219,9 +235,8 @@ table.fl-table th:nth-child(odd) {
 }
 
 table.fl-table tr:nth-child(even) {
-  background: #F8F8F8;
+  background: #f8f8f8;
 }
-
 
 table.table-black {
   border-radius: 5px;
@@ -233,10 +248,11 @@ table.table-black {
   max-width: 100%;
   white-space: nowrap;
   background-color: white;
-  box-shadow: 0px 2px 2px rgba( 0, 0, 0, 0.2 );
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
-table.table-black td, table.table-black th {
+table.table-black td,
+table.table-black th {
   text-align: center;
   padding: 8px;
 }
@@ -252,56 +268,60 @@ table.table-black th {
 }
 
 table.table-black tr:nth-child(even) {
-  background: #F8F8F8;
+  background: #f8f8f8;
 }
 
 table.branco {
   border-collapse: collapse;
- width: 100%;
- border: 1px solid lightgray;
- box-shadow: 0px 2px 2px rgba( 0, 0, 0, 0.2 );
+  width: 100%;
+  border: 1px solid lightgray;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
 }
-table.branco th{
- font-weight: bold;
- font-size: 1.1em;
- background: rgb(255,255,255);
-background: linear-gradient(180deg, rgba(255,255,255,1) 12%, rgba(216,216,221,1) 92%);
- border-bottom: 1px solid lightgray;
+table.branco th {
+  font-weight: bold;
+  font-size: 1.1em;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 1) 12%,
+    rgba(216, 216, 221, 1) 92%
+  );
+  border-bottom: 1px solid lightgray;
 }
 
-table.branco td, table.branco th {
- text-align: left;
- padding: 8px;
- border:none;
+table.branco td,
+table.branco th {
+  text-align: left;
+  padding: 8px;
+  border: none;
 }
 
 table.branco tr:nth-child(even) {
- background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 table.preto {
   border-collapse: collapse;
- width: 100%;
- box-shadow: 0px 2px 2px rgba( 0, 0, 0, 0.2 );
+  width: 100%;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
 }
-table.preto th{
- font-weight: bold;
- font-size: 1.1em;
- background-color: #4d4d4d;
- color: white;
+table.preto th {
+  font-weight: bold;
+  font-size: 1.1em;
+  background-color: #4d4d4d;
+  color: white;
+}
 
+table.preto td,
+table.preto th {
+  text-align: left;
+  padding: 8px;
+  border: none;
 }
-
-table.preto td, table.preto th {
- text-align: left;
- padding: 8px;
- border:none;
-}
-table.preto  tr{
+table.preto tr {
   border-bottom: 1px solid lightgray;
- }
+}
 
 table.preto tr:nth-child(even) {
- background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
-

@@ -44,7 +44,6 @@ class Folha extends Estilo {
   load(blocos) {
     blocos.forEach(bloco => {
       this.criarBloco(bloco)
-
     })
   }
 
@@ -70,7 +69,6 @@ class Folha extends Estilo {
   }
 
   addWindowMouseMoveAction(action) {
-
     return this.navTab.navbar.addWindowMouseMoveAction(action)
   }
 
@@ -84,7 +82,6 @@ class Folha extends Estilo {
     }
   }
 
-
   criarBloco(options) {
     let defaultOptions = {
       folhaContainer: this.folhaContainer,
@@ -95,45 +92,41 @@ class Folha extends Estilo {
       initialWidth: options.initialWidth || options.width,
       src: options.src,
       folha: this,
-      load: options.load,
+      load: options.load
     }
 
     switch (options.type) {
-      case 'Texto':
+      case "Texto":
         this.blocos.push(new Texto(defaultOptions))
         break
-      case 'Imagem':
+      case "Imagem":
         this.blocos.push(new Imagem(defaultOptions))
         break
 
-      case 'Tabela':
+      case "Tabela":
         this.blocos.push(new Tabela(defaultOptions))
         break
 
-      case 'Lista':
+      case "Lista":
         this.blocos.push(new Lista(defaultOptions))
         break
 
-      case 'Audio':
+      case "Audio":
         this.blocos.push(new Audio(defaultOptions))
         break
 
-      case 'Video':
+      case "Video":
         this.blocos.push(new Video(defaultOptions))
         break
 
-      case 'GravadorAudio':
+      case "GravadorAudio":
         this.blocos.push(new GravadorAudio(defaultOptions))
         break
-      case 'Equacao':
+      case "Equacao":
         this.blocos.push(new Equacao(defaultOptions))
         break
-
     }
-
-
   }
-
 
   esconderBlocos() {
     for (let i = 0; i < this.blocos.length; i++) {

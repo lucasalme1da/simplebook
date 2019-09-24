@@ -1,0 +1,26 @@
+162 - 211, navtabs.js
+
+- Sem folha, dash blocos e dash caderno se não houver mochilas
+
+- Sem folha e dash blocos se não houver caderno
+
+- Sem dash blocos se não houver folhas
+
+se vetor for ficar vazio ao excluir, atualizar info acima
+se vetor for populado (ao adicionar), atualizar info acima
+
+navbar:
+
+lockTab(true/false)
+lockDashBlocos(true/false)
+lockDashCaderno(true/false)
+
+
+
+
+Ao apagar caderno, apagar suas folhas
+Ao apagar mochila, apagar seus cadernos
+
+
+
+VERIFICAR WARNING SOMENTE AO ABRIR A DASH!!!!!!
