@@ -319,6 +319,8 @@ class Equacao extends Blocos {
             height: '100%',
         })
         this.buttons = document.createElement('div')
+        this.operationNav = this.buttons
+        this.disableHoldSelectionAndDrag(this.buttons)
         this.addEstilo(this.buttons, {
             width: '100%',
             height: '60px',
@@ -360,6 +362,8 @@ class Equacao extends Blocos {
         this.addInsertSymbols(this.symbolOptions)
         this.addConfig([this.configFont])
         this.addMainContent(this.cont)
+        this.createElement()
+        this.lastElement.focus()
     }
 
 }

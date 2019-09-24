@@ -12,7 +12,6 @@ class NavBar extends Estilo {
     super()
     this.bodyRef = document.getElementsByTagName("BODY")[0]
     this.folhaContainer = document.getElementsByTagName("folhacontainer")[0]
-
     this.scrollPadding = 20
     this.scrollAdd = 500
 
@@ -21,7 +20,8 @@ class NavBar extends Estilo {
     this.limiteAbas = 10
     this.moreModalAberto = false
     this.windowOnMouseMoveActions = []
-
+    this.zIndexBlocoMin = 10000
+    this.zIndexBlocoMax = 20000
     this.criar()
 
     this.dashBook = new Dashboard({
@@ -94,7 +94,7 @@ class NavBar extends Estilo {
       height: 400,
     }]
 
-    window.onkeydown = e => {
+    window.addEventListener('keydown', e => {
 
       let folha = this.dashBag.getBag().currentBag().currentBook().selectedPage
 
@@ -121,16 +121,18 @@ class NavBar extends Estilo {
 
       }
 
-    }
+    }, false)
 
 
 
-    this.addWindowMouseMoveAction(e => {
+
+    window.addEventListener('mousemove', e => {
       this.mouseX = e.clientX
       this.mouseY = e.clientY
-    })
+    }, false)
 
-    window.onmousewheel = e => {
+
+    window.addEventListener('mousewheel', e => {
       if (e.wheelDelta < 0) {
         const height = this.folhaContainer.parentElement.offsetHeight
         const scrollTop = this.folhaContainer.parentElement.scrollTop
@@ -145,9 +147,10 @@ class NavBar extends Estilo {
 
         }
       }
-    }
+    }, false)
 
-    this.folhaContainer.onpaste = e => {
+
+    this.folhaContainer.addEventListener('paste', e => {
 
       let folha = this.dashBag.getBag().currentBag().currentBook().selectedPage
 
@@ -170,7 +173,8 @@ class NavBar extends Estilo {
           src: `./imgs/Imagem-${this.imageCount + 1}.jpg`
         })
       }
-    }
+    }, false)
+
   }
   getMousePos(width, height) {
     let x = this.mouseX - this.folhaContainer.offsetLeft - width / 2
@@ -190,19 +194,7 @@ class NavBar extends Estilo {
       this.imageCount = 0
     }
   }
-  removeWindowMouseMoveAction(ind) {
-    this.windowOnMouseMoveActions.splice(ind, 1)
-  }
 
-  addWindowMouseMoveAction(action) {
-    this.windowOnMouseMoveActions.push(action)
-    window.onmousemove = e => {
-      this.windowOnMouseMoveActions.forEach(action => {
-        action(e)
-      })
-    }
-    return this.windowOnMouseMoveActions.length - 1
-  }
   criar() {
     let container = document.createElement("div")
     this.addEstilo(container, {
@@ -214,7 +206,11 @@ class NavBar extends Estilo {
       overflowY: "auto",
       overflowX: "hidden"
     })
+
     this.folhaContainer = document.createElement("folhaContainer")
+
+    this.disableHoldSelectionAndDrag(this.folhaContainer)
+
     container.appendChild(this.folhaContainer)
 
     this.addEstilo(this.folhaContainer, {
@@ -229,7 +225,7 @@ class NavBar extends Estilo {
     this.addEstilo(this.ref, {
       position: "fixed",
       boxShadow: "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-      zIndex: "999",
+      zIndex: (this.zIndexBlocoMax + 2),
       borderBottom: "9px solid var(--cor-clara)"
     })
 
@@ -248,6 +244,7 @@ class NavBar extends Estilo {
       borderRadius: "8px",
       overflowY: "auto",
       maxHeight: "450px",
+      zIndex: (this.zIndexBlocoMax + 2),
       backgroundColor: "var(--cor-escura)"
     })
 

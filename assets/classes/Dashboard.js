@@ -33,7 +33,8 @@ class Dashboard extends Estilo {
       width: "20vw",
       zIndex: '302',
       background: "var(--cor-escura)",
-      alignSelf: "flex-end"
+      alignSelf: "flex-end",
+      zIndex: (this.navBar.zIndexBlocoMax + 1)
     })
   }
 

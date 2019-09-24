@@ -250,6 +250,7 @@ class Caderno extends Estilo {
       new Folha({
         folhaContainer: this.navBar.folhaContainer,
         loadedFonts: this.navBar.loadedFonts,
+        navBar: this.navBar,
         height
       })
     )
