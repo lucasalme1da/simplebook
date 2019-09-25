@@ -1,7 +1,7 @@
 const Estilo = require("./Estilo")
 const Botao = require("./Botao")
 const Mochila = require("./Mochila")
-const fs = require('fs')
+const fs = require("fs")
 
 class MochilaDash extends Estilo {
   constructor(dashRef) {
@@ -158,7 +158,7 @@ class MochilaDash extends Estilo {
       padding: "1%"
     })
 
-    this.contentContainer = document.createElement("div")
+    this.contentContainer = document.createElement("mochilaContentContainer")
     this.addEstilo(this.contentContainer, {
       width: "91%",
       height: "83%",
@@ -170,10 +170,11 @@ class MochilaDash extends Estilo {
       flexDirection: "column",
       alignItems: "flex-start",
       borderRadius: "8px",
-      padding: "2%"
+      padding: "2%",
+      overflowY: "overlay"
     })
 
-    const btnAddBook = new Botao({
+    let btnAddBook = new Botao({
       icon: "addBook",
       imageWidth: "20px",
       imageHeight: "20px",
@@ -182,12 +183,27 @@ class MochilaDash extends Estilo {
       ref: this.contentContainer,
       action: () => {
         this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
+        this.createBag(this.contentContainer)
       },
       style: {
         backgroundColor: "none",
-        alignSelf: "center"
+        alignSelf: "center",
+        paddingBottom: "35px"
       }
     })
+    this.btnAddBook = btnAddBook
 
     this.ref = document.createElement("mochilas")
     rightTitleContainer.append(
@@ -200,16 +216,12 @@ class MochilaDash extends Estilo {
     this.ref.append(this.titleContainer, this.contentContainer)
     this.dashRef.appendChild(this.ref)
 
-    this.loadBags()
-    // .catch(erro => {
-    //   this.createBag(this.contentContainer)
-    // })
+    this.loadBags().catch(erro => {})
   }
 
   load() {
     let cadernos = this.CadernosDasMochilas
     this.mochilas.forEach((mochila, indice) => {
-
       mochila.load(cadernos[indice])
 
       // cadernos[indice].forEach(caderno => {
@@ -221,42 +233,42 @@ class MochilaDash extends Estilo {
       //   })
 
       // })
-
     })
-
   }
 
   loadBags() {
-    // return new Promise((resolve, reject) => {
-    let bags = fs.readdirSync('./save')
-    let cadernos = []
-    if (!bags.length) reject()
-    bags.forEach(bag => {
-      let data = fs.readFileSync(`./save/${bag}`);
+    return new Promise((resolve, reject) => {
+      let bags = fs.readdirSync("./save")
+      let cadernos = []
+      if (!bags.length) reject()
+      bags.forEach(bag => {
+        let data = fs.readFileSync(`./save/${bag}`)
 
-      data = JSON.parse(data)
-      console.log(data)
-      const { cadernosData } = data
-      cadernos.push(cadernosData)
-      this.createBag(this.contentContainer, data.name)
+        data = JSON.parse(data)
+        console.log(data)
+        const { cadernosData } = data
+        cadernos.push(cadernosData)
+        this.createBag(this.contentContainer, data.name)
+      })
+      this.CadernosDasMochilas = cadernos
+      resolve()
     })
-    this.CadernosDasMochilas = cadernos
-    //   resolve()
-    // })
-
   }
 
   createBag(container, name) {
-
     this.mochilas.push(
       new Mochila({
         bagRef: this,
         containerRef: container,
-        name
+        name: name,
+        btnAdd: this.btnAddBook
       })
     )
     this.selectBag(this.mochilas[this.mochilas.length - 1])
     if (this.emptyWarning) this.turnOffWarning()
+    if (this.mochilas.length == 1) this.dashRefObj.navBar.lockDashCaderno(false)
+    // this.dashRefObj.navBar.lockTab(true)
+    // this.dashRefObj.getBook().emptyBookWarningCreator()
   }
 
   selectBag(bagRef) {
@@ -273,10 +285,26 @@ class MochilaDash extends Estilo {
         })
       }
     }
-    this.updateBagInfo()
+    // this.updateBagInfo()
     this.currentBag().updateBookInfo()
     this.esconderMochilas()
     this.dashRefObj.navBar.updateTabs()
+    if (
+      this.currentBag().currentBook() != undefined &&
+      this.currentBag().currentBook().lastTabSelected != null
+    ) {
+      this.currentBag()
+        .currentBook()
+        .lastTabSelected.setActive()
+    } else {
+      this.updateBooklist()
+    }
+    if (this.currentBag().cadernos.length > 0) {
+      this.dashRefObj.navBar.lockTab(false)
+    } else {
+      this.dashRefObj.navBar.lockTab(true)
+    }
+    this.updateBagInfo()
   }
 
   currentBag() {
@@ -286,9 +314,12 @@ class MochilaDash extends Estilo {
   }
 
   updateBagInfo() {
-    this.nameRightContainer.textContent = this.currentBag().bagName
-    this.bookCounter = this.currentBag().cadernos.length
-    this.bookCounterRightContainer.textContent = this.bookCounter + " Cadernos"
+    if (this.currentBag() != undefined) {
+      this.nameRightContainer.textContent = this.currentBag().bagName
+      this.bookCounter = this.currentBag().cadernos.length
+      this.bookCounterRightContainer.textContent =
+        this.bookCounter + " Cadernos"
+    }
   }
 
   turnOffWarning() {
@@ -363,24 +394,51 @@ class MochilaDash extends Estilo {
   }
 
   updateBooklist() {
-    let arrayOfElBooks = [
-      ...document.querySelectorAll("cadernos")[0].children[1].children
-    ]
+    // substituir query selector por uma funcao que varra os cadernos atuais
+    let arrayOfElBooks = []
+    this.mochilas.forEach(element => {
+      for (let j = 0; j < element.cadernos.length; j++) {
+        arrayOfElBooks.push(element.cadernos[j].newBook)
+      }
+    })
 
-    for (let i = 0; i < arrayOfElBooks.length - 1; i++) {
-      // console.log(arrayOfElBooks[i])
+    // let arrayOfElBooks = [
+    //   ...document.querySelectorAll("cadernos")[0].children[1].children
+    // ]
+
+    // console.log("total de cadernos ->", arrayOfElBooks2)
+    console.log("total de cadernos ->", arrayOfElBooks)
+
+    // console.log("total de cadernos ->", arrayOfElBooks)
+    for (let i = 0; i < arrayOfElBooks.length; i++) {
       arrayOfElBooks[i].style.display = "none"
     }
+
+    // console.log("cadernos desta mochila ->", this.currentBag().cadernos)
     for (let j = 0; j < this.currentBag().cadernos.length; j++) {
-      // console.log(this.currentBag().cadernos[j].newBook)
       this.currentBag().cadernos[j].newBook.style.display = "flex"
     }
-    // console.log(this.currentBag().cadernos)
 
-    if (this.currentBag().cadernos.length == 0) {
-      // console.log("empty books")
+    if (
+      this.currentBag().cadernos.length > 0 &&
+      this.dashRefObj.getBook().emptyWarning == true
+    ) {
+      this.dashRefObj.getBook().turnOffWarning()
+    }
+    // console.log("chamaste?")
+
+    if (
+      this.currentBag().cadernos.length == 0 &&
+      this.dashRefObj.getBook().emptyWarning == false
+    ) {
       this.dashRefObj.getBook().emptyBookWarningCreator()
     }
+    // console.log(this.currentBag())
+
+    // if (this.currentBag().cadernos.length >= 0)
+    //   this.dashRefObj.getBook().turnOffWarning()
+
+    // debugger
   }
 
   esconderMochilas() {

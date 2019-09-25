@@ -25,20 +25,16 @@ class Estilo {
     el.ondrag = e => e.preventDefault()
   }
   disableSelect(el) {
-
-    el.addEventListener("mousedown", this.disabler, "false");
-
+    el.addEventListener("mousedown", this.disabler, "false")
   }
 
   enableSelect(el) {
-
-    el.removeEventListener("mousedown", this.disabler, "false");
-
+    el.removeEventListener("mousedown", this.disabler, "false")
   }
 
   disabler(e) {
-    e.preventDefault();
-    return false;
+    e.preventDefault()
+    return false
   }
 
   getWidth(element) {
@@ -74,7 +70,7 @@ class Estilo {
     }
   }
   addRenamable(obj, ellipsisStartPoint, bagName) {
-    obj.ondblclick = () => {
+    obj.addEventListener("dblclick", () => {
       if (obj.title.length > 0) obj.textContent = obj.title
       this.addEstilo(obj, {
         transitionTimingFunction: "ease",
@@ -99,7 +95,7 @@ class Estilo {
         selection.removeAllRanges()
         selection.addRange(range)
       }
-      document.onclick = e => {
+      let clickEdit = e => {
         if (e.target != obj) {
           if (obj.innerText.trim() == "") {
             obj.textContent = oldTextContent
@@ -112,7 +108,7 @@ class Estilo {
           obj.title = obj.textContent
           if (bagName) {
             if (obj.textContent.length >= ellipsisStartPoint - 5) {
-              bagName.bagDashRef.nameRightContainer.textContent = `${obj.textContent.slice(
+              bagName.bagRef.nameRightContainer.textContent = `${obj.textContent.slice(
                 0,
                 ellipsisStartPoint - 5
               )}...`
@@ -121,7 +117,7 @@ class Estilo {
                 ellipsisStartPoint - 5
               )}...`
             } else {
-              bagName.bagDashRef.nameRightContainer.textContent = `${obj.textContent.slice(
+              bagName.bagRef.nameRightContainer.textContent = `${obj.textContent.slice(
                 0,
                 ellipsisStartPoint - 5
               )}`
@@ -136,10 +132,12 @@ class Estilo {
               0,
               ellipsisStartPoint
             )}...`
-          document.onclick = () => { }
         }
+        document.removeEventListener("click", clickEdit)
       }
-      obj.onkeydown = e => {
+      document.addEventListener("click", clickEdit)
+
+      let keydownEdit = e => {
         if (e.keyCode == 13) {
           if (obj.innerText.trim() == "") {
             obj.textContent = oldTextContent
@@ -152,7 +150,7 @@ class Estilo {
           obj.title = obj.textContent
           if (bagName) {
             if (obj.textContent.length >= ellipsisStartPoint - 5) {
-              bagName.bagDashRef.nameRightContainer.textContent = `${obj.textContent.slice(
+              bagName.bagRef.nameRightContainer.textContent = `${obj.textContent.slice(
                 0,
                 ellipsisStartPoint - 5
               )}...`
@@ -161,7 +159,7 @@ class Estilo {
                 ellipsisStartPoint - 5
               )}...`
             } else {
-              bagName.bagDashRef.nameRightContainer.textContent = `${obj.textContent.slice(
+              bagName.bagRef.nameRightContainer.textContent = `${obj.textContent.slice(
                 0,
                 ellipsisStartPoint - 5
               )}`
@@ -176,9 +174,12 @@ class Estilo {
               0,
               ellipsisStartPoint
             )}...`
+          obj.removeEventListener("keydown", keydownEdit)
+          document.removeEventListener("click", clickEdit)
         }
       }
-    }
+      obj.addEventListener("keydown", keydownEdit)
+    })
   }
 }
 

@@ -8,7 +8,8 @@ class Mochila extends Estilo {
   constructor(options) {
     super()
     this.criar(options)
-    this.bagDashRef = options.bagRef
+    this.bagRef = options.bagRef
+    this.btnAdd = options.btnAdd
   }
 
   criar(options) {
@@ -29,12 +30,15 @@ class Mochila extends Estilo {
       paddingLeft: "2%",
       position: "relative",
       top: "0vh",
-      transition: "all 0.3s ease"
+      transition: "all 0.3s ease",
+      flexShrink: "0"
     })
 
     // Editar Nome da Bolsa
     const newBagName = document.createElement("p")
-    newBagName.textContent = options.name ? options.name : "Nova Mochila " + ("(" + ++bagCounter + ")")
+    newBagName.textContent = options.name
+      ? options.name
+      : "Nova Mochila " + ("(" + ++bagCounter + ")")
     this.bagName = newBagName.textContent
     this.addEstilo(newBagName, {
       height: "50%"
@@ -78,8 +82,9 @@ class Mochila extends Estilo {
     })
 
     this.newBag.onclick = e => {
-      if (e.target == this.newBag || e.target == newBagName)
+      if (e.target == this.newBag || e.target == newBagName) {
         options.bagRef.selectBag(this)
+      }
     }
 
     this.newBag.onmouseover = () => {
@@ -114,16 +119,13 @@ class Mochila extends Estilo {
         duration: this.animationTimes.slow
       }
     )
-
-    this.bagRef = options.bagRef
-
-    // let length = options.cadernos ? options.cadernos.length : null
-    // if (length > 0) {
-    //   this.options.cadernos.forEach(caderno => {
-    //     createBook(folhas)
-    //   })
-    // }
+    options.btnAdd.ref.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest"
+    })
   }
+
   load(cadernos) {
     cadernos.forEach(cad => {
       const { name, folhas } = cad
@@ -131,6 +133,7 @@ class Mochila extends Estilo {
       caderno.load(folhas)
     })
   }
+
   autoSave(options) {
     return new Promise((resolve, reject) => {
       try {
@@ -141,7 +144,8 @@ class Mochila extends Estilo {
         let now = new Date()
 
         let data = {
-          dataSalvamento: `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`,
+          dataSalvamento: `${now.getDate()}/${now.getMonth() +
+            1}/${now.getFullYear()}`,
           name: this.bagName,
           versao: "1.02",
           cadernosData
@@ -150,7 +154,9 @@ class Mochila extends Estilo {
         // if (!fs.existsSync(`./save/${this.bagName}.bag`)) {
         // let buffer = Buffer.from(JSON.stringify(data))
         // console.log(buffer)
-        fs.writeFile(`./save/${this.bagName}.bag`, JSON.stringify(data),
+        fs.writeFile(
+          `./save/${this.bagName}.bag`,
+          JSON.stringify(data),
           erro => {
             if (erro) {
               return console.log(err)
@@ -189,22 +195,50 @@ class Mochila extends Estilo {
       )
 
       anim.onfinish = () => {
-        let bagLength = this.bagRef.mochilas.length
-        let bagArray = this.bagRef.mochilas
-        if (bagLength > 1) {
-          if (this.isSelected) {
-            this.bagRef.selectBag(bagArray[bagLength - 2])
-          }
+        let nextBagIndex = this.bagRef.mochilas.indexOf(this) + 1
+        if (
+          this.currentBag() &&
+          this.bagRef.mochilas[nextBagIndex] != undefined
+        ) {
+          this.bagRef.selectBag(this.bagRef.mochilas[nextBagIndex])
         }
-        for (let i = 0; i <= bagLength; i++) {
-          if (bagArray[i] == this) bagArray.splice(i, 1)
+
+        if (
+          this.currentBag() &&
+          this.bagRef.mochilas[this.bagRef.mochilas.length - 1] == this &&
+          this.bagRef.mochilas.length > 1
+        ) {
+          this.bagRef.selectBag(
+            this.bagRef.mochilas[this.bagRef.mochilas.length - 2]
+          )
         }
+        for (let i = 0; i <= this.bagRef.mochilas.length; i++) {
+          if (this.bagRef.mochilas[i] == this) this.bagRef.mochilas.splice(i, 1)
+        }
+
+        // this.cadernos.forEach(element => {
+        //   element.deleteMe()
+        // })
+        // this.cadernos = []
+
+        this.deleteAllBooks()
+
         ref.removeChild(bag)
-        if (this.bagRef.mochilas.length == 1) this.bagRef.selectBag(bagArray[0])
-        if (this.bagRef.mochilas.length == 0)
+
+        if (this.bagRef.mochilas.length == 0) {
           this.bagRef.emptyBagWarningCreator()
+          this.bagRef.dashRefObj.navBar.lockDashCaderno(true)
+        }
       }
     }
+  }
+
+  deleteAllBooks() {
+    this.cadernos.forEach(element => {
+      element.deleteAllTabs()
+    })
+    this.cadernos = []
+    // this.bagRef.dashRefObj.navBar.lockTab(true)
   }
 
   getBagName() {
@@ -221,13 +255,13 @@ class Mochila extends Estilo {
         thisBag: this,
         bookRef: this.bagRef.dashRefObj.getBook(),
         containerRef: this.bagRef.dashRefObj.getBook().contentContainer,
-        name
+        name: name
       })
     )
     this.selectBook(this.cadernos[this.cadernos.length - 1])
     if (this.bagRef.dashRefObj.getBook().emptyWarning)
       this.bagRef.dashRefObj.getBook().turnOffWarning()
-
+    if (this.cadernos.length == 1) this.bagRef.dashRefObj.navBar.lockTab(false)
     return this.cadernos[this.cadernos.length - 1]
   }
 
@@ -246,9 +280,11 @@ class Mochila extends Estilo {
         })
       }
     }
-    console.log(this.bagRef.dashRefObj.navBar.updateTabs())
+    // console.log(this.bagRef.dashRefObj.navBar.updateTabs())
     this.esconderCadernos()
     this.bagRef.dashRefObj.navBar.updateTabs()
+    if (this.currentBook().lastTabSelected)
+      this.currentBook().lastTabSelected.setActive()
   }
 
   previousBook() {
@@ -262,7 +298,7 @@ class Mochila extends Estilo {
   }
 
   updateBookInfo() {
-    console.log(this.bagName)
+    // console.log(this.bagName)
     this.bagRef.dashRefObj.getBook().titleNameContainer.textContent = this.bagName
   }
 

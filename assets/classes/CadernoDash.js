@@ -5,6 +5,7 @@ const Caderno = require("./Caderno")
 class CadernoDash extends Estilo {
   constructor(dashRef) {
     super()
+    this.emptyWarning = false
     this.dashRefObj = dashRef
     this.dashRef = dashRef.ref
   }
@@ -49,9 +50,7 @@ class CadernoDash extends Estilo {
       width: "40%",
       height: "80%",
       ref: this.titleButtonContainer,
-      action: () => {
-        console.log("action")
-      },
+      action: () => {},
       style: { backgroundColor: "var(--cor-escura)" },
       hover: { backgroundColor: "var(--cor-clara)" }
     })
@@ -82,10 +81,11 @@ class CadernoDash extends Estilo {
       flexDirection: "column",
       alignItems: "flex-start",
       borderRadius: "8px",
-      padding: "2%"
+      padding: "2%",
+      overflowY: "overlay"
     })
 
-    const btnAddBook = new Botao({
+    let btnAddBook = new Botao({
       icon: "addBook",
       imageWidth: "20px",
       imageHeigth: "20px",
@@ -100,9 +100,11 @@ class CadernoDash extends Estilo {
       },
       style: {
         backgroundColor: "none",
-        alignSelf: "center"
+        alignSelf: "center",
+        paddingBottom: "35px"
       }
     })
+    this.btnAddBook = btnAddBook
     this.ref = document.createElement("cadernos")
     this.titleContainer.append(
       this.titleNameContainer,
@@ -116,6 +118,7 @@ class CadernoDash extends Estilo {
     this.emptyWarning = false
     this.ref.removeChild(this.ref.firstChild)
     this.titleContainer.style.display = "flex"
+    this.titleNameContainer.style.display = "inherit"
     this.addEstilo(this.contentContainer, {
       height: "89%"
     })

@@ -10,6 +10,7 @@ this.Dashboard = Dashboard
 class NavBar extends Estilo {
   constructor() {
     super()
+    this.currentTab = null
     this.bodyRef = document.getElementsByTagName("BODY")[0]
     this.folhaContainer = document.getElementsByTagName("folhacontainer")[0]
     this.scrollPadding = 20
@@ -43,69 +44,70 @@ class NavBar extends Estilo {
     this.lastActiveTabIndex = -1
     this.dashBag.getBag().load()
 
-    let blocos = [{
+    let blocos = [
+      {
+        type: "Texto",
+        key: 84,
+        width: 100,
+        height: 50
+      },
+      {
+        type: "Imagem",
+        key: 73,
+        width: 400,
+        height: 400
+      },
+      {
+        type: "Lista",
+        key: 76,
+        width: 400,
+        height: 400
+      },
+      {
+        type: "Audio",
+        key: 75,
+        width: 380,
+        height: 100
+      },
+      {
+        type: "Tabela",
+        key: 71,
+        width: 400,
+        height: 400
+      },
+      {
+        type: "Video",
+        key: 74,
+        width: 600,
+        height: 500
+      },
+      {
+        type: "GravadorAudio",
+        key: 79,
+        width: 500,
+        height: 150
+      },
+      {
+        type: "Equacao",
+        key: 69,
+        width: 500,
+        height: 400
+      }
+    ]
 
-      type: 'Texto',
-      key: 84,
-      width: 100,
-      height: 50,
-    },
-    {
-      type: 'Imagem',
-      key: 73,
-      width: 400,
-      height: 400
-
-    },
-    {
-      type: 'Lista',
-      key: 76,
-      width: 400,
-      height: 400,
-    },
-    {
-      type: 'Audio',
-      key: 75,
-      width: 380,
-      height: 100,
-    },
-    {
-      type: 'Tabela',
-      key: 71,
-      width: 400,
-      height: 400,
-    },
-    {
-      type: 'Video',
-      key: 74,
-      width: 600,
-      height: 500,
-    },
-    {
-      type: 'GravadorAudio',
-      key: 79,
-      width: 500,
-      height: 150,
-    },
-    {
-      type: 'Equacao',
-      key: 69,
-      width: 500,
-      height: 400,
-    }]
 
     window.addEventListener('keydown', e => {
 
       let folha = this.dashBag.getBag().currentBag().currentBook().selectedPage
 
       if (folha) {
-
         if (e.ctrlKey) {
-
           let blocoACriar = blocos.find(bloco => bloco.key == e.keyCode)
           if (blocoACriar) {
-
-            const { x, y } = this.getMousePos(blocoACriar.width, blocoACriar.height)
+            const { x, y } = this.getMousePos(
+              blocoACriar.width,
+              blocoACriar.height
+            )
             folha.criarBloco({
               type: blocoACriar.type,
               posX: x,
@@ -113,13 +115,10 @@ class NavBar extends Estilo {
               initialWidth: blocoACriar.width,
               initialHeight: blocoACriar.height
             })
-
           }
-
-
         }
-
       }
+
 
     }, false)
 
@@ -140,11 +139,14 @@ class NavBar extends Estilo {
 
         const diff = scrollHeight - (height + scrollTop)
         if (diff <= this.scrollPadding) {
-          const height = this.parsePx(this.folhaContainer.style.height) + this.scrollAdd
+          const height =
+            this.parsePx(this.folhaContainer.style.height) + this.scrollAdd
           this.folhaContainer.style.height = this.reparsePx(height)
-          let folha = this.dashBag.getBag().currentBag().currentBook().selectedPage
+          let folha = this.dashBag
+            .getBag()
+            .currentBag()
+            .currentBook().selectedPage
           folha.height = height
-
         }
       }
     }, false)
@@ -176,6 +178,7 @@ class NavBar extends Estilo {
     }, false)
 
   }
+
   getMousePos(width, height) {
     let x = this.mouseX - this.folhaContainer.offsetLeft - width / 2
     let y =
@@ -185,6 +188,7 @@ class NavBar extends Estilo {
       height / 2
     return { x, y }
   }
+
   countImgs() {
     let images = fs.readdirSync("./imgs")
     if (images.length > 0) {
@@ -218,7 +222,7 @@ class NavBar extends Estilo {
       display: "block",
       width: "100%",
       backgroundColor: "white",
-      position: "relative",
+      position: "relative"
     })
 
     this.ref = document.createElement("nav")
@@ -241,9 +245,10 @@ class NavBar extends Estilo {
       padding: "10px",
       top: "6vh",
       right: "20vw",
-      borderRadius: "8px",
+      borderBottomLeftRadius: "8px",
       overflowY: "auto",
       maxHeight: "450px",
+
       zIndex: (this.zIndexBlocoMax + 2),
       backgroundColor: "var(--cor-escura)"
     })
@@ -310,7 +315,7 @@ class NavBar extends Estilo {
       justifyContent: "space-around"
     })
 
-    const botao1 = new Botao({
+    let botao1 = new Botao({
       icon: "pencilIcon2",
       width: "10%",
       height: "60%",
@@ -319,8 +324,9 @@ class NavBar extends Estilo {
         this.openDash(this.dashBlock)
       }
     })
+    this.botao1 = botao1
 
-    const botao2 = new Botao({
+    let botao2 = new Botao({
       icon: "bookIcon",
       width: "10%",
       height: "60%",
@@ -329,7 +335,9 @@ class NavBar extends Estilo {
         this.openDash(this.dashBook)
       }
     })
-    const botao3 = new Botao({
+    this.botao2 = botao2
+
+    let botao3 = new Botao({
       icon: "bagIcon2",
       width: "10%",
       height: "60%",
@@ -376,6 +384,7 @@ class NavBar extends Estilo {
         flexShrink: 0
       }
     })
+    this.novaAba = novaAba
     tabs.append(tabsContainer, plusContainer)
     novaAba.hover(novaAba.ref, { backgroundColor: "var(--cor-clara)" })
     this.ref.append(tabs, buttons)
@@ -390,7 +399,7 @@ class NavBar extends Estilo {
     })
   }
 
-  load() { }
+  load() {}
 
   abrirMoreButton() {
     if (this.moreButton.ref.style.display != "flex") {
@@ -406,14 +415,16 @@ class NavBar extends Estilo {
   }
 
   fecharMoreButton() {
-    if (this.tabs.length <= this.limiteAbas) {
+    if (this.allCurrentTabs().length <= this.limiteAbas) {
       if (this.moreButton.ref.style.display != "none") {
         let anim = this.moreButton.ref.animate(
           [{ width: "80px", opacity: 1 }, { width: "0px", opacity: 0 }],
-          200
+          100
         )
-        this.addEstilo(this.moreButton.ref, { display: "none" })
-        this.abrirMoreModal()
+        anim.onfinish = () => {
+          this.addEstilo(this.moreButton.ref, { display: "none" })
+          this.abrirMoreModal()
+        }
       }
     }
   }
@@ -439,7 +450,7 @@ class NavBar extends Estilo {
   }
 
   atualizarNumAbas() {
-    this.moreButton.text.textContent = `${this.tabs.length -
+    this.moreButton.text.textContent = `${this.allCurrentTabs().length -
       this.limiteAbas} mais`
   }
 
@@ -475,11 +486,11 @@ class NavBar extends Estilo {
         let loadedFont = new FontFace(name, `url(assets/fonts/${font})`)
         loadedFont
           .load()
-          .then(function (loaded_face) {
+          .then(function(loaded_face) {
             document.fonts.add(loaded_face)
             document.body.style.fontFamily = `"${name}", Arial`
           })
-          .catch(function (error) { })
+          .catch(function(error) {})
       })
     })
   }
@@ -494,7 +505,7 @@ class NavBar extends Estilo {
       .currentBag()
       .currentBook()
     let tab
-    if (this.tabs.length >= this.limiteAbas) {
+    if (this.allCurrentTabs().length >= this.limiteAbas) {
       this.abrirMoreButton()
       tab = new NavTabs({
         ref: this.moreNavTabs,
@@ -508,7 +519,6 @@ class NavBar extends Estilo {
       })
       this.tabs.push(tab)
       this.atualizarNumAbas()
-
     } else {
       tab = new NavTabs({
         ref: this.tabsContainer,
@@ -532,6 +542,7 @@ class NavBar extends Estilo {
 
   updateTabs() {
     let arrayOfElNavBars = [...document.querySelectorAll("navtab")]
+
     for (let i = 0; i < arrayOfElNavBars.length; i++) {
       arrayOfElNavBars[i].style.display = "none"
     }
@@ -547,7 +558,7 @@ class NavBar extends Estilo {
         this.lastActiveTabIndex = j
       }
     }
-    this.selectLastVisibleTab()
+    // this.selectLastVisibleTab()
   }
 
   selectLastVisibleTab() {
@@ -569,6 +580,50 @@ class NavBar extends Estilo {
           return this.tabs[i].pageRef
         }
       }
+    }
+  }
+
+  allCurrentTabs() {
+    let output = []
+
+    this.tabs.forEach(element => {
+      if (
+        element.belongsTo ==
+        this.dashBag
+          .getBag()
+          .currentBag()
+          .currentBook()
+      )
+        output.push(element)
+    })
+    return output
+  }
+
+  lockDashCaderno(state) {
+    if (state) {
+      this.botao2.disable(true)
+      this.lockDashBlocos(true)
+    } else {
+      this.botao2.disable(false)
+      this.lockDashBlocos(false)
+    }
+  }
+
+  lockDashBlocos(state) {
+    if (state) {
+      this.botao1.disable(true)
+      this.lockTab(true)
+    } else {
+      this.botao1.disable(false)
+      this.lockTab(false)
+    }
+  }
+
+  lockTab(state) {
+    if (state) {
+      this.novaAba.disable(true)
+    } else {
+      this.novaAba.disable(false)
     }
   }
 }
