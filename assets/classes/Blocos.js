@@ -12,9 +12,14 @@ class Blocos extends Estilo {
         this.initialHeight = options.initialHeight || 200
         this.initialWidth = options.initialWidth || 200
         this.criar(options)
+        this.cloneMarginX = 50
+        this.cloneMarginY = 50
         this.maximized = false
         this.tempoFadeOut = 8000
+        this.tempoFullFadeOut = 16000
         this.exportData = {}
+        // this.operationNav, elemento que será criado para ficar no topo do bloco para auxiliar da edição do bloco
+        // Necessário a definição como operationNav para utilizar o fullMinimize
     }
 
     export() {
@@ -30,359 +35,34 @@ class Blocos extends Estilo {
         return exportOb
     }
 
-    criar() {
 
-        this.blocoRef = document.createElement('bloco')
-
-        this.blocoRef.ondrag = e => {
-            e.preventDefault()
-        }
-
-        this.blocoRef.onclick = () => {
-            this.handleClick()
-        }
-
-        this.optionsContainer = document.createElement('optionsContainer')
-        this.addEstilo(this.optionsContainer, {
-            position: 'absolute',
-            left: '100%',
-            paddingLeft: '15px',
-            zIndex: '302'
-        })
-        this.optionsContainer.ondrag = e => {
-            e.preventDefault()
-        }
-        this.optionsButtons = []
-
-        this.close = new Botao({
-            icon: "close",
-            width: "2vw",
-            height: "2vw",
-            imageWidth: "12px",
-            imageHeight: "12px",
-            animation: true,
-            ref: this.optionsContainer,
-            style: {
-                display: "flex",
-                marginBottom: "5px",
-                justifyContent: "space-around",
-                alignItems: "center",
-                borderRadius: "50%",
-                position: 'relative',
-                backgroundColor: "var(--cor-media)",
-                boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
-            },
-            action: () => this.removeBloco(this)
-
-        })
-
-        this.edit = new Botao({
-            icon: "gear",
-            width: "2vw",
-            height: "2vw",
-            imageWidth: "12px",
-            imageHeight: "12px",
-            ref: this.optionsContainer,
-            animation: true,
-            style: {
-                display: "flex",
-                marginBottom: "5px",
-                justifyContent: "space-around",
-                alignItems: "center",
-                borderRadius: "50%",
-                position: 'relative',
-                backgroundColor: "var(--cor-media)",
-                boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
-            },
-            action: () => this.openEditContainer(this)
-        })
-
-        this.optionsButtons.push(this.close, this.edit)
-
-        this.editContainer = document.createElement('editContainer')
-        this.addEstilo(this.editContainer, {
-
-            display: 'none',
-            position: 'relative',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            padding: '5px',
-            top: '-1vw',
-            left: '1.5vw',
-            minWidth: '200px',
-            minHeight: '100px',
-            borderRadius: '8px',
-            zIndex: '301',
-            backgroundColor: 'var(--cor-media)',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
+    handleClick() {
+        this.folha.cloneBlock = this
+        if (!this.maximized) this.maximize(this)
+        clearTimeout(this.tempoMinimize)
+        clearTimeout(this.tempoFullMinimize)
+        this.tempoMinimize = setTimeout(() => this.minimize(this), this.tempoFadeOut)
+        this.tempoFullMinimize = setTimeout(() => this.fullMinimize(this), this.tempoFullFadeOut)
 
 
-        })
-        this.Frete = new Botao({
-            width: "80%",
-            height: "30px",
-            text: 'Trazer para frente',
-            ref: this.editContainer,
-            animation: true,
-            style: {
-                padding: '5px',
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: "var(--cor-clara)",
-                marginBottom: '3px'
-            },
-            action: () => this.trazerFrente(this)
-        })
+    }
 
-        this.center = new Botao({
-            width: "80%",
-            height: "30px",
-            text: 'Centralizar',
-            ref: this.editContainer,
-            animation: true,
-            style: {
-                padding: '5px',
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: "var(--cor-clara)",
-                marginBottom: '3px'
-            },
-            action: () => this.alignCenter(this)
-        })
-        this.aliignLeft = new Botao({
-            width: "80%",
-            height: "30px",
-            text: 'Alinhar a esquerda',
-            ref: this.editContainer,
-            animation: true,
-            style: {
-                padding: '5px',
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: "var(--cor-clara)",
-                marginBottom: '3px'
-            },
-            action: () => this.alignLeft(this)
+    cloneBlock() {
 
-        })
+        let exportOb = this.folha.cloneBlock ? this.folha.cloneBlock.export() : this.export()
+        exportOb.posX += this.cloneMarginX
+        exportOb.posY += this.cloneMarginY
+        this.folha.criarBloco(exportOb)
 
-        this.aliignRight = new Botao({
-            width: "80%",
-            height: "30px",
-            text: 'Alinhar a direita',
-            ref: this.editContainer,
-            animation: true,
-            style: {
-                padding: '5px',
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: "var(--cor-clara)",
-                marginBottom: '3px'
-
-            },
-            action: () => this.alignRight(this)
-
-        })
-
-        this.optionsContainer.appendChild(this.editContainer)
-
-        this.blocoRef.appendChild(this.optionsContainer)
-
-        this.addEstilo(this.blocoRef, {
-            width: '200px',
-            height: '100px',
-            border: '1px solid var(--cor-escura)',
-            backgroundColor: 'white',
-            position: 'absolute',
-            opacity: '1',
-            transform: 'scale(1)',
-            zIndex: '100',
-            top: '50px',
-            left: '50px',
-            padding: '20px',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
-        })
-
-        this.blocoRef.onmousedown = e => {
-
-            if (e.target == this.blocoRef) {
-                let tempo;
-                let blocoStyle = this.blocoRef.style
-                let bloco = this.blocoRef
-                let originalX = this.parsePx(blocoStyle.left)
-                let originalY = this.parsePx(blocoStyle.top)
-
-                let get = false
-                let mousePosX;
-                let mousePosY;
-                let left;
-                let top;
-                this.folhaContainer.onmousemove = e => {
-                    if (!get) {
-                        mousePosX = e.pageX - this.folhaContainer.offsetLeft
-                        mousePosY = e.pageY - this.folhaContainer.offsetTop
-                        left = mousePosX - originalX;
-                        top = mousePosY - originalY;
-                        get = true
-                    }
-                    mousePosX = e.pageX - this.folhaContainer.offsetLeft
-                    mousePosY = e.pageY - this.folhaContainer.offsetTop
-                    blocoStyle.left = this.reparsePx(mousePosX - left)
-                    blocoStyle.top = this.reparsePx(mousePosY - top)
-                }
-                this.folhaContainer.onmouseup = () => {
-
-                    this.folhaContainer.onmousemove = () => { }
-                    this.addEstilo(this.folhaContainer, {
-                        cursor: 'default'
-                    })
-
-                }
-                this.addEstilo(this.folhaContainer, {
-                    cursor: 'grabbing'
-                })
-
+    }
+    keyAction(e) {
+        if (e.ctrlKey) {
+            if (e.keyCode == 68) {
+                this.cloneBlock()
             }
         }
 
-        this.resizes = []
-
-        this.resizesContainer = []
-
-
-        this.resizeTopLeft = document.createElement('resize')
-        this.resizeTopLeft.topLeft = true
-        this.resizes.push(this.resizeTopLeft)
-        let reziseContainerTopLeft = document.createElement('reziseContainer')
-        this.addEstilo(reziseContainerTopLeft, {
-            top: '0%',
-            left: '0%',
-            position: 'absolute'
-        })
-        this.resizesContainer.push(reziseContainerTopLeft)
-        reziseContainerTopLeft.appendChild(this.resizeTopLeft)
-        this.resizeTop = document.createElement('resize')
-        this.resizes.push(this.resizeTop)
-        this.resizeTop.top = true
-        let reziseContainerTop = document.createElement('reziseContainer')
-        this.addEstilo(reziseContainerTop, {
-            top: '0%',
-            left: '50%',
-            position: 'absolute'
-        })
-        this.resizesContainer.push(reziseContainerTop)
-        reziseContainerTop.appendChild(this.resizeTop)
-        this.resizeTopRight = document.createElement('resize')
-        this.resizeTopRight.topRight = true
-        this.resizes.push(this.resizeTopRight)
-        let reziseContainerTopRight = document.createElement('reziseContainer')
-        this.addEstilo(reziseContainerTopRight, {
-            top: '0%',
-            left: '100%',
-            position: 'absolute'
-        })
-        this.resizesContainer.push(reziseContainerTopRight)
-        reziseContainerTopRight.appendChild(this.resizeTopRight)
-        this.resizeLeft = document.createElement('resize')
-        this.resizes.push(this.resizeLeft)
-        this.resizeLeft.left = true
-        let reziseContainerLeft = document.createElement('reziseContainer')
-        this.addEstilo(reziseContainerLeft, {
-            top: '50%',
-            left: '0%',
-            position: 'absolute'
-        })
-        this.resizesContainer.push(reziseContainerLeft)
-        reziseContainerLeft.appendChild(this.resizeLeft)
-        this.resizeRight = document.createElement('resize')
-        this.resizes.push(this.resizeRight)
-        this.resizeRight.right = true
-        let reziseContainerRight = document.createElement('reziseContainer')
-        this.addEstilo(reziseContainerRight, {
-            top: '50%',
-            left: '100%',
-            position: 'absolute'
-        })
-        this.resizesContainer.push(reziseContainerRight)
-        reziseContainerRight.appendChild(this.resizeRight)
-        this.resizeBottomLeft = document.createElement('resize')
-        this.resizes.push(this.resizeBottomLeft)
-        this.resizeBottomLeft.bottomLeft = true
-        let reziseContainerBottomLeft = document.createElement('reziseContainer')
-        this.addEstilo(reziseContainerBottomLeft, {
-            top: '100%',
-            left: '0%',
-            position: 'absolute'
-        })
-        this.resizesContainer.push(reziseContainerBottomLeft)
-        reziseContainerBottomLeft.appendChild(this.resizeBottomLeft)
-        this.resizeBottomRight = document.createElement('resize')
-        this.resizes.push(this.resizeBottomRight)
-        this.resizeBottomRight.bottomRight = true
-        let reziseContainerBottomRight = document.createElement('reziseContainer')
-        this.addEstilo(reziseContainerBottomRight, {
-            top: '100%',
-            left: '100%',
-            position: 'absolute'
-        })
-        this.resizesContainer.push(reziseContainerBottomRight)
-        reziseContainerBottomRight.appendChild(this.resizeBottomRight)
-        this.resizeBottom = document.createElement('resize')
-        this.resizes.push(this.resizeBottom)
-        this.resizeBottom.bottom = true
-        let reziseContainerBottom = document.createElement('reziseContainer')
-        this.addEstilo(reziseContainerBottom, {
-            top: '100%',
-            left: '50%',
-            position: 'absolute'
-        })
-        this.resizesContainer.push(reziseContainerBottom)
-        reziseContainerBottom.appendChild(this.resizeBottom)
-        this.resizes.forEach(resize => {
-            resize.ondrag = e => e.preventDefault()
-            let vw = window.innerWidth
-            let vh = window.innerHeight
-
-            this.addEstilo(resize, {
-                width: '1vw',
-                height: '1vw',
-                display: 'block',
-                borderRadius: '50%',
-                position: 'relative',
-                top: '-0.5vw',
-                left: '-0.5vw',
-                backgroundColor: 'white',
-                boxShadow: '0 0 1px 0 var(--cor-escura) inset, 0 0 1px 0 var(--cor-escura)',
-                zIndex: '2',
-            })
-            this.makeResize(this.blocoRef, this.resizes)
-        })
-        this.blocoRef.append(...this.resizesContainer)
-        this.folhaContainer.appendChild(this.blocoRef)
-        let animBloco = this.blocoRef.animate([{
-            opacity: '0',
-            transform: 'scale(0.8)'
-
-        }, {
-            opacity: '1',
-            transform: 'scale(1)'
-
-        }], 500)
-        animBloco.onfinish = () => this.minimize(this)
-
     }
-
-    handleClick() {
-
-        if (!this.maximized) this.maximize(this)
-
-        clearTimeout(this.tempoMinimize)
-        this.tempoMinimize = setTimeout(() => this.minimize(this), this.tempoFadeOut)
-
-
-    }
-
     changeContainerPos(ref) {
 
         if (ref.optionsContainer.style.left == '100%') {
@@ -511,109 +191,111 @@ class Blocos extends Estilo {
         let originalMouseX = 0;
         let originalMouseY = 0;
         let ind
-        const resize = (e, resizer) => {
-            this.disableSelect(this.folhaContainer)
-
-            this.addEstilo(resizer, {
-                cursor: "grabbing",
-                backgroundColor: "lightblue"
-            })
-            this.addEstilo(this.folhaContainer, {
-                cursor: "grabbing"
-            })
-
-            if (resizer.bottomRight) {
-                const width = originalWidth + (e.pageX - originalMouseX);
-                const height = originalHeight + (e.pageY - originalMouseY)
-                if (width > minimum_size) {
-                    element.style.width = this.reparsePx(width)
-                }
-                if (height > minimum_size) {
-                    element.style.height = this.reparsePx(height)
-                }
-            }
-            else if (resizer.bottomLeft) {
-                const height = originalHeight + (e.pageY - originalMouseY)
-                const width = originalWidth - (e.pageX - originalMouseX)
-                if (height > minimum_size) {
-                    element.style.height = this.reparsePx(height)
-                }
-                if (width > minimum_size) {
-                    element.style.width = this.reparsePx(width)
-                    element.style.left = this.reparsePx(originalX + (e.pageX - originalMouseX))
-                }
-            }
-            else if (resizer.topRight) {
-                const width = originalWidth + (e.pageX - originalMouseX)
-                const height = originalHeight - (e.pageY - originalMouseY)
-                if (width > minimum_size) {
-                    element.style.width = this.reparsePx(width)
-                }
-                if (height > minimum_size) {
-                    element.style.height = this.reparsePx(height)
-                    element.style.top = this.reparsePx(originalY + (e.pageY - originalMouseY))
-                }
-            }
-            else if (resizer.topLeft) {
-                const width = originalWidth - (e.pageX - originalMouseX)
-                const height = originalHeight - (e.pageY - originalMouseY)
-                if (width > minimum_size) {
-                    element.style.width = this.reparsePx(width)
-                    element.style.left = this.reparsePx(originalX + (e.pageX - originalMouseX))
-                }
-                if (height > minimum_size) {
-                    element.style.height = this.reparsePx(height)
-                    element.style.top = this.reparsePx(originalY + (e.pageY - originalMouseY))
-                }
-            }
-            else if (resizer.bottom) {
-                const height = originalHeight + (e.pageY - originalMouseY)
-                if (height > minimum_size) {
-                    element.style.height = this.reparsePx(height)
-                }
-            }
-            else if (resizer.top) {
-                const height = originalHeight - (e.pageY - originalMouseY)
-                if (height > minimum_size) {
-                    element.style.height = this.reparsePx(height)
-                    element.style.top = this.reparsePx(originalY + (e.pageY - originalMouseY))
-
-                }
-            }
-            else if (resizer.right) {
-
-                const width = originalWidth + (e.pageX - originalMouseX)
-                if (width > minimum_size) {
-                    element.style.width = this.reparsePx(width)
-                }
-
-            }
-            else if (resizer.left) {
-                const width = originalWidth - (e.pageX - originalMouseX)
-                if (width > minimum_size) {
-                    element.style.width = this.reparsePx(width)
-                    element.style.left = this.reparsePx(originalX + (e.pageX - originalMouseX))
-                }
-
-
-            }
-        }
-        const stopResize = resizer => {
-            this.enableSelect(this.folhaContainer)
-
-            this.addEstilo(this.folhaContainer, {
-                cursor: "default"
-            })
-            this.addEstilo(resizer, {
-                cursor: "grab",
-                backgroundColor: 'white'
-            })
-            this.folha.removeWindowMouseMoveAction(ind)
-        }
 
         resizers.forEach(resizer => {
 
-            resizer.onmousedown = e => {
+            let resize = e => {
+                this.addEstilo(resizer, {
+                    cursor: "grabbing",
+                    backgroundColor: "lightblue"
+                })
+                this.addEstilo(this.folhaContainer, {
+                    cursor: "grabbing"
+                })
+
+                if (resizer.bottomRight) {
+                    const width = originalWidth + (e.pageX - originalMouseX);
+                    const height = originalHeight + (e.pageY - originalMouseY)
+                    if (width > minimum_size) {
+                        element.style.width = this.reparsePx(width)
+                    }
+                    if (height > minimum_size) {
+                        element.style.height = this.reparsePx(height)
+                    }
+                }
+                else if (resizer.bottomLeft) {
+                    const height = originalHeight + (e.pageY - originalMouseY)
+                    const width = originalWidth - (e.pageX - originalMouseX)
+                    if (height > minimum_size) {
+                        element.style.height = this.reparsePx(height)
+                    }
+                    if (width > minimum_size) {
+                        element.style.width = this.reparsePx(width)
+                        element.style.left = this.reparsePx(originalX + (e.pageX - originalMouseX))
+                    }
+                }
+                else if (resizer.topRight) {
+                    const width = originalWidth + (e.pageX - originalMouseX)
+                    const height = originalHeight - (e.pageY - originalMouseY)
+                    if (width > minimum_size) {
+                        element.style.width = this.reparsePx(width)
+                    }
+                    if (height > minimum_size) {
+                        element.style.height = this.reparsePx(height)
+                        element.style.top = this.reparsePx(originalY + (e.pageY - originalMouseY))
+                    }
+                }
+                else if (resizer.topLeft) {
+                    const width = originalWidth - (e.pageX - originalMouseX)
+                    const height = originalHeight - (e.pageY - originalMouseY)
+                    if (width > minimum_size) {
+                        element.style.width = this.reparsePx(width)
+                        element.style.left = this.reparsePx(originalX + (e.pageX - originalMouseX))
+                    }
+                    if (height > minimum_size) {
+                        element.style.height = this.reparsePx(height)
+                        element.style.top = this.reparsePx(originalY + (e.pageY - originalMouseY))
+                    }
+                }
+                else if (resizer.bottom) {
+                    const height = originalHeight + (e.pageY - originalMouseY)
+                    if (height > minimum_size) {
+                        element.style.height = this.reparsePx(height)
+                    }
+                }
+                else if (resizer.top) {
+                    const height = originalHeight - (e.pageY - originalMouseY)
+                    if (height > minimum_size) {
+                        element.style.height = this.reparsePx(height)
+                        element.style.top = this.reparsePx(originalY + (e.pageY - originalMouseY))
+
+                    }
+                }
+                else if (resizer.right) {
+
+                    const width = originalWidth + (e.pageX - originalMouseX)
+                    if (width > minimum_size) {
+                        element.style.width = this.reparsePx(width)
+                    }
+
+                }
+                else if (resizer.left) {
+                    const width = originalWidth - (e.pageX - originalMouseX)
+                    if (width > minimum_size) {
+                        element.style.width = this.reparsePx(width)
+                        element.style.left = this.reparsePx(originalX + (e.pageX - originalMouseX))
+                    }
+
+
+                }
+            }
+
+            let stopResize = () => {
+                this.addEstilo(this.folhaContainer, {
+                    cursor: "default"
+                })
+                this.addEstilo(resizer, {
+                    cursor: "grab",
+                    backgroundColor: 'white'
+                })
+
+                this.folhaContainer.removeEventListener('mousemove', resize)
+                this.blocoRef.style.transition = 'top 0.1s ease, left 0.1s ease'
+
+            }
+
+
+            let initResize = e => {
                 e.preventDefault()
                 originalWidth = this.parsePx(getComputedStyle(element, null).getPropertyValue('width'))
                 originalHeight = this.parsePx(getComputedStyle(element, null).getPropertyValue('height'))
@@ -622,15 +304,14 @@ class Blocos extends Estilo {
                 originalMouseX = e.pageX;
                 originalMouseY = e.pageY;
 
-                ind = this.folha.addWindowMouseMoveAction(ew => {
-                    resize(ew, resizer)
-                })
-
-                window.onmouseup = () => {
-                    stopResize(resizer)
-                }
+                this.folhaContainer.addEventListener('mousemove', resize, false)
+                window.addEventListener('mouseup', stopResize, false)
+                element.style.transition = 'none'
             }
 
+            // initResize = initResize.bind(this)
+
+            resizer.addEventListener('mousedown', initResize, false)
 
         })
 
@@ -838,6 +519,26 @@ class Blocos extends Estilo {
 
     }
 
+    fullMinimize(ref) {
+
+        ref.addEstilo(ref.blocoRef, {
+            boxShadow: 'none'
+        })
+        if (ref.operationNav) {
+            let animm = ref.operationNav.animate([{
+                opacity: '1',
+                transform: 'scale(1)'
+            }, {
+                opacity: '0',
+                transform: 'scale(0.8)'
+            }], ref.animationTimes.medium)
+            animm.onfinish = () => {
+                ref.operationNav.style.opacity = '0'
+            }
+        }
+
+    }
+
     minimize(ref) {
 
         ref.addEstilo(ref.blocoRef, {
@@ -869,7 +570,7 @@ class Blocos extends Estilo {
         }, {
             opacity: '0'
 
-        }], 80)
+        }], this.animationTimes.medium)
 
         anim.onfinish = () => {
             ref.addEstilo(ref.optionsContainer, {
@@ -882,8 +583,24 @@ class Blocos extends Estilo {
 
     maximize(ref) {
         ref.addEstilo(ref.blocoRef, {
-            border: '1px solid var(--cor-escura)'
+            border: '1px solid var(--cor-escura)',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
         })
+        if (ref.operationNav && ref.operationNav.style.opacity != '1') {
+
+            let anima = ref.operationNav.animate([{
+                opacity: '0',
+                transform: 'scale(0.8)'
+            }, {
+                opacity: '1',
+                transform: 'scale(1)'
+            }], ref.animationTimes.medium)
+            anima.onfinish = () => {
+                ref.operationNav.style.opacity = '1'
+
+            }
+        }
+
         ref.resizesContainer.forEach(container => {
             ref.addEstilo(container, {
                 display: 'block',
@@ -894,7 +611,6 @@ class Blocos extends Estilo {
             }, {
                 opacity: '1'
             }], 80)
-
 
         })
 
@@ -1043,6 +759,7 @@ class Blocos extends Estilo {
 
         })
         let symbolModalContainer = document.createElement('div')
+        this.disableHoldSelectionAndDrag(symbolModalContainer)
         this.addEstilo(symbolModalContainer, {
             position: 'absolute',
             width: '20%',
@@ -1050,6 +767,7 @@ class Blocos extends Estilo {
             height: '100%',
             left: '100%',
             top: '72px',
+            display: 'none'
 
         })
         this.symbolModal = document.createElement('div')
@@ -1070,6 +788,7 @@ class Blocos extends Estilo {
         })
         const toggleModal = () => {
             if (this.symbolModal.style.display == 'none') {
+                this.symbolModalContainer.style.display = 'block'
                 this.symbolModal.style.display = 'flex'
                 let anim = this.symbolModal.animate([{
                     opacity: '0',
@@ -1078,8 +797,6 @@ class Blocos extends Estilo {
                     opacity: '1',
                     left: '-105%'
                 }], this.animationTimes.medium)
-
-
             } else {
                 let anim = this.symbolModal.animate([{
                     opacity: '1',
@@ -1091,6 +808,7 @@ class Blocos extends Estilo {
                 anim.onfinish = () => {
 
                     this.symbolModal.style.display = 'none'
+                    this.symbolModalContainer.style.display = 'none'
 
                 }
 
@@ -1194,20 +912,98 @@ class Blocos extends Estilo {
 
     }
 
+    moveBloco(e) {
+
+        if (e.target == this.blocoRef) {
+
+            let tempo
+            let blocoStyle = this.blocoRef.style
+            let bloco = this.blocoRef
+            let originalX = this.parsePx(blocoStyle.left)
+            let originalY = this.parsePx(blocoStyle.top)
+            let originalScroll = Math.ceil(this.folhaContainer.parentElement.scrollTop)
+            let get = false
+            let mousePosX
+            let mousePosY
+            let mousePosNoScroll
+            let left
+            let top
+            let scrollTop = 0
+            let indexAnterior = blocoStyle.zIndex
+            blocoStyle.zIndex = this.folha.zIndexBlocoMax
+            let moveFloha = e => {
+                if (!get) {
+                    mousePosX = e.pageX - this.folhaContainer.offsetLeft
+                    mousePosY = e.pageY - this.folhaContainer.offsetTop
+                    left = mousePosX - originalX;
+                    top = mousePosY - originalY;
+                    get = true
+                }
+                scrollTop = Math.floor(this.folhaContainer.parentElement.scrollTop) - originalScroll
+                mousePosX = e.pageX - this.folhaContainer.offsetLeft
+                mousePosNoScroll = e.pageY - this.folhaContainer.offsetTop
+                mousePosY = scrollTop + mousePosNoScroll
+
+                blocoStyle.left = this.reparsePx(mousePosX - left)
+                blocoStyle.top = this.reparsePx(mousePosY - top)
+            }
+
+            moveFloha = moveFloha.bind(this)
+
+            let stopMoveFolha = e => {
+                this.folhaContainer.removeEventListener('mousemove', moveFloha)
+                this.folhaContainer.parentElement.removeEventListener('scroll', moveBlockWheel)
+                blocoStyle.zIndex = indexAnterior
+                this.addEstilo(this.folhaContainer, {
+                    cursor: 'default'
+                })
+            }
+
+            let moveBlockWheel = e => {
+                scrollTop = Math.ceil(this.folhaContainer.parentElement.scrollTop) - originalScroll
+                mousePosY = scrollTop + mousePosNoScroll
+                blocoStyle.top = this.reparsePx(mousePosY - top)
+
+            }
+
+            stopMoveFolha = stopMoveFolha.bind(this)
+
+            this.folhaContainer.parentElement.addEventListener('scroll', moveBlockWheel, false)
+
+            this.folhaContainer.addEventListener('mousemove', moveFloha, false)
+
+            this.folhaContainer.addEventListener('mouseup', stopMoveFolha, false)
+
+            this.addEstilo(this.folhaContainer, {
+                cursor: 'grabbing'
+            })
+            e.preventDefault()
+            e.stopImmediatePropagation()
+        }
+    }
+    selectElementContents(el) {
+        let range = document.createRange();
+        range.selectNodeContents(el);
+        let sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+
     criar(options) {
 
         this.blocoRef = document.createElement('bloco')
-
-        this.blocoRef.onclick = () => {
-            this.handleClick()
-        }
+        // this.blocoRef.setAttribute('tabindex', '0')
+        this.blocoRef.addEventListener('click', this.handleClick.bind(this), false)
+        // this.blocoRef.addEventListener('click', this.setFocus.bind(this), false)
+        this.blocoRef.addEventListener('keydown', this.keyAction.bind(this), false)
+        this.blocoRef.addEventListener('mousedown', this.moveBloco.bind(this), false)
 
         this.optionsContainer = document.createElement('optionsContainer')
-        this.optionsContainer.ondrag = e => { e.preventDefault() }
+        this.disableHoldSelectionAndDrag(this.optionsContainer)
         this.addEstilo(this.optionsContainer, {
             position: 'absolute',
             left: '100%',
-            paddingLeft: '15px',
+            paddingLeft: '20px',
             zIndex: '301'
         })
 
@@ -1259,7 +1055,8 @@ class Blocos extends Estilo {
         this.optionsButtons.push(this.close, this.edit)
 
         this.editContainer = document.createElement('editContainer')
-        this.editContainer.ondrag = e => { e.preventDefault() }
+        this.disableHoldSelectionAndDrag(this.editContainer)
+
         this.addEstilo(this.editContainer, {
 
             display: 'none',
@@ -1356,62 +1153,18 @@ class Blocos extends Estilo {
             transform: 'scale(1)',
             backgroundColor: 'white',
             position: 'absolute',
-            zIndex: '100',
+            zIndex: this.folha.zIndexBlocoMin,
             top: options.posY,
             left: options.posX,
             padding: '20px',
+            transition: 'top 0.1s ease, left 0.1s ease',
             boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
         })
 
-        this.blocoRef.onmousedown = e => {
-
-            if (e.target == this.blocoRef) {
-                let tempo;
-                let blocoStyle = this.blocoRef.style
-                let bloco = this.blocoRef
-                let originalX = this.parsePx(blocoStyle.left)
-                let originalY = this.parsePx(blocoStyle.top)
-
-                let get = false
-                let mousePosX;
-                let mousePosY;
-                let left;
-                let top;
-                this.folhaContainer.onmousemove = e => {
-
-                    if (!get) {
-                        this.disableSelect(this.folhaContainer)
-                        mousePosX = e.pageX - this.folhaContainer.offsetLeft
-                        mousePosY = e.pageY - this.folhaContainer.offsetTop
-                        left = mousePosX - originalX;
-                        top = mousePosY - originalY;
-                        get = true
-                    }
-                    mousePosX = e.pageX - this.folhaContainer.offsetLeft
-                    mousePosY = e.pageY - this.folhaContainer.offsetTop
-                    blocoStyle.left = this.reparsePx(mousePosX - left)
-                    blocoStyle.top = this.reparsePx(mousePosY - top)
-                }
-                this.folhaContainer.onmouseup = () => {
-                    this.enableSelect(this.folhaContainer)
-
-                    this.folhaContainer.onmousemove = () => { }
-                    this.addEstilo(this.folhaContainer, {
-                        cursor: 'default'
-                    })
-
-                }
-                this.addEstilo(this.folhaContainer, {
-                    cursor: 'grabbing'
-                })
-
-            }
-        }
 
         this.resizes = []
 
         this.resizesContainer = []
-
 
         this.resizeTopLeft = document.createElement('resize')
         this.resizeTopLeft.topLeft = true
@@ -1532,7 +1285,10 @@ class Blocos extends Estilo {
             transform: 'scale(1)'
 
         }], this.animationTimes.medium)
-        animBloco.onfinish = () => this.minimize(this)
+        animBloco.onfinish = () => {
+            this.tempoMinimize = setTimeout(() => this.minimize(this), 100)
+            this.tempoFullMinimize = setTimeout(() => this.fullMinimize(this), this.tempoFullFadeOut)
+        }
     }
 
 }

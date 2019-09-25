@@ -105,6 +105,7 @@ class Lista extends Blocos {
   }
   addItem(ref) {
     let li = document.createElement("li")
+
     li.textContent = this.placeholder
     li.setAttribute("contenteditable", "true")
     ref.addEstilo(li, {
@@ -128,6 +129,8 @@ class Lista extends Blocos {
       ref.animationTimes.medium
     )
     ref.itens.push(li)
+    ref.lista.lastChild.focus()
+    this.selectElementContents(ref.lista.lastChild)
   }
   criarLista() {
     this.container = document.createElement("div")
@@ -146,8 +149,11 @@ class Lista extends Blocos {
       marginBottom: "15px",
       listStylePosition: "inside"
     })
-    this.plusContainer = document.createElement("plusContainer")
-    this.plusContainer.ondrag = e => e.preventDefault()
+    this.plusContainer = document.createElement("pluscontainer")
+
+    this.disableHoldSelectionAndDrag(this.plusContainer)
+    this.operationNav = this.plusContainer
+
     this.addEstilo(this.plusContainer, {
       display: "flex",
       alignItems: "center",
@@ -292,6 +298,8 @@ class Lista extends Blocos {
     this.container.append(this.plusContainer, this.lista)
     this.addConfig([this.listStyle, this.configFont])
     this.addMainContent(this.container)
+    this.lista.firstElementChild.focus()
+    this.selectElementContents(this.lista.firstElementChild)
   }
 }
 
